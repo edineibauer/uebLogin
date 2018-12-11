@@ -1,4 +1,7 @@
 <?php
+
+use Form\Form;
+
 ob_start();
 ?>
     <div class='row font-large' style="max-width: 750px; margin: auto">
@@ -9,7 +12,7 @@ ob_start();
             <div class="panel">
                 <div class="panel">
                     <?php
-                    $form = new \FormCrud\Form("usuarios");
+                    $form = new Form("usuarios");
                     $form->setAutoSave(false);
                     $form->setCallback("goToDashboard");
                     $form->setFields(["nome", "email", "password"]);
