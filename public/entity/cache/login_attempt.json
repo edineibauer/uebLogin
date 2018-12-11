@@ -1,0 +1,84 @@
+{
+  "1": {
+    "format": "datetime",
+    "type": "datetime",
+    "nome": "data",
+    "column": "data",
+    "size": "false",
+    "key": "",
+    "unique": "false",
+    "default": "datetime",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "\/^\\d{4}-\\d{2}-\\d{2}(\\s|T)\\d{2}:\\d{2}(:\\d{2})*$\/",
+      "validate": ""
+    },
+    "form": "false",
+    "input": "datetime"
+  },
+  "2": {
+    "format": "text",
+    "type": "varchar",
+    "nome": "ip",
+    "column": "ip",
+    "size": "32",
+    "key": "",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": "false",
+    "input": "text"
+  },
+  "3": {
+    "format": "text",
+    "type": "varchar",
+    "nome": "username",
+    "column": "username",
+    "size": "127",
+    "key": "",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": "false",
+    "input": "text"
+  },
+  "0": {
+    "format": "none",
+    "type": "int",
+    "nome": "id",
+    "column": "id",
+    "size": "",
+    "key": "identifier",
+    "unique": "true",
+    "default": "false",
+    "update": "false",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": "",
+      "names": "",
+      "validate": ""
+    },
+    "form": {
+      "input": "hidden",
+      "cols": "12",
+      "colm": "",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "select": [],
+    "filter": []
+  }
+}

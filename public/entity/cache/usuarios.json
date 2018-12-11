@@ -1,0 +1,343 @@
+{
+  "1": {
+    "format": "title",
+    "type": "varchar",
+    "nome": "Nome",
+    "column": "nome",
+    "size": "127",
+    "key": "title",
+    "unique": "true",
+    "default": "false",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": {
+      "input": "text",
+      "cols": "12",
+      "colm": "",
+      "coll": "",
+      "class": "",
+      "style": "font-size:1.7em;font-weight:bold"
+    },
+    "indice": "2"
+  },
+  "2": {
+    "format": "link",
+    "type": "varchar",
+    "nome": "Nome Usu\u00e1rio",
+    "column": "nome_usuario",
+    "size": "127",
+    "key": "link",
+    "unique": "true",
+    "default": "false",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": "false",
+    "indice": "15"
+  },
+  "3": {
+    "format": "source",
+    "type": "json",
+    "nome": "Imagem",
+    "column": "imagem",
+    "size": "false",
+    "key": "source",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "bmp",
+        "tif",
+        "tiff",
+        "psd",
+        "svg"
+      ],
+      "names": [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "bmp",
+        "tif",
+        "tiff",
+        "psd",
+        "svg"
+      ],
+      "validate": ""
+    },
+    "form": {
+      "input": "file",
+      "cols": "12",
+      "colm": "",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "21"
+  },
+  "4": {
+    "format": "email",
+    "type": "varchar",
+    "nome": "Email",
+    "column": "email",
+    "size": "127",
+    "key": "",
+    "unique": "true",
+    "default": "false",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": "email"
+    },
+    "form": {
+      "input": "email",
+      "cols": "12",
+      "colm": "12",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "7"
+  },
+  "5": {
+    "format": "password",
+    "type": "varchar",
+    "nome": "Password",
+    "column": "password",
+    "size": "254",
+    "key": "",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": {
+      "input": "password",
+      "cols": "12",
+      "colm": "12",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "10"
+  },
+  "6": {
+    "format": "datetime",
+    "type": "datetime",
+    "nome": "Data",
+    "column": "data",
+    "size": "false",
+    "key": "",
+    "unique": "false",
+    "default": "datetime",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "\/^\\d{4}-\\d{2}-\\d{2}(\\s|T)\\d{2}:\\d{2}(:\\d{2})*$\/",
+      "validate": ""
+    },
+    "form": "false",
+    "indice": "23"
+  },
+  "7": {
+    "format": "status",
+    "type": "tinyint",
+    "nome": "Status",
+    "column": "status",
+    "size": "1",
+    "key": "",
+    "unique": "false",
+    "default": "1",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": [
+        "0",
+        "1"
+      ],
+      "names": [
+        "desativado",
+        "ativado"
+      ],
+      "validate": ""
+    },
+    "form": {
+      "input": "switch",
+      "cols": "12",
+      "colm": "2",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "19"
+  },
+  "8": {
+    "format": "select",
+    "type": "tinyint",
+    "nome": "Setor",
+    "column": "setor",
+    "size": "false",
+    "key": "",
+    "unique": "false",
+    "default": "2",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": [
+        "1",
+        "2",
+        "20"
+      ],
+      "names": [
+        "Administra\u00e7\u00e3o do Site",
+        "Gerente",
+        "Usuário"
+      ],
+      "validate": ""
+    },
+    "form": {
+      "input": "select",
+      "cols": "12",
+      "colm": "5",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "20"
+  },
+  "9": {
+    "format": "select",
+    "type": "tinyint",
+    "nome": "N\u00edvel",
+    "column": "nivel",
+    "size": "false",
+    "key": "",
+    "unique": "false",
+    "default": "1",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": [
+        "1",
+        "2"
+      ],
+      "names": [
+        "Adm",
+        "Gerente"
+      ],
+      "validate": ""
+    },
+    "form": {
+      "input": "select",
+      "cols": "12",
+      "colm": "5",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "indice": "22"
+  },
+  "10": {
+    "format": "text",
+    "type": "varchar",
+    "nome": "token",
+    "column": "token",
+    "size": "254",
+    "key": "",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": "false",
+    "indice": "24"
+  },
+  "11": {
+    "format": "date",
+    "type": "date",
+    "nome": "Token Expira",
+    "column": "token_expira",
+    "size": "false",
+    "key": "date",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "\/^\\d{4}-\\d{2}-\\d{2}$\/",
+      "validate": ""
+    },
+    "form": "false",
+    "indice": "26"
+  },
+  "12": {
+    "format": "text",
+    "type": "varchar",
+    "nome": "Token Recovery",
+    "column": "token_recovery",
+    "size": "254",
+    "key": "",
+    "unique": "false",
+    "default": "",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "validate": ""
+    },
+    "form": "false",
+    "indice": "25"
+  },
+  "0": {
+    "format": "none",
+    "type": "int",
+    "nome": "id",
+    "column": "id",
+    "size": "",
+    "key": "identifier",
+    "unique": "true",
+    "default": "false",
+    "update": "false",
+    "relation": "",
+    "allow": {
+      "regex": "",
+      "values": "",
+      "names": "",
+      "validate": ""
+    },
+    "form": {
+      "input": "hidden",
+      "cols": "12",
+      "colm": "",
+      "coll": "",
+      "class": "",
+      "style": ""
+    },
+    "select": [],
+    "filter": []
+  }
+}
