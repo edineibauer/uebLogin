@@ -9,15 +9,15 @@ function recoveryEmail() {
     if (recoveryFree) {
         recoveryFree = false;
         let email = $("#recovery-email").val();
-        let reg = new RegExp("\w+@\w+.\w+", "i");
         if(validateEmail(email)) {
             post('login', 'recoveryEmail', {email: email}, function (g) {
-                console.log(g);
                 if (!g) {
                     toast('Email não encontrado!', 4000, "toast-warning");
                 } else {
-                    toast('Link de Recuperação enviada ao email', 4000, "toast-success");
-                    $("#recovery-email").val("");
+                    if(g !== "no-network") {
+                        toast('Link de Recuperação enviada ao email', 4000, "toast-success");
+                        $("#recovery-email").val("");
+                    }
                 }
 
                 recoveryFree = true;

@@ -10,7 +10,7 @@ function newPassword() {
                     setTimeout(function () {
                         window.location.href = HOME + "login";
                     },1500);
-                } else {
+                } else if(g !== "no-network"){
                     toast("Token Inválido! Tente recuperar senha novamente.", 6000, "toast-warning");
                 }
                 novaSenha = true;

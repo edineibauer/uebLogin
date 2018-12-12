@@ -13,7 +13,8 @@ function login() {
             recaptcha: recaptcha
         }, function (g) {
             if(g) {
-                toast(g, 3000, "toast-warning");
+                if(g !== "no-network")
+                    toast(g, 3000, "toast-warning");
             } else {
                 toast("Logando...", 2000, "toast-success");
 
