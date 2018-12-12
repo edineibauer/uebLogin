@@ -7,7 +7,7 @@ function login() {
         var email = $("#emaillog").val();
         var pass = $("#passlog").val();
         var recaptcha = $("#g-recaptcha-response").val();
-        post('session-control', 'login', {
+        post('login', 'login', {
             email: email,
             pass: pass,
             recaptcha: recaptcha

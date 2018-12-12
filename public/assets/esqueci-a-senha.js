@@ -11,7 +11,7 @@ function recoveryEmail() {
         let email = $("#recovery-email").val();
         let reg = new RegExp("\w+@\w+.\w+", "i");
         if(validateEmail(email)) {
-            post('session-control', 'recoveryEmail', {email: email}, function (g) {
+            post('login', 'recoveryEmail', {email: email}, function (g) {
                 console.log(g);
                 if (!g) {
                     toast('Email não encontrado!', 4000, "toast-warning");
