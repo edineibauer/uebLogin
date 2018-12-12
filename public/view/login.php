@@ -10,7 +10,7 @@ if (!empty($_SESSION['userlogin'])) {
         if (LOGO || FAVICON) {
             ?>
             <div class='container align-center upper panel color-text-grey'>
-                <img src="<?=HOME . "image/" . (LOGO ? LOGO : FAVICON) . "&h=100"?>" height="60" style="height: 60px;float: initial;margin:initial">
+                <img src="<?=HOME . "assetsPublic/img/favicon-256.png"?>" height="60" style="height: 60px;float: initial;margin:initial">
             </div>
             <?php
         } else {
