@@ -1,5 +1,5 @@
 <?php
-$login = new \SessionControl\Login();
+$login = new \Login\Login();
 $login->logOut();
 
 if($login->getResult() && !$login->getError()) {

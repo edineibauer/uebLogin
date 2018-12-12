@@ -1,5 +1,5 @@
 <?php
-use \ConnCrud\TableCrud;
+use \Conn\TableCrud;
 
 $email = trim(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
 
@@ -12,7 +12,7 @@ if ($email) {
         $user->save();
 
         //Prepara para enviar email
-        $envio = new \EmailControl\EmailEnvio();
+        $envio = new \Email\EmailEnvio();
         $envio->setAssunto("Recuperação de Senha");
         $envio->setDestinatarioEmail($email);
         $envio->setBtnLink(HOME . "inserir-nova-senha/{$code}");

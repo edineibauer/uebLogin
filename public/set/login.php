@@ -1,6 +1,6 @@
 <?php
 
-use SessionControl\Login;
+use Login\Login;
 
 $dados['email'] = strip_tags(trim(filter_input(INPUT_POST, "email", FILTER_DEFAULT)));
 $dados['password'] = trim(filter_input(INPUT_POST, "pass", FILTER_DEFAULT));

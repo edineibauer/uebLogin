@@ -1,5 +1,5 @@
 <?php
-use \ConnCrud\TableCrud;
+use \Conn\TableCrud;
 use Helpers\Check;
 
 $senha = strip_tags(trim(filter_input(INPUT_POST, 'senha', FILTER_DEFAULT)));
