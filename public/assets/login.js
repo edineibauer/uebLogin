@@ -16,7 +16,8 @@ function login() {
                 if(g !== "no-network")
                     toast(g, 3000, "toast-warning");
             } else {
-                toast("Logando...", 2000, "toast-success");
+                toast("Entrando...", 2000, "toast-success");
+                clearCache();
 
                 setTimeout(function () {
                     window.location.href = HOME + 'dashboard';
