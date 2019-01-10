@@ -11,11 +11,12 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": ""
     },
     "form": {
-      "input": "text",
+      "input": "input",
+      "type": "text",
       "cols": "12",
       "colm": "",
       "coll": "",
@@ -36,7 +37,7 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": ""
     },
     "form": "false",
@@ -54,28 +55,36 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
-      "values": [
-        "png",
-        "jpg",
-        "jpeg",
-        "gif",
-        "bmp",
-        "tif",
-        "tiff",
-        "psd",
-        "svg"
-      ],
-      "names": [
-        "png",
-        "jpg",
-        "jpeg",
-        "gif",
-        "bmp",
-        "tif",
-        "tiff",
-        "psd",
-        "svg"
+      "regexp": "",
+      "options": [
+        {
+          "option": "png",
+          "name": "png"
+        },{
+          "option": "jpg",
+          "name": "jpg"
+        },{
+          "option": "jpeg",
+          "name": "jpeg"
+        },{
+          "option": "gif",
+          "name": "gif"
+        },{
+          "option": "bmp",
+          "name": "bmp"
+        },{
+          "option": "tif",
+          "name": "tif"
+        },{
+          "option": "tiff",
+          "name": "tiff"
+        },{
+          "option": "psd",
+          "name": "psd"
+        },{
+          "option": "svg",
+          "name": "svg"
+        }
       ],
       "validate": ""
     },
@@ -101,11 +110,12 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": "email"
     },
     "form": {
-      "input": "email",
+      "input": "input",
+      "type": "email",
       "cols": "12",
       "colm": "12",
       "coll": "",
@@ -126,11 +136,12 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": ""
     },
     "form": {
-      "input": "password",
+      "input": "input",
+      "type": "password",
       "cols": "12",
       "colm": "12",
       "coll": "",
@@ -151,7 +162,7 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "\/^\\d{4}-\\d{2}-\\d{2}(\\s|T)\\d{2}:\\d{2}(:\\d{2})*$\/",
+      "regexp": "\/^\\d{4}-\\d{2}-\\d{2}(\\s|T)\\d{2}:\\d{2}(:\\d{2})*$\/",
       "validate": ""
     },
     "form": "false",
@@ -169,14 +180,16 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
-      "values": [
-        "0",
-        "1"
-      ],
-      "names": [
-        "desativado",
-        "ativado"
+      "regexp": "",
+      "options": [
+        {
+          "option": "0",
+          "name": "desativado"
+        },
+        {
+          "option": "1",
+          "name": "ativado"
+        }
       ],
       "validate": ""
     },
@@ -202,16 +215,20 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
-      "values": [
-        "1",
-        "2",
-        "20"
-      ],
-      "names": [
-        "Administra\u00e7\u00e3o do Site",
-        "Gerente",
-        "Usuário"
+      "regexp": "",
+      "options": [
+        {
+          "option": "1",
+          "name": "Desenvolvedor"
+        },
+        {
+          "option": "2",
+          "name": "Administrador"
+        },
+        {
+          "option": "20",
+          "name": "Usuário"
+        }
       ],
       "validate": ""
     },
@@ -237,14 +254,16 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
-      "values": [
-        "1",
-        "2"
-      ],
-      "names": [
-        "Adm",
-        "Gerente"
+      "regexp": "",
+      "options": [
+        {
+          "option": "1",
+          "name": "Adm"
+        },
+        {
+          "option": "2",
+          "name": "Gerente"
+        }
       ],
       "validate": ""
     },
@@ -270,7 +289,7 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": ""
     },
     "form": "false",
@@ -288,7 +307,7 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "\/^\\d{4}-\\d{2}-\\d{2}$\/",
+      "regexp": "\/^\\d{4}-\\d{2}-\\d{2}$\/",
       "validate": ""
     },
     "form": "false",
@@ -306,7 +325,7 @@
     "update": "true",
     "relation": "",
     "allow": {
-      "regex": "",
+      "regexp": "",
       "validate": ""
     },
     "form": "false",
@@ -324,9 +343,7 @@
     "update": "false",
     "relation": "",
     "allow": {
-      "regex": "",
-      "values": "",
-      "names": "",
+      "regexp": "",
       "validate": ""
     },
     "form": {
