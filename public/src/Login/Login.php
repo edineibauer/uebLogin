@@ -83,7 +83,14 @@ class Login
 
     public function logOut()
     {
-        setcookie("token", 0, time() - 1, "/");
+        $this->setCookie("token", 0 , -1);
+        $this->setCookie("id", 0 , -1);
+        $this->setCookie("nome", 0 , -1);
+        $this->setCookie("nome_usuario", 0 , -1);
+        $this->setCookie("email", 0 , -1);
+        $this->setCookie("setor", 0 , -1);
+        $this->setCookie("nivel", 0 , -1);
+
         if (isset($_SESSION['userlogin'])) {
             if(!empty($_SESSION['userlogin']['token'])) {
                 $token = new TableCrud(PRE . "usuarios");
@@ -145,7 +152,13 @@ class Login
                 $up = new Update();
                 $up->exeUpdate(PRE . "usuarios", ['token' => $this->getToken(), "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$read->getResult()[0]['id']}");
 
-                $this->setCookie($_SESSION['userlogin']['token']);
+                $this->setCookie("token", $_SESSION['userlogin']['token']);
+                $this->setCookie("id", $_SESSION['userlogin']['id']);
+                $this->setCookie("nome", $_SESSION['userlogin']['nome']);
+                $this->setCookie("nome_usuario", $_SESSION['userlogin']['nome_usuario']);
+                $this->setCookie("email", $_SESSION['userlogin']['email'] ?? "");
+                $this->setCookie("setor", $_SESSION['userlogin']['setor']);
+                $this->setCookie("nivel", $_SESSION['userlogin']['nivel']);
             } else {
                 if ($read->getResult())
                     $this->setResult('Usuário Desativado!');
@@ -184,9 +197,10 @@ class Login
         return $this->getResult() ? false : true;
     }
 
-    private function setCookie($token)
+    private function setCookie($name, $value, int $dias = 60)
     {
-        setcookie("token", $token, time() + (86400 * 30 * 2), "/"); // 2 meses de cookie
+        $tempo = $dias < 0 ? time() - 1 : time() + (86400 * $dias);
+        setcookie($name, $value, $tempo, "/"); // 2 meses de cookie
     }
 
     /**
