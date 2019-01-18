@@ -83,14 +83,6 @@ class Login
 
     public function logOut()
     {
-        $this->setCookie("token", 0 , -1);
-        $this->setCookie("id", 0 , -1);
-        $this->setCookie("nome", 0 , -1);
-        $this->setCookie("nome_usuario", 0 , -1);
-        $this->setCookie("email", 0 , -1);
-        $this->setCookie("setor", 0 , -1);
-        $this->setCookie("nivel", 0 , -1);
-
         if (isset($_SESSION['userlogin'])) {
             if(!empty($_SESSION['userlogin']['token'])) {
                 $token = new TableCrud(PRE . "usuarios");
