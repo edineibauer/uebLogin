@@ -158,6 +158,7 @@ class Login
                 $this->setCookie("email", $_SESSION['userlogin']['email'] ?? "");
                 $this->setCookie("setor", $_SESSION['userlogin']['setor']);
                 $this->setCookie("nivel", $_SESSION['userlogin']['nivel']);
+                $this->setCookie("update", file_get_contents(PATH_HOME . "_config/updates/update.txt"));
             } else {
                 if ($read->getResult())
                     $this->setResult('Usuário Desativado!');
