@@ -84,21 +84,18 @@ class Login
     public function logOut()
     {
         if (isset($_SESSION['userlogin'])) {
-            if(!empty($_SESSION['userlogin']['token'])) {
-                $token = new TableCrud(PRE . "usuarios");
-                $token->load("token", $_SESSION['userlogin']['token']);
-                if ($token->exist()) {
-                    $token->setDados(["token" => null, "token_expira" => null]);
-                    $token->save();
-                }
-            } elseif(!empty($_SESSION['userlogin']['email'])) {
-                $token = new TableCrud(PRE . "usuarios");
-                $token->load("email", $_SESSION['userlogin']['email']);
+            if (!empty($_SESSION['userlogin']['token']) || (isset($_COOKIE['token']) && $_COOKIE['token'] !== "0")) {
+                $t = !empty($_SESSION['userlogin']['token']) ? $_SESSION['userlogin']['token'] : $_COOKIE['token'];
+                $token = new TableCrud("usuarios");
+                $token->load("token", $t);
                 if ($token->exist()) {
                     $token->setDados(["token" => null, "token_expira" => null]);
                     $token->save();
                 }
             }
+
+            if (isset($_COOKIE['token']))
+                $this->setCookie("token", 0, -1);
 
             session_unset();
         }
@@ -123,22 +120,31 @@ class Login
      */
     private function checkUserInfo()
     {
-        if(!$this->getResult()) {
+        if (!$this->getResult()) {
             $d = new Dicionario("usuarios");
-            $emailName = $d->search($d->getInfo()['email'])->getColumn();
-            $password = $d->search($d->getInfo()['password'])->getColumn();
-            $nome = $d->search($d->getInfo()['title'])->getColumn();
+            $emailName = $d->searchSemantic('email')->getColumn();
+            $name = $d->searchSemantic('link')->getColumn();
+            $password = $d->searchSemantic('password')->getColumn();
+            $nome = $d->searchSemantic('title')->getColumn();
+            $tel = $d->searchSemantic('tel');
+            $cpf = $d->searchSemantic('cpf');
+
+            $where = "{$emailName} = :user || {$name} = :user";
+            if (!empty($tel))
+                $where .= " || {$tel->getColumn()} = :user";
+            if (!empty($cpf))
+                $where .= " || {$cpf->getColumn()} = :user";
 
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE ({$emailName} = :email || nome_usuario = :email) && {$password} = :pass", "email={$this->email}&pass={$this->senha}");
-            if ($read->getResult() && $read->getResult()[0]['status'] === '1' && !$this->getResult()) {
+            $read->exeRead(PRE . "usuarios", "WHERE ({$where}) && {$password} = :pass", "user={$this->email}&pass={$this->senha}");
+            if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
                 $_SESSION['userlogin'] = $read->getResult()[0];
                 $_SESSION['userlogin']['imagem'] = json_decode($_SESSION['userlogin']['imagem'], true)[0]['url'];
 
                 if (!isset($_SESSION['userlogin']['email']))
                     $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
 
-                if(!isset($_SESSION['userlogin']['nome']))
+                if (!isset($_SESSION['userlogin']['nome']))
                     $_SESSION['userlogin']['nome'] = $_SESSION['userlogin'][$nome];
                 $_SESSION['userlogin']['token'] = $this->getToken();
 

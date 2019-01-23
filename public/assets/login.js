@@ -9,16 +9,16 @@ function login() {
         var recaptcha = $("#g-recaptcha-response").val();
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
             if (g) {
+                loginFree = !0
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
                 toast("Entrando...", 2000, "toast-success");
-                clearCache();
-                setTimeout(function () {
-                    window.location.href = HOME + 'dashboard'
-                }, 1500)
+                clearCache().then(() => {
+                    loginFree = !0
+                    window.location.href = HOME + 'dashboard';
+                });
             }
-            loginFree = !0
         })
     }
 }
