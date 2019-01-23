@@ -140,9 +140,10 @@ class Login
 
                 if(!isset($_SESSION['userlogin']['nome']))
                     $_SESSION['userlogin']['nome'] = $_SESSION['userlogin'][$nome];
+                $_SESSION['userlogin']['token'] = $this->getToken();
 
                 $up = new Update();
-                $up->exeUpdate(PRE . "usuarios", ['token' => $this->getToken(), "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$read->getResult()[0]['id']}");
+                $up->exeUpdate(PRE . "usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$read->getResult()[0]['id']}");
 
                 $this->setCookie("token", $_SESSION['userlogin']['token']);
                 $this->setCookie("id", $_SESSION['userlogin']['id']);
