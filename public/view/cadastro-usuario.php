@@ -1,17 +1,12 @@
 <?php
-if(empty($_SESSION['userlogin'])) {
+if (empty($_SESSION['userlogin'])) {
     ob_start();
     ?>
     <div class='row font-large' style="max-width: 750px; margin: auto">
         <div class="clear"><br></div>
         <div class='container align-center upper panel font-light color-text-grey'>Cadastro de Usuário</div>
         <br>
-        <div class="row z-depth-2 color-white">
-            <div class="panel">
-                <div class="panel" id="cadatro-user">
-                </div>
-            </div>
-        </div>
+        <div class="panel" id="cadatro-user"></div>
 
         <div class="row clear"><br></div>
         <div class="row upper color-text-grey font-small">
