@@ -139,7 +139,13 @@ class Login
             $read->exeRead(PRE . "usuarios", "WHERE ({$where}) && {$password} = :pass", "user={$this->email}&pass={$this->senha}");
             if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
                 $_SESSION['userlogin'] = $read->getResult()[0];
-                $_SESSION['userlogin']['imagem'] = json_decode($_SESSION['userlogin']['imagem'], true)[0]['url'];
+
+                if(!empty($_SESSION['userlogin']['imagem']) && Check::isJson($_SESSION['userlogin']['imagem'])) {
+                    $_SESSION['userlogin']['imagem'] = json_decode($_SESSION['userlogin']['imagem'], true);
+
+                    if (!empty($_SESSION['userlogin']['imagem'][0]) && !empty($_SESSION['userlogin']['imagem'][0]['url']))
+                        $_SESSION['userlogin']['imagem'] = $_SESSION['userlogin']['imagem'][0]['url'];
+                }
 
                 if (!isset($_SESSION['userlogin']['email']))
                     $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
