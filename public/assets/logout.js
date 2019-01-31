@@ -1,8 +1,8 @@
 post('route', 'internet', {}, function (g) {
     if(g === 1) {
         toast("Saindo...", 3000, "toast-warning");
-        clearCache().then(() => {
-            post('login', 'logout', function(g) {
+        post('login', 'logout', function(g) {
+            updateCacheLogin().then(() => {
                 location.href = HOME + "login";
             });
         });

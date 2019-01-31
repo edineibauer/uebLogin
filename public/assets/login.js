@@ -14,7 +14,7 @@ function login() {
                     toast(g, 3000, "toast-warning")
             } else {
                 toast("Entrando...", 2000, "toast-success");
-                clearCache().then(() => {
+                updateCacheLogin().then(() => {
                     loginFree = !0
                     window.location.href = HOME + 'dashboard';
                 });
