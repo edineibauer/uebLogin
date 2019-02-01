@@ -81,26 +81,6 @@ class Login
         return $this->result;
     }
 
-    public function logOut()
-    {
-        if (isset($_SESSION['userlogin'])) {
-            if (!empty($_SESSION['userlogin']['token']) || (isset($_COOKIE['token']) && $_COOKIE['token'] !== "0")) {
-                $t = !empty($_SESSION['userlogin']['token']) ? $_SESSION['userlogin']['token'] : $_COOKIE['token'];
-                $token = new TableCrud("usuarios");
-                $token->load("token", $t);
-                if ($token->exist()) {
-                    $token->setDados(["token" => null, "token_expira" => null]);
-                    $token->save();
-                }
-            }
-
-            if (isset($_COOKIE['token']))
-                $this->setCookie("token", 0, -1);
-
-            session_unset();
-        }
-    }
-
     private function start()
     {
         if ($this->email && $this->senha && !$this->attemptExceded()) {
@@ -138,33 +118,8 @@ class Login
             $read = new Read();
             $read->exeRead(PRE . "usuarios", "WHERE ({$where}) && {$password} = :pass", "user={$this->email}&pass={$this->senha}");
             if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
-                $_SESSION['userlogin'] = $read->getResult()[0];
+                $this->setLogin($read->getResult()[0]);
 
-                if(!empty($_SESSION['userlogin']['imagem']) && Check::isJson($_SESSION['userlogin']['imagem'])) {
-                    $_SESSION['userlogin']['imagem'] = json_decode($_SESSION['userlogin']['imagem'], true);
-
-                    if (!empty($_SESSION['userlogin']['imagem'][0]) && !empty($_SESSION['userlogin']['imagem'][0]['url']))
-                        $_SESSION['userlogin']['imagem'] = $_SESSION['userlogin']['imagem'][0]['url'];
-                }
-
-                if (!isset($_SESSION['userlogin']['email']))
-                    $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
-
-                if (!isset($_SESSION['userlogin']['nome']))
-                    $_SESSION['userlogin']['nome'] = $_SESSION['userlogin'][$nome];
-                $_SESSION['userlogin']['token'] = $this->getToken();
-
-                $up = new Update();
-                $up->exeUpdate(PRE . "usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$read->getResult()[0]['id']}");
-
-                $this->setCookie("token", $_SESSION['userlogin']['token']);
-                $this->setCookie("id", $_SESSION['userlogin']['id']);
-                $this->setCookie("nome", $_SESSION['userlogin']['nome']);
-                $this->setCookie("nome_usuario", $_SESSION['userlogin']['nome_usuario']);
-                $this->setCookie("email", $_SESSION['userlogin']['email'] ?? "");
-                $this->setCookie("setor", $_SESSION['userlogin']['setor']);
-                $this->setCookie("nivel", $_SESSION['userlogin']['nivel']);
-                $this->setCookie("update", file_get_contents(PATH_HOME . "_config/updates/update.txt"));
             } else {
                 if ($read->getResult())
                     $this->setResult('Usuário Desativado!');
@@ -176,6 +131,79 @@ class Login
                 $attempt->save();
             }
         }
+    }
+
+    public function logOut()
+    {
+        if (isset($_SESSION['userlogin'])) {
+            if (!empty($_SESSION['userlogin']['token']) || (isset($_COOKIE['token']) && $_COOKIE['token'] !== "0")) {
+                $t = !empty($_SESSION['userlogin']['token']) ? $_SESSION['userlogin']['token'] : $_COOKIE['token'];
+                $token = new TableCrud("usuarios");
+                $token->load("token", $t);
+                if ($token->exist()) {
+                    $token->setDados(["token" => null, "token_expira" => null]);
+                    $token->save();
+                }
+            }
+        }
+        session_unset();
+
+        $this->setCookie("token", 0, -1);
+        $this->setCookie("token", 0, -1);
+        $this->setCookie("id", 0, -1);
+        $this->setCookie("nome", 0, -1);
+        $this->setCookie("nome_usuario", 0, -1);
+        $this->setCookie("email", 0, -1);
+        $this->setCookie("imagem", 0, -1);
+        $this->setCookie("setor", 0, -1);
+        $this->setCookie("nivel", 0, -1);
+    }
+
+    /**
+     * Seta dados de um usuário como login de acesso
+     * @param array $usuario
+     */
+    public function setLogin(array $usuario)
+    {
+        $_SESSION['userlogin'] = $usuario;
+        $_SESSION['userlogin']['imagem'] = $this->getImagem($_SESSION['userlogin']['imagem']);
+        $_SESSION['userlogin']['token'] = $this->getToken();
+
+        if (!isset($_SESSION['userlogin']['email']))
+            $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
+
+        if (!isset($_SESSION['userlogin']['nome']))
+            $_SESSION['userlogin']['nome'] = $_SESSION['userlogin'][$nome];
+
+        //atualiza banco com token
+        $up = new Update();
+        $up->exeUpdate("usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
+
+        //Cookies
+        $this->setCookie("token", $_SESSION['userlogin']['token']);
+        $this->setCookie("id", $_SESSION['userlogin']['id']);
+        $this->setCookie("nome", $_SESSION['userlogin']['nome']);
+        $this->setCookie("nome_usuario", $_SESSION['userlogin']['nome_usuario']);
+        $this->setCookie("email", $_SESSION['userlogin']['email'] ?? "");
+        $this->setCookie("imagem", $_SESSION['userlogin']['imagem']);
+        $this->setCookie("setor", $_SESSION['userlogin']['setor']);
+        $this->setCookie("nivel", $_SESSION['userlogin']['nivel']);
+    }
+
+    /**
+     * @param string $imagem
+     * @return string
+     */
+    private function getImagem(string $imagem): string
+    {
+        if (!empty($imagem) && Check::isJson($imagem)) {
+            $imagem = json_decode($imagem, true);
+
+            if (!empty($imagem[0]) && !empty($imagem[0]['image']))
+                return $imagem[0]['image'];
+        }
+
+        return "";
     }
 
     private function attemptExceded()

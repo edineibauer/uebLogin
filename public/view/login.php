@@ -1,22 +1,10 @@
 <?php
-if (!empty($_SESSION['userlogin'])) {
-    $data['response'] = 3;
-    $data['data'] = HOME . "dashboard";
-} else {
-    ob_start();
-    ?>
+ob_start();
+?>
     <div class='row container font-large' style="max-width: 470px; margin: auto">
-        <?php
-        if (LOGO || FAVICON) {
-            ?>
-            <div class='container align-center upper panel color-text-grey'>
-                <img src="<?=HOME . "assetsPublic/img/favicon-256.png"?>" height="60" style="height: 60px;float: initial;margin:initial">
-            </div>
-            <?php
-        } else {
-            echo '<div class="clear"><br><br><br></div>';
-        }
-        ?>
+        <div class="container align-center upper panel color-text-grey" id="logoLogin">
+            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png' height='60' style='height: 60px;float: initial;margin:initial'>
+        </div>
         <div class='container align-center upper panel color-text-grey'>área restrita <?= SITENAME ?></div>
         <div class="row z-depth-2 color-white" id="login-card">
             <div class="panel">
@@ -67,7 +55,6 @@ if (!empty($_SESSION['userlogin'])) {
         </div>
         <div class="clear"><br><br><br></div>
     </div>
-    <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
-}
+<?php
+$data['data'] = ob_get_contents();
+ob_end_clean();
