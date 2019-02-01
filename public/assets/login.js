@@ -23,11 +23,6 @@ function login() {
     }
 }
 
-$(function () {
-    if(getCookie("token") !== "" && getCookie("token") !== 0)
-        setCookieAnonimo();
-})
-
 $("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
     if (e.which === 13)
         login()
