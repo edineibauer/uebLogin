@@ -105,7 +105,6 @@ class Login
             $emailName = $d->searchSemantic('email')->getColumn();
             $name = $d->searchSemantic('link')->getColumn();
             $password = $d->searchSemantic('password')->getColumn();
-            $nome = $d->searchSemantic('title')->getColumn();
             $tel = $d->searchSemantic('tel');
             $cpf = $d->searchSemantic('cpf');
 
@@ -166,9 +165,12 @@ class Login
     public function setLogin(array $usuario)
     {
         $_SESSION['userlogin'] = $usuario;
-        $_SESSION['userlogin']['imagem'] = $this->getImagem($_SESSION['userlogin']['imagem']);
+        $_SESSION['userlogin']['imagem'] = $this->getImagem($_SESSION['userlogin']['imagem'] ?? "");
         $_SESSION['userlogin']['token'] = $this->getToken();
 
+        $d = new Dicionario("usuarios");
+        $emailName = $d->searchSemantic('email')->getColumn();
+        $nome = $d->searchSemantic('title')->getColumn();
         if (!isset($_SESSION['userlogin']['email']))
             $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
 
