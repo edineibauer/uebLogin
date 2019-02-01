@@ -148,7 +148,6 @@ class Login
         session_unset();
 
         $this->setCookie("token", 0, -1);
-        $this->setCookie("token", 0, -1);
         $this->setCookie("id", 0, -1);
         $this->setCookie("nome", 0, -1);
         $this->setCookie("nome_usuario", 0, -1);
@@ -182,14 +181,14 @@ class Login
         $up->exeUpdate("usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
 
         //Cookies
-        $this->setCookie("token", $_SESSION['userlogin']['token']);
-        $this->setCookie("id", $_SESSION['userlogin']['id']);
-        $this->setCookie("nome", $_SESSION['userlogin']['nome']);
-        $this->setCookie("nome_usuario", $_SESSION['userlogin']['nome_usuario']);
-        $this->setCookie("email", $_SESSION['userlogin']['email'] ?? "");
-        $this->setCookie("imagem", $_SESSION['userlogin']['imagem']);
-        $this->setCookie("setor", $_SESSION['userlogin']['setor']);
-        $this->setCookie("nivel", $_SESSION['userlogin']['nivel']);
+        $this->setCookie("token", 0, -1);
+        $this->setCookie("id", 0, -1);
+        $this->setCookie("nome", 0, -1);
+        $this->setCookie("nome_usuario", 0, -1);
+        $this->setCookie("email", 0, -1);
+        $this->setCookie("imagem", 0, -1);
+        $this->setCookie("setor", 0, -1);
+        $this->setCookie("nivel", 0, -1);
     }
 
     /**
