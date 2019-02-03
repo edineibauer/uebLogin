@@ -9,7 +9,7 @@ if (empty($_SESSION['userlogin'])) {
         <div class="panel" id="cadatro-user"></div>
 
         <div class="row clear"><br></div>
-        <div class="row upper color-text-grey font-small">
+        <div class="row upper color-text-grey font-small s-padding-small">
             <a href="<?= defined('HOME') ? HOME : "" ?>login"
                class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
                 fazer login

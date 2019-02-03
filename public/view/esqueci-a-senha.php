@@ -12,14 +12,14 @@ if(empty($_SESSION['userlogin'])) {
             </div>
         </div>
         <div class="card" style="margin-top: 3px;">
-            <button class="col btn-large theme-d2 hover-opacity-off opacity hover-shadow" id="send-email-recover"
+            <button class="col btn-large s-font-medium theme-d2 hover-opacity-off opacity hover-shadow" id="send-email-recover"
                     style="float:initial!important;" onclick="recoveryEmail();">
                 Enviar Email de Recuperação
             </button>
         </div>
 
         <div class="row clear"><br></div>
-        <div class="row upper color-text-grey font-small">
+        <div class="row upper color-text-grey font-small s-padding-small">
             <a href="<?= defined('HOME') ? HOME : "" ?>login"
                class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
                 fazer login
