@@ -9,7 +9,7 @@ function login() {
         var recaptcha = $("#g-recaptcha-response").val();
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
             if (g) {
-                loginFree = !0
+                loginFree = !0;
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
@@ -23,7 +23,12 @@ function login() {
     }
 }
 
-$("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
-    if (e.which === 13)
-        login()
-})
+$(function () {
+    if(getCookie("token") !== "" && getCookie("token") !== "0")
+        window.location.href = HOME + "dashboard";
+
+    $("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
+        if (e.which === 13)
+            login()
+    });
+});

@@ -2,12 +2,8 @@
 
 $code = explode('get/inserir-nova-senha/', $_SERVER['REQUEST_URI'])[1];
 
-if (empty($code) || strlen($code) < 10) {
-    $data['response'] = 3;
-    $data['data'] = HOME . "esqueci-a-senha";
-} else {
-    ob_start();
-    ?>
+ob_start();
+?>
     <div class='row font-large' style="max-width: 450px; margin: auto">
         <div class="clear"><br><br><br></div>
         <div class='container align-center upper panel font-light color-text-grey'>Redefinir Senha</div>
@@ -23,7 +19,8 @@ if (empty($code) || strlen($code) < 10) {
             <input type="hidden" id="code" value="<?= $code ?>"/>
         </div>
         <div class="card" style="margin-top: 3px;">
-            <button class="col btn-large theme-d1 opacity hover-shadow hover-opacity-off" style="float:initial!important;"
+            <button class="col btn-large theme-d1 opacity hover-shadow hover-opacity-off"
+                    style="float:initial!important;"
                     onclick="newPassword();">
                 Confirmar Nova Senha
             </button>
@@ -38,7 +35,6 @@ if (empty($code) || strlen($code) < 10) {
         </div>
         <div class="row clear"><br><br><br><br></div>
     </div>
-    <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
-}
+<?php
+$data['data'] = ob_get_contents();
+ob_end_clean();

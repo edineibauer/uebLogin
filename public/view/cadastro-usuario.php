@@ -1,7 +1,6 @@
 <?php
-if (empty($_SESSION['userlogin'])) {
-    ob_start();
-    ?>
+ob_start();
+?>
     <div class='row font-large' style="max-width: 750px; margin: auto">
         <div class="clear"><br></div>
         <div class='container align-center upper panel font-light color-text-grey'>Cadastro de Usuário</div>
@@ -19,10 +18,6 @@ if (empty($_SESSION['userlogin'])) {
     </div>
 
 
-    <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
-} else {
-    $data['response'] = 3;
-    $data['data'] = HOME . "dashboard";
-}
+<?php
+$data['data'] = ob_get_contents();
+ob_end_clean();

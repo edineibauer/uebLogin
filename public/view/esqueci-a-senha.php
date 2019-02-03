@@ -1,7 +1,6 @@
 <?php
-if(empty($_SESSION['userlogin'])) {
-    ob_start();
-    ?>
+ob_start();
+?>
     <div class='row font-large' style="max-width: 450px; margin: auto">
         <div class="clear"><br><br><br></div>
         <div class='container align-center upper panel font-light color-text-grey'>Recuperação de Senha</div>
@@ -12,7 +11,8 @@ if(empty($_SESSION['userlogin'])) {
             </div>
         </div>
         <div class="card" style="margin-top: 3px;">
-            <button class="col btn-large s-font-medium theme-d2 hover-opacity-off opacity hover-shadow" id="send-email-recover"
+            <button class="col btn-large s-font-medium theme-d2 hover-opacity-off opacity hover-shadow"
+                    id="send-email-recover"
                     style="float:initial!important;" onclick="recoveryEmail();">
                 Enviar Email de Recuperação
             </button>
@@ -28,10 +28,6 @@ if(empty($_SESSION['userlogin'])) {
         <div class="row clear"><br><br><br><br></div>
     </div>
 
-    <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
-} else {
-    $data['response'] = 3;
-    $data['data'] = HOME . "dashboard";
-}
+<?php
+$data['data'] = ob_get_contents();
+ob_end_clean();
