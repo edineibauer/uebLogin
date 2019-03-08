@@ -125,14 +125,14 @@ class Login
                     if (strtolower($users['nome']) === strtolower($this->user)) {
                         if (!empty($users['setor'])) {
                             $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
-                            $users['setor'] = ($read->getResult() ? $read->getResult()[0] :  "");
+                            $users['setor'] = ($read->getResult() ? array_merge(["entity" => $users['setor']], $read->getResult()[0]) :  "");
                         }
                         $user = $users;
                         break;
                     } elseif (!empty($users['setor']) && !empty($usuarios[$users['setor']])) {
                         $read->exeRead($users['setor'], $usuarios[$users['setor']], "user={$this->user}");
                         if($read->getResult()) {
-                            $users['setor'] = $read->getResult()[0];
+                            $users['setor'] = array_merge(["entity" => $users['setor']], $read->getResult()[0]);
                             $user = $users;
                             break;
                         }
