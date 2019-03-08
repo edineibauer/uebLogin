@@ -6,13 +6,14 @@ use Conn\Read;
 use Conn\TableCrud;
 use Conn\Update;
 use Entity\Dicionario;
+use Entity\Entity;
 use Helpers\Check;
 use Helpers\Helper;
 use ReCaptcha\ReCaptcha;
 
 class Login
 {
-    private $email;
+    private $user;
     private $senha;
     private $recaptcha;
     private $attempts = 0;
@@ -26,8 +27,8 @@ class Login
         if ($data) {
             if (isset($data['recaptcha']) && !empty($data['recaptcha']))
                 $this->setRecaptcha($data['recaptcha']);
-            if (isset($data['email']) && !empty($data['email']))
-                $this->setEmail($data['email']);
+            if (isset($data['user']) && !empty($data['user']))
+                $this->setUser($data['user']);
             if (isset($data['password']) && !empty($data['password']))
                 $this->setSenha($data['password']);
         }
@@ -44,10 +45,10 @@ class Login
     /**
      * @param string $email
      */
-    public function setEmail($email)
+    public function setUser($user)
     {
-        if (!empty($email))
-            $this->email = (string)strip_tags(trim($email));
+        if (!empty($user))
+            $this->user = (string)strip_tags(trim($user));
         $this->start();
     }
 
@@ -83,13 +84,13 @@ class Login
 
     private function start()
     {
-        if ($this->email && $this->senha && !$this->attemptExceded()) {
+        if ($this->user && $this->senha && !$this->attemptExceded()) {
             if (!empty($_SESSION['userlogin']))
                 $this->setResult('Você já esta logado.');
             elseif ($this->isHuman())
                 $this->checkUserInfo();
 
-        } elseif ($this->email && $this->senha) {
+        } elseif ($this->user && $this->senha) {
             $cont = 10 - $this->attempts;
             $this->setResult($cont > 0 ? "{$cont} tentativas faltantes" : " bloqueado por 15 minutos");
         }
@@ -100,25 +101,53 @@ class Login
      */
     private function checkUserInfo()
     {
-        if (!$this->getResult()) {
-            $d = new Dicionario("usuarios");
-            $emailName = $d->searchSemantic('email')->getColumn();
-            $name = $d->searchSemantic('link')->getColumn();
-            $password = $d->searchSemantic('password')->getColumn();
-            $tel = $d->searchSemantic('tel');
-            $cpf = $d->searchSemantic('cpf');
 
-            $where = "{$emailName} = :user || {$name} = :user";
-            if (!empty($tel))
-                $where .= " || {$tel->getColumn()} = :user";
-            if (!empty($cpf))
-                $where .= " || {$cpf->getColumn()} = :user";
+        if (!$this->getResult()) {
+            $dicionarios = Entity::dicionario(null, !0);
+
+            $usuarios = [];
+            foreach ($dicionarios as $entity => $dados) {
+                if (!empty($dados['info']['user']) && $dados['info']['user'] === 1) {
+                    $usuarios[$entity] = "";
+                    if (!empty($dados['info']['unique'])) {
+                        foreach ($dados['info']['unique'] as $id)
+                            $usuarios[$entity] .= (empty($usuarios[$entity])? "WHERE " : " || ") . $dados['dicionario'][$id]['column'] . " = :user";
+                    }
+                }
+            }
 
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE ({$where}) && {$password} = :pass", "user={$this->email}&pass={$this->senha}");
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
             if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
-                $this->setLogin($read->getResult()[0]);
 
+                $user = null;
+                foreach ($read->getResult() as $users) {
+                    if (strtolower($users['nome']) === strtolower($this->user)) {
+                        if (!empty($users['setor'])) {
+                            $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
+                            $users['setor'] = ($read->getResult() ? $read->getResult()[0] :  "");
+                        }
+                        $user = $users;
+                        break;
+                    } elseif (!empty($users['setor']) && !empty($usuarios[$users['setor']])) {
+                        $read->exeRead($users['setor'], $usuarios[$users['setor']], "user={$this->user}");
+                        if($read->getResult()) {
+                            $users['setor'] = $read->getResult()[0];
+                            $user = $users;
+                            break;
+                        }
+                    }
+                }
+
+                if ($user) {
+                    $this->setLogin($user);
+                } else {
+                    $this->setResult('Usuário Inválido!');
+
+                    $attempt = new TableCrud("login_attempt");
+                    $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user));
+                    $attempt->save();
+                }
             } else {
                 if ($read->getResult())
                     $this->setResult('Usuário Desativado!');
@@ -126,7 +155,7 @@ class Login
                     $this->setResult('Login Inválido!');
 
                 $attempt = new TableCrud("login_attempt");
-                $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->email));
+                $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user));
                 $attempt->save();
             }
         }
@@ -150,11 +179,8 @@ class Login
         $this->setCookie("token", 0, -1);
         $this->setCookie("id", 0, -1);
         $this->setCookie("nome", 0, -1);
-        $this->setCookie("nome_usuario", 0, -1);
-        $this->setCookie("email", 0, -1);
         $this->setCookie("imagem", 0, -1);
         $this->setCookie("setor", 0, -1);
-        $this->setCookie("nivel", 0, -1);
     }
 
     /**
@@ -164,17 +190,8 @@ class Login
     public function setLogin(array $usuario)
     {
         $_SESSION['userlogin'] = $usuario;
-        $_SESSION['userlogin']['imagem'] = $this->getImagem($_SESSION['userlogin']['imagem'] ?? "");
+        $_SESSION['userlogin']['imagem'] = "";
         $_SESSION['userlogin']['token'] = $this->getToken();
-
-        $d = new Dicionario("usuarios");
-        $emailName = $d->searchSemantic('email')->getColumn();
-        $nome = $d->searchSemantic('title')->getColumn();
-        if (!isset($_SESSION['userlogin']['email']))
-            $_SESSION['userlogin']['email'] = $_SESSION['userlogin'][$emailName];
-
-        if (!isset($_SESSION['userlogin']['nome']))
-            $_SESSION['userlogin']['nome'] = $_SESSION['userlogin'][$nome];
 
         //atualiza banco com token
         $up = new Update();
@@ -184,11 +201,8 @@ class Login
         $this->setCookie("token", 0, -1);
         $this->setCookie("id", 0, -1);
         $this->setCookie("nome", 0, -1);
-        $this->setCookie("nome_usuario", 0, -1);
-        $this->setCookie("email", 0, -1);
         $this->setCookie("imagem", 0, -1);
         $this->setCookie("setor", 0, -1);
-        $this->setCookie("nivel", 0, -1);
     }
 
     /**
@@ -211,7 +225,7 @@ class Login
     {
         $ip = filter_var(Helper::getIP(), FILTER_VALIDATE_IP);
         $read = new Read();
-        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) && ip = '{$ip}' && email = '{$this->email}'");
+        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) && ip = '{$ip}' && email = '{$this->user}'");
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
