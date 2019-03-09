@@ -101,7 +101,6 @@ class Login
      */
     private function checkUserInfo()
     {
-
         if (!$this->getResult()) {
             $dicionarios = Entity::dicionario(null, !0);
 
@@ -119,20 +118,22 @@ class Login
             $read = new Read();
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
             if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
-
                 $user = null;
                 foreach ($read->getResult() as $users) {
                     if (strtolower($users['nome']) === strtolower($this->user)) {
                         if (!empty($users['setor'])) {
                             $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
-                            $users['setor'] = ($read->getResult() ? array_merge(["entity" => $users['setor']], $read->getResult()[0]) :  "");
+                            $users['data'] = ($read->getResult() ? $read->getResult()[0] :  "");
+                        } else {
+                            $users['setor'] = "admin";
+                            $users['data'] = "";
                         }
                         $user = $users;
                         break;
                     } elseif (!empty($users['setor']) && !empty($usuarios[$users['setor']])) {
                         $read->exeRead($users['setor'], $usuarios[$users['setor']], "user={$this->user}");
                         if($read->getResult()) {
-                            $users['setor'] = array_merge(["entity" => $users['setor']], $read->getResult()[0]);
+                            $users['data'] = $read->getResult()[0];
                             $user = $users;
                             break;
                         }
