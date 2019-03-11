@@ -52,33 +52,5 @@
     },
     "form": "false",
     "input": "text"
-  },
-  "0": {
-    "format": "none",
-    "type": "int",
-    "nome": "id",
-    "column": "id",
-    "size": "",
-    "key": "identifier",
-    "unique": "true",
-    "default": "false",
-    "update": "false",
-    "relation": "",
-    "allow": {
-      "regex": "",
-      "values": "",
-      "names": "",
-      "validate": ""
-    },
-    "form": {
-      "input": "hidden",
-      "cols": "12",
-      "colm": "",
-      "coll": "",
-      "class": "",
-      "style": ""
-    },
-    "select": [],
-    "filter": []
   }
 }
