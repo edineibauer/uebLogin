@@ -104,56 +104,57 @@ class Login
         if (!$this->getResult()) {
             $dicionarios = Entity::dicionario(null, !0);
 
-            $usuarios = [];
+            $whereUser = [];
             foreach ($dicionarios as $entity => $dados) {
-                if (!empty($dados['info']['user']) && $dados['info']['user'] === 1) {
-                    $usuarios[$entity] = "";
+                if (empty($whereUser[$entity]) && !empty($dados['info']['user']) && $dados['info']['user'] === 1) {
+                    $whereUser[$entity] = "WHERE usuarios_id = :id";
+                    $where = "";
                     if (!empty($dados['info']['unique'])) {
                         foreach ($dados['info']['unique'] as $id)
-                            $usuarios[$entity] .= (empty($usuarios[$entity])? "WHERE " : " || ") . $dados['dicionario'][$id]['column'] . " = :user";
+                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$id]['column'] . " = '{$this->user}'";
                     }
+                    $whereUser[$entity] .= $where . (!empty($where) ? ")" : "");
                 }
             }
 
+            $user = null;
             $read = new Read();
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
-            if ($read->getResult() && $read->getResult()[0]['status'] === '1') {
-                $user = null;
+            if ($read->getResult()) {
                 foreach ($read->getResult() as $users) {
                     if (strtolower($users['nome']) === strtolower($this->user)) {
-                        if (!empty($users['setor'])) {
-                            $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
-                            $users['setorData'] = ($read->getResult() ? $read->getResult()[0] :  "");
-                        } else {
-                            $users['setor'] = "admin";
-                            $users['setorData'] = "";
-                        }
-                        $user = $users;
-                        break;
-                    } elseif (!empty($users['setor']) && !empty($usuarios[$users['setor']])) {
-                        $read->exeRead($users['setor'], $usuarios[$users['setor']], "user={$this->user}");
-                        if($read->getResult()) {
-                            $users['setorData'] = $read->getResult()[0];
+                        if($users['status'] === "1") {
+                            if (!empty($users['setor'])) {
+                                $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
+                                $users['setorData'] = ($read->getResult() ? $read->getResult()[0] : "");
+                            } else {
+                                $users['setor'] = "admin";
+                                $users['setorData'] = "";
+                            }
                             $user = $users;
+                        } else {
+                            $this->setResult('Usuário Inativo!');
+                        }
+                        break;
+                    } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
+                        $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
+                        if ($read->getResult()) {
+                            if($users['status'] === "1") {
+                                $users['setorData'] = $read->getResult()[0];
+                                $user = $users;
+                            } else {
+                                $this->setResult('Usuário Inativo!');
+                            }
                             break;
                         }
                     }
                 }
+            }
 
-                if ($user) {
-                    $this->setLogin($user);
-                } else {
-                    $this->setResult('Usuário Inválido!');
-
-                    $attempt = new TableCrud("login_attempt");
-                    $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user));
-                    $attempt->save();
-                }
-            } else {
-                if ($read->getResult())
-                    $this->setResult('Usuário Desativado!');
-                else
-                    $this->setResult('Login Inválido!');
+            if ($user) {
+                $this->setLogin($user);
+            } elseif(empty($this->getResult())) {
+                $this->setResult('Login Inválido!');
 
                 $attempt = new TableCrud("login_attempt");
                 $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user));
