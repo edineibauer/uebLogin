@@ -133,7 +133,7 @@ class Login
                             }
                             $user = $users;
                         } else {
-                            $this->setResult('Usuário Inativo!');
+                            $this->setResult('Usuário Desativado!');
                         }
                         break;
                     } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
@@ -143,7 +143,7 @@ class Login
                                 $users['setorData'] = $read->getResult()[0];
                                 $user = $users;
                             } else {
-                                $this->setResult('Usuário Inativo!');
+                                $this->setResult('Usuário Desativado!');
                             }
                             break;
                         }
