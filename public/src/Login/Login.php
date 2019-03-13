@@ -126,7 +126,7 @@ class Login
                         if($users['status'] === "1") {
                             if (!empty($users['setor'])) {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
-                                $users['setorData'] = ($read->getResult() ? $read->getResult()[0] : "");
+                                $users['setorData'] = $read->getResult() ? $read->getResult()[0] : "";
                             } else {
                                 $users['setor'] = "admin";
                                 $users['setorData'] = "";
@@ -148,6 +148,18 @@ class Login
                             break;
                         }
                     }
+                }
+
+                //busca informações do grupo de usuário pertencente
+                if(!empty($user['setorData'])) {
+                    foreach ($dicionarios[$user['setor']]['dicionario'] as $meta) {
+                        if($meta['format'] === "list" && $dicionarios[$meta['relation']]['info']['user'] === 2 && !empty($user['setorData'][$meta['column']])) {
+                            $read->exeRead($meta['relation'], "WHERE id = :rid", "rid={$user['setorData'][$meta['column']]}");
+                            $user['groupData'] = ($read->getResult() ? $read->getResult()[0] : "");
+                        }
+                    }
+                } else {
+                    $user['groupData'] = "";
                 }
             }
 
@@ -211,7 +223,7 @@ class Login
      * @param string $imagem
      * @return string
      */
-    private function getImagem(string $imagem): string
+    /*private function getImagem(string $imagem): string
     {
         if (!empty($imagem) && Check::isJson($imagem)) {
             $imagem = json_decode($imagem, true);
@@ -221,7 +233,7 @@ class Login
         }
 
         return "";
-    }
+    }*/
 
     private function attemptExceded()
     {
