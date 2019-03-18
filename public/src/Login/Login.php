@@ -18,13 +18,19 @@ class Login
     private $senha;
     private $recaptcha;
     private $attempts = 0;
+    private $setor;
     private $result;
 
     /**
-     * @param mixed $data
+     * Login constructor.
+     * @param array $data
+     * @param string|null $setor
      */
-    public function __construct($data = null)
+    public function __construct(array $data, string $setor = null)
     {
+        if($setor)
+            $this->setor = $setor;
+
         if ($data) {
             if (isset($data['recaptcha']) && !empty($data['recaptcha']))
                 $this->setRecaptcha($data['recaptcha']);
@@ -32,6 +38,8 @@ class Login
                 $this->setUser($data['user']);
             if (isset($data['password']) && !empty($data['password']))
                 $this->setSenha($data['password']);
+
+            $this->start();
         }
     }
 
@@ -50,7 +58,6 @@ class Login
     {
         if (!empty($user))
             $this->user = (string)strip_tags(trim($user));
-        $this->start();
     }
 
     /**
@@ -62,8 +69,6 @@ class Login
             $this->senha = (string)Check::password(trim($senha));
         else
             $this->setResult('Senha muito Curta');
-
-        $this->start();
     }
 
     /**
@@ -72,7 +77,6 @@ class Login
     public function setRecaptcha($recaptcha)
     {
         $this->recaptcha = $recaptcha;
-        $this->start();
     }
 
     /**
@@ -89,7 +93,10 @@ class Login
 //            if (!empty($_SESSION['userlogin']))
 //                $this->setResult('Você já esta logado.');
 //            elseif ($this->isHuman())
-            $this->checkUserInfo();
+//                $this->checkUserInfo();
+
+            if ($this->isHuman())
+                $this->checkUserInfo();
 
         } elseif ($this->user && $this->senha) {
             $cont = 10 - $this->attempts;
@@ -120,7 +127,8 @@ class Login
 
             $user = null;
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
+            $where = "WHERE password = :pass" . (!empty($this->setor) ? " && setor = '{$this->setor}'" : "");
+            $read->exeRead(PRE . "usuarios", $where, "pass={$this->senha}");
             if ($read->getResult()) {
                 foreach ($read->getResult() as $users) {
                     unset($users['password']);
@@ -176,7 +184,7 @@ class Login
                 }
             }
 
-            if ($user) {
+            if ($user && (empty($this->setor) || $this->setor === $user['setor'])) {
                 $this->setLogin($user);
             } elseif(empty($this->getResult())) {
                 $this->setResult('Login Inválido!');
