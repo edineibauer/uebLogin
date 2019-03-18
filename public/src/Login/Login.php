@@ -7,6 +7,7 @@ use Conn\TableCrud;
 use Conn\Update;
 use Entity\Dicionario;
 use Entity\Entity;
+use Entity\Metadados;
 use Helpers\Check;
 use Helpers\Helper;
 use ReCaptcha\ReCaptcha;
@@ -85,10 +86,10 @@ class Login
     private function start()
     {
         if ($this->user && $this->senha && !$this->attemptExceded()) {
-            if (!empty($_SESSION['userlogin']))
-                $this->setResult('Você já esta logado.');
-            elseif ($this->isHuman())
-                $this->checkUserInfo();
+//            if (!empty($_SESSION['userlogin']))
+//                $this->setResult('Você já esta logado.');
+//            elseif ($this->isHuman())
+            $this->checkUserInfo();
 
         } elseif ($this->user && $this->senha) {
             $cont = 10 - $this->attempts;
@@ -122,11 +123,17 @@ class Login
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
             if ($read->getResult()) {
                 foreach ($read->getResult() as $users) {
+                    unset($users['password']);
                     if (strtolower($users['nome']) === strtolower($this->user)) {
                         if($users['status'] === "1") {
-                            if (!empty($users['setor'])) {
+                            if (!empty($users['setor']) && $users['setor'] !== "admin") {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
                                 $users['setorData'] = $read->getResult() ? $read->getResult()[0] : "";
+                                unset($users['setorData']['usuarios_id']);
+                                foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
+                                    if($meta['format'] === "password" || $meta['key'] === "information")
+                                        unset($users['setorData'][$meta['column']]);
+                                }
                             } else {
                                 $users['setor'] = "admin";
                                 $users['setorData'] = "";
@@ -141,6 +148,11 @@ class Login
                         if ($read->getResult()) {
                             if($users['status'] === "1") {
                                 $users['setorData'] = $read->getResult()[0];
+                                unset($users['setorData']['usuarios_id']);
+                                foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
+                                    if($meta['format'] === "password" || $meta['key'] === "information")
+                                        unset($users['setorData'][$meta['column']]);
+                                }
                                 $user = $users;
                             } else {
                                 $this->setResult('Usuário Desativado!');
@@ -151,15 +163,16 @@ class Login
                 }
 
                 //busca informações do grupo de usuário pertencente
-                if(!empty($user['setorData'])) {
-                    foreach ($dicionarios[$user['setor']]['dicionario'] as $meta) {
-                        if($meta['format'] === "list" && $dicionarios[$meta['relation']]['info']['user'] === 2 && !empty($user['setorData'][$meta['column']])) {
-                            $read->exeRead($meta['relation'], "WHERE id = :rid", "rid={$user['setorData'][$meta['column']]}");
-                            $user['groupData'] = ($read->getResult() ? $read->getResult()[0] : "");
+                if(!empty($user)) {
+                    $user['groupData'] = "";
+                    if (!empty($user['setorData'])) {
+                        foreach ($dicionarios[$user['setor']]['dicionario'] as $meta) {
+                            if ($meta['format'] === "list" && $dicionarios[$meta['relation']]['info']['user'] === 2 && !empty($user['setorData'][$meta['column']])) {
+                                $read->exeRead($meta['relation'], "WHERE id = :rid", "rid={$user['setorData'][$meta['column']]}");
+                                $user['groupData'] = ($read->getResult() ? $read->getResult()[0] : "");
+                            }
                         }
                     }
-                } else {
-                    $user['groupData'] = "";
                 }
             }
 
