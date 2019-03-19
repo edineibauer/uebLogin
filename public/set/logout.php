@@ -1,7 +1,7 @@
 <?php
 use Conn\TableCrud;
 
-function setCookie($name, $value, int $dias = 60)
+function setCookiePre($name, $value, int $dias = 60)
 {
     $tempo = $dias < 0 ? time() - 1 : time() + (86400 * $dias);
     setcookie($name, $value, $tempo, "/"); // 2 meses de cookie
@@ -20,8 +20,8 @@ if (isset($_SESSION['userlogin'])) {
 }
 session_unset();
 
-setCookie("token", 0, -1);
-setCookie("id", 0, -1);
-setCookie("nome", 0, -1);
-setCookie("imagem", 0, -1);
-setCookie("setor", 0, -1);
+setCookiePre("token", 0, -1);
+setCookiePre("id", 0, -1);
+setCookiePre("nome", 0, -1);
+setCookiePre("imagem", 0, -1);
+setCookiePre("setor", 0, -1);
