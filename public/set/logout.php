@@ -1,3 +1,3 @@
 <?php
 
-new Logout();
+new Login\Logout();
