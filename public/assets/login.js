@@ -13,22 +13,20 @@ function login() {
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
-                toast("Entrando...", 2000, "toast-success");
-                clearCacheLogin().then(() => {
-                    loginFree = !0
-                    window.location.href = HOME + 'dashboard';
-                });
+                toast("Seja Bem-vindo!", 3000, "toast-success");
+                setCookie("token", "", -1);
+                checkSessao();
             }
         })
     }
 }
 
 $(function () {
-    if(getCookie("token") !== "" && getCookie("token") !== "0")
+    if (getCookie("token") !== "" && getCookie("token") !== "0")
         window.location.href = HOME + "dashboard";
 
     $("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
             login()
-    });
+    })
 });
