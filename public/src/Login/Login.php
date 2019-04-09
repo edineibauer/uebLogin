@@ -143,14 +143,13 @@ class Login
                                         if ($meta['format'] === "password" || $meta['key'] === "information")
                                             unset($users['setorData'][$meta['column']]);
                                     }
-                                } else {
-                                    $users['setorData'] = "";
+                                    $user = $users;
                                 }
                             } else {
                                 $users['setor'] = "admin";
                                 $users['setorData'] = "";
+                                $user = $users;
                             }
-                            $user = $users;
                         } else {
                             $this->setResult('Usuário Desativado!');
                         }
