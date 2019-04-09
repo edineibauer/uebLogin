@@ -28,7 +28,7 @@ class Login
      */
     public function __construct(array $data, string $setor = null)
     {
-        if($setor)
+        if ($setor)
             $this->setor = $setor;
 
         if ($data) {
@@ -133,14 +133,18 @@ class Login
                 foreach ($read->getResult() as $users) {
                     unset($users['password']);
                     if (strtolower($users['nome']) === strtolower($this->user)) {
-                        if($users['status'] === "1") {
+                        if ($users['status'] === "1") {
                             if (!empty($users['setor']) && $users['setor'] !== "admin") {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
-                                $users['setorData'] = $read->getResult() ? $read->getResult()[0] : "";
-                                unset($users['setorData']['usuarios_id']);
-                                foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
-                                    if($meta['format'] === "password" || $meta['key'] === "information")
-                                        unset($users['setorData'][$meta['column']]);
+                                if ($read->getResult()) {
+                                    $users['setorData'] = $read->getResult()[0];
+                                    unset($users['setorData']['usuarios_id']);
+                                    foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
+                                        if ($meta['format'] === "password" || $meta['key'] === "information")
+                                            unset($users['setorData'][$meta['column']]);
+                                    }
+                                } else {
+                                    $users['setorData'] = "";
                                 }
                             } else {
                                 $users['setor'] = "admin";
@@ -154,11 +158,11 @@ class Login
                     } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
                         $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
                         if ($read->getResult()) {
-                            if($users['status'] === "1") {
+                            if ($users['status'] === "1") {
                                 $users['setorData'] = $read->getResult()[0];
                                 unset($users['setorData']['usuarios_id']);
                                 foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
-                                    if($meta['format'] === "password" || $meta['key'] === "information")
+                                    if ($meta['format'] === "password" || $meta['key'] === "information")
                                         unset($users['setorData'][$meta['column']]);
                                 }
                                 $user = $users;
@@ -171,7 +175,7 @@ class Login
                 }
 
                 //busca informações do grupo de usuário pertencente
-                if(!empty($user)) {
+                if (!empty($user)) {
                     $user['groupData'] = "";
                     if (!empty($user['setorData'])) {
                         foreach ($dicionarios[$user['setor']]['dicionario'] as $meta) {
@@ -186,7 +190,7 @@ class Login
 
             if ($user && (empty($this->setor) || $this->setor === $user['setor'])) {
                 $this->setLogin($user);
-            } elseif(empty($this->getResult())) {
+            } elseif (empty($this->getResult())) {
                 $this->setResult('Login Inválido!');
 
                 $attempt = new TableCrud("login_attempt");
