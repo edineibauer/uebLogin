@@ -34,7 +34,7 @@ ob_start();
         </div>
         <div class="row clearfix" style="padding: 2px"></div>
 
-        <div class="row s-padding-medium">
+        <div class="row padding-medium padding-4">
             <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity" onclick="login();">
                 Entrar
             </button>
@@ -42,7 +42,7 @@ ob_start();
 
         <div class="row clearfix"><br></div>
 
-        <div class="row upper color-text-grey font-small s-padding-medium">
+        <div class="row upper color-text-grey font-small padding-medium padding-4">
             <!--<a href="<?/*= defined('HOME') ? HOME : "" */?>cadastro-usuario"
                class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
                 Cadastre-se
