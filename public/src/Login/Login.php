@@ -209,16 +209,11 @@ class Login
         $_SESSION['userlogin']['imagem'] = "";
         $_SESSION['userlogin']['token'] = $this->getToken();
 
+        $this->setResult($_SESSION['userlogin']);
+
         //atualiza banco com token
         $up = new Update();
         $up->exeUpdate("usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
-
-        //Cookies
-        $this->setCookie("token", 0, -1);
-        $this->setCookie("id", 0, -1);
-        $this->setCookie("nome", 0, -1);
-        $this->setCookie("imagem", 0, -1);
-        $this->setCookie("setor", 0, -1);
     }
 
     /**
