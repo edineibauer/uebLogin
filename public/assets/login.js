@@ -14,8 +14,9 @@ function login() {
                     toast(g, 3000, "toast-warning")
             } else {
                 toast("Seja Bem-vindo!", 3000, "toast-success");
+
                 setCookieUser(g).then(() => {
-                    window.location.href = HOME + "dashboard"
+                    location.href = HOME + "dashboard"
                 });
             }
         })
@@ -24,7 +25,7 @@ function login() {
 
 $(function () {
     if (getCookie("token") !== "" && getCookie("token") !== "0")
-        window.location.href = HOME + "dashboard";
+        location.href = HOME + "dashboard";
 
     $("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
