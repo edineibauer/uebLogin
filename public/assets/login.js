@@ -14,8 +14,25 @@ function login() {
                     toast(g, 3000, "toast-warning")
             } else {
                 toast("Seja Bem-vindo!", 3000, "toast-success");
-                setCookie("token", "", -1);
-                checkSessao();
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", HOME + "set");
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        let data = JSON.parse(this.responseText);
+                        if (typeof data.data === "object" && data.response === 1) {
+                            setCookieUser(data.data).then(() => {
+                                window.location.href = HOME + "dashboard"
+                            });
+                        } else {
+                            setCookieAnonimo().then(() => {
+                                window.location.href = HOME
+                            });
+                        }
+                    }
+                };
+                xhttp.send("lib=route&file=sessao");
             }
         })
     }
