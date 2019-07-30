@@ -18,26 +18,22 @@ class Login
     private $senha;
     private $recaptcha;
     private $attempts = 0;
-    private $setor;
     private $result;
 
     /**
      * Login constructor.
      * @param array $data
-     * @param string|null $setor
+     * @param bool $passEncripty
      */
-    public function __construct(array $data, string $setor = null)
+    public function __construct(array $data, bool $passEncripty = true)
     {
-        if ($setor)
-            $this->setor = $setor;
-
         if ($data) {
             if (isset($data['recaptcha']) && !empty($data['recaptcha']))
                 $this->setRecaptcha($data['recaptcha']);
             if (isset($data['user']) && !empty($data['user']))
                 $this->setUser($data['user']);
             if (isset($data['password']) && !empty($data['password']))
-                $this->setSenha($data['password']);
+                $this->setSenha($data['password'], $passEncripty);
 
             $this->start();
         }
@@ -61,12 +57,13 @@ class Login
     }
 
     /**
-     * @param string $senha
+     * @param $senha
+     * @param bool $passEncripty
      */
-    public function setSenha($senha)
+    public function setSenha($senha, bool $passEncripty = true)
     {
         if (!empty($senha) && strlen($senha) > 3)
-            $this->senha = (string)Check::password(trim($senha));
+            $this->senha = (string) ($passEncripty ? Check::password(trim($senha)) : trim($senha));
         else
             $this->setResult('Senha muito Curta');
     }
@@ -127,7 +124,7 @@ class Login
 
             $user = null;
             $read = new Read();
-            $where = "WHERE password = :pass" . (!empty($this->setor) ? " && setor = '{$this->setor}'" : "");
+            $where = "WHERE password = :pass";
             $read->exeRead(PRE . "usuarios", $where, "pass={$this->senha}");
             if ($read->getResult()) {
                 foreach ($read->getResult() as $users) {
@@ -187,7 +184,7 @@ class Login
                 }
             }
 
-            if ($user && (empty($this->setor) || $this->setor === $user['setor'])) {
+            if ($user) {
                 $this->setLogin($user);
             } elseif (empty($this->getResult())) {
                 $this->setResult('Login Inválido!');
@@ -208,6 +205,7 @@ class Login
         $_SESSION['userlogin'] = $usuario;
         $_SESSION['userlogin']['imagem'] = "";
         $_SESSION['userlogin']['token'] = $this->getToken();
+        $this->setCookie("token", $_SESSION['userlogin']['token']);
 
         $this->setResult($_SESSION['userlogin']);
 
@@ -215,22 +213,6 @@ class Login
         $up = new Update();
         $up->exeUpdate("usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
     }
-
-    /**
-     * @param string $imagem
-     * @return string
-     */
-    /*private function getImagem(string $imagem): string
-    {
-        if (!empty($imagem) && Check::isJson($imagem)) {
-            $imagem = json_decode($imagem, true);
-
-            if (!empty($imagem[0]) && !empty($imagem[0]['image']))
-                return $imagem[0]['image'];
-        }
-
-        return "";
-    }*/
 
     private function attemptExceded()
     {
@@ -257,7 +239,7 @@ class Login
         return $this->getResult() ? false : true;
     }
 
-    private function setCookie($name, $value, int $dias = 60)
+    private function setCookie($name, $value, int $dias = 360)
     {
         $tempo = $dias < 0 ? time() - 1 : time() + (86400 * $dias);
         setcookie($name, $value, $tempo, "/"); // 2 meses de cookie
