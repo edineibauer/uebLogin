@@ -8,31 +8,15 @@ function login() {
         var pass = $("#passlog").val();
         var recaptcha = $("#g-recaptcha-response").val();
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
-            if (g) {
+            if (typeof g === "string") {
                 loginFree = !0;
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
                 toast("Seja Bem-vindo!", 3000, "toast-success");
-
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", HOME + "set");
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        let data = JSON.parse(this.responseText);
-                        if (typeof data.data === "object" && data.response === 1) {
-                            setCookieUser(data.data).then(() => {
-                                window.location.href = HOME + "dashboard"
-                            });
-                        } else {
-                            setCookieAnonimo().then(() => {
-                                window.location.href = HOME
-                            });
-                        }
-                    }
-                };
-                xhttp.send("lib=route&file=sessao");
+                setCookieUser(g).then(() => {
+                    window.location.href = HOME + "dashboard"
+                });
             }
         })
     }
