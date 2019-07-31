@@ -1,6 +1,3 @@
-setCookieAnonimo()
-    .then(() => {
-        loadUserViews()
-    }).then(() => {
+setCookieAnonimo().then(() => {
     location.href = HOME + "login"
 });

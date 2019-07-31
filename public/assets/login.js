@@ -7,7 +7,9 @@ function login() {
         var email = $("#emaillog").val();
         var pass = $("#passlog").val();
         var recaptcha = $("#g-recaptcha-response").val();
+        toast("Verificando Dados!", 15000, "toast-warning vs-login");
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
+            $(".vs-login").remove();
             if (typeof g === "string") {
                 loginFree = !0;
                 if (g !== "no-network")
