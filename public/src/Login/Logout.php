@@ -13,13 +13,10 @@ class Logout
     {
         if (isset($_SESSION['userlogin'])) {
             if (!empty($_SESSION['userlogin']['token'])) {
-                $t = !empty($_SESSION['userlogin']['token']) ? $_SESSION['userlogin']['token'] : $_COOKIE['token'];
-                $token = new TableCrud("usuarios");
-                $token->load("token", $t);
-                if ($token->exist()) {
-                    $token->setDados(["token" => null, "token_expira" => null]);
-                    $token->save();
-                }
+                $token = new TableCrud("usuarios_token");
+                $token->load("token", $_SESSION['userlogin']['token']);
+                if ($token->exist())
+                    $token->delete();
             }
             unset($_SESSION['userlogin']);
         }

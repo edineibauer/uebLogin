@@ -211,7 +211,10 @@ class Login
 
         //atualiza banco com token
         $up = new Update();
-        $up->exeUpdate("usuarios", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
+        $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", "id={$_SESSION['userlogin']['id']}");
+
+        $create = new \Conn\Create();
+        $create->exeCreate("usuarios_token", ['token' => $_SESSION['userlogin']['token'], "token_expira" => date("Y-m-d H:i:s"), "usuario" => $_SESSION['userlogin']['id']]);
     }
 
     private function attemptExceded()

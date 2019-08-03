@@ -1,4 +1,6 @@
 <?php
+
+use Conn\Delete;
 use \Conn\TableCrud;
 use Helpers\Check;
 
@@ -11,13 +13,15 @@ $passColumn = $d->search($d->getInfo()['password'])->getColumn();
 $banco = new TableCrud("usuarios");
 $banco->load("token_recovery", $restoreCode);
 if ($banco->exist()) {
+    $id = $banco->getDados()['id'];
     $banco->setDados([
         "token_recovery" => "",
-        "token" => "",
-        "token_expira" => "",
         $passColumn => Check::password($senha)
     ]);
     $banco->save();
+
+    $del = new Delete();
+    $del->exeDelete("usuarios_token", "WHERE usuario = :u", "u={$id}");
 
     $data['data'] = "1";
 }

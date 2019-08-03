@@ -8,7 +8,7 @@ if ($email) {
     $user->load("email", $email);
     if ($user->exist()) {
         $code = md5(base64_encode(date('Y-m-d H:i:s') . "recovery-pass"));
-        $user->setDados(['token' => null, 'token_recovery' => $code, "token_expira" => date('Y-m-d H:i:s')]);
+        $user->setDados(['token_recovery' => $code]);
         $user->save();
 
         //Prepara para enviar email
