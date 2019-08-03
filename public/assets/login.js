@@ -18,9 +18,7 @@ function login() {
                 toast("Seja Bem-vindo!", 3000, "toast-success");
 
                 setCookieUser(g).then(() => {
-                    return loadUserViews();
-                }).then(() => {
-                    location.href = HOME + "dashboard"
+                    app.loadView(HOME + "dashboard");
                 })
             }
         })
