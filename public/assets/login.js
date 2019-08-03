@@ -27,7 +27,7 @@ function login() {
 
 $(function () {
     if (getCookie("token") !== "" && getCookie("token") !== "0")
-        location.href = HOME + "dashboard";
+        app.loadView(HOME + "dashboard");
 
     $("#core-content").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)

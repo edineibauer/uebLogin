@@ -1,9 +1,13 @@
 <?php
-ob_start();
-?>
+if(!empty($_SESSION['userlogin']['token'])) {
+    $data = ["response" => 3, "data" => HOME + "dashboard", "error" => []];
+} else {
+    ob_start();
+    ?>
     <div class='row container font-large' style="max-width: 470px; margin: auto">
         <div class="container align-center upper panel color-text-grey" id="logoLogin">
-            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png' height='60' style='height: 60px;float: initial;margin:initial'>
+            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png' height='60'
+                 style='height: 60px;float: initial;margin:initial'>
         </div>
         <div class='container align-center upper panel color-text-grey'>área restrita <?= SITENAME ?></div>
         <div class="row z-depth-2 color-white" id="login-card">
@@ -35,7 +39,8 @@ ob_start();
         <div class="row clearfix" style="padding: 2px"></div>
 
         <div class="row padding-medium padding-4">
-            <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity" onclick="login();">
+            <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity"
+                    onclick="login();">
                 Entrar
             </button>
         </div>
@@ -43,7 +48,7 @@ ob_start();
         <div class="row clearfix"><br></div>
 
         <div class="row upper color-text-grey font-small padding-medium padding-4">
-            <!--<a href="<?/*= defined('HOME') ? HOME : "" */?>cadastro-usuario"
+            <!--<a href="<?/*= defined('HOME') ? HOME : "" */ ?>cadastro-usuario"
                class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
                 Cadastre-se
             </a>-->
@@ -55,6 +60,7 @@ ob_start();
         </div>
         <div class="clear"><br><br><br></div>
     </div>
-<?php
-$data['data'] = ob_get_contents();
-ob_end_clean();
+    <?php
+    $data['data'] = ob_get_contents();
+    ob_end_clean();
+}
