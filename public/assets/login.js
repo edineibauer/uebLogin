@@ -9,6 +9,7 @@ function login() {
         var recaptcha = $("#g-recaptcha-response").val();
         toast("Validando dados!", 15000, "vs-login");
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
+            clearToast();
             $(".vs-login").remove();
             if (typeof g === "string") {
                 loginFree = !0;
