@@ -11,6 +11,7 @@ function login() {
         post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
             clearToast();
             if (typeof g === "string") {
+                navigator.vibrate(100);
                 loginFree = !0;
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
