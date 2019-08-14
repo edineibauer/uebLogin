@@ -4,5 +4,4 @@ if (dados.id == getCookie("id")) {
     setCookie("nome_usuario", slug(dados.nome));
     setCookie("email", dados.email);
     dashboardSidebarInfo();
-    setSidebarInfo();
 }
