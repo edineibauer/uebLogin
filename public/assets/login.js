@@ -18,7 +18,7 @@ function login() {
                 toast("Seja Bem-vindo!", 3000, "toast-success");
 
                 setCookieUser(g).then(() => {
-                    app.loadView(HOME + "dashboard", animateForward("#core-content"));
+                    pageTransition("dashboard", "route", "forward", "#core-content", null, null, !1);
                 })
             }
         })
@@ -27,7 +27,7 @@ function login() {
 
 $(function () {
     if (getCookie("token") !== "" && getCookie("token") !== "0")
-        app.loadView(HOME + "dashboard", animateFade("#core-content"));
+        pageTransition("dashboard", "route", "fade", "#core-content", null, null, !1);
 
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)

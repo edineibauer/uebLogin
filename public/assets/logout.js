@@ -1,4 +1,4 @@
 toast("Saindo...", 3000);
 setCookieAnonimo().then(() => {
-    app.loadView(HOME + "login", animateFade("#core-content"), !0);
+    pageTransition("login", "route", "fade", "#core-content", null, null, !1);
 });
