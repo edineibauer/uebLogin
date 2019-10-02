@@ -1,6 +1,9 @@
 <?php
-ob_start();
-?>
+if (!empty($_SESSION['userlogin']['token'])) {
+    $data = ["response" => 3, "data" => HOME . "dashboard", "error" => []];
+} else {
+    ob_start();
+    ?>
     <div class='row font-large' style="max-width: 450px; margin: auto">
         <div class="clear"><br><br><br></div>
         <div class='container align-center upper panel font-light color-text-grey'>Recuperação de Senha</div>
@@ -28,6 +31,7 @@ ob_start();
         <div class="row clear"><br><br><br><br></div>
     </div>
 
-<?php
-$data['data'] = ob_get_contents();
-ob_end_clean();
+    <?php
+    $data['data'] = ob_get_contents();
+    ob_end_clean();
+}

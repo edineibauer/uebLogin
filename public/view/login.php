@@ -1,6 +1,6 @@
 <?php
 if (!empty($_SESSION['userlogin']['token'])) {
-    $data = ["response" => 3, "data" => HOME + "dashboard", "error" => []];
+    $data = ["response" => 3, "data" => HOME . "dashboard", "error" => []];
 } else {
     ob_start();
     ?>
