@@ -203,7 +203,6 @@ class Login
     public function setLogin(array $usuario)
     {
         $_SESSION['userlogin'] = $usuario;
-        $_SESSION['userlogin']['imagem'] = "";
         $_SESSION['userlogin']['token'] = $this->getToken();
         $this->setCookie("token", $_SESSION['userlogin']['token']);
 
