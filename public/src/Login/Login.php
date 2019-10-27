@@ -204,6 +204,11 @@ class Login
     {
         $_SESSION['userlogin'] = $usuario;
         $_SESSION['userlogin']['token'] = $this->getToken();
+        if(!empty($_SESSION['userlogin']['imagem'])) {
+            $_SESSION['userlogin']['imagem'] = json_decode($_SESSION['userlogin']['imagem'], !0)[0];
+            unset($_SESSION['userlogin']['imagem']['preview']);
+        }
+
         $this->setCookie("token", $_SESSION['userlogin']['token']);
 
         $this->setResult($_SESSION['userlogin']);
