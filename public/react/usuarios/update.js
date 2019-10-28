@@ -4,7 +4,7 @@ if (dados.id == getCookie("id")) {
         delete dados.imagem.preview;
     }
 
-    if(dados.setor === "" || dados.setor === "null")
+    if(dados.setor === "" || dados.setor === "null" || dados.setor === null)
         dados.setor = "admin";
 
     setCookieUser(dados).then(() => {
