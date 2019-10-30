@@ -15,9 +15,10 @@ function login() {
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
-                toast("Seja Bem-vindo!", 1800, "toast-success");
+                toast("Seja Bem-vindo! Carregando seu painel...", 18000, "toast-success");
 
                 setCookieUser(g).then(() => {
+                    toast("", 0);
                     pageTransition("dashboard", "route", "forward", "#core-content", null, null, !1);
                 })
             }

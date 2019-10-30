@@ -6,7 +6,7 @@ if (!empty($_SESSION['userlogin']['token'])) {
     ?>
     <div class='row container font-large' style="max-width: 470px; margin: auto">
         <div class="container align-center upper panel color-text-grey" id="logoLogin">
-            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png' height='60'
+            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?=VERSION?>' height='60'
                  style='height: 60px;float: initial;margin:initial'>
         </div>
         <div class='container align-center upper panel color-text-grey'>área restrita <?= SITENAME ?></div>
