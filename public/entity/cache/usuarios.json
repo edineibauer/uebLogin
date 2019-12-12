@@ -108,7 +108,7 @@
       "type": "text"
     },
     "datagrid": {
-      "grid_relevant": "",
+      "grid_relevant": "2",
       "grid_class": "",
       "grid_style": "",
       "grid_template": ""
@@ -148,12 +148,7 @@
       "atributos": "",
       "type": "password"
     },
-    "datagrid": {
-      "grid_relevant": "",
-      "grid_class": "",
-      "grid_style": "",
-      "grid_template": ""
-    },
+    "datagrid": "false",
     "select": "",
     "filter": "",
     "value": "",
@@ -229,7 +224,7 @@
     },
     "form": "false",
     "datagrid": {
-      "grid_relevant": "3",
+      "grid_relevant": "4",
       "grid_class": "",
       "grid_style": "",
       "grid_template": ""
@@ -259,16 +254,7 @@
       "validate": ""
     },
     "form": "false",
-    "datagrid": {
-      "grid_relevant": "",
-      "grid_class": "",
-      "grid_style": "",
-      "grid_template": "",
-      "grid_relevant_relational": "",
-      "grid_class_relational": "",
-      "grid_style_relational": "",
-      "grid_template_relational": ""
-    },
+    "datagrid": "false",
     "select": "",
     "filter": "",
     "value": "",
@@ -295,7 +281,7 @@
     },
     "form": "false",
     "datagrid": {
-      "grid_relevant": "2",
+      "grid_relevant": "3",
       "grid_class": "",
       "grid_style": "",
       "grid_template": ""
