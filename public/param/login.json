@@ -2,5 +2,6 @@
   "title": "Login",
   "subtitle": "faça login para continuar",
   "type": "page",
-  "css": ["w3"]
+  "css": ["w3"],
+  "navbar": false
 }
