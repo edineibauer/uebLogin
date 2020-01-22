@@ -62,10 +62,10 @@ class Login
      */
     public function setSenha($senha, bool $passEncripty = true)
     {
-        if (!empty($senha) && strlen($senha) > 3)
+        if (!empty($senha))
             $this->senha = (string) ($passEncripty ? Check::password(trim($senha)) : trim($senha));
         else
-            $this->setResult('Senha muito Curta');
+            $this->setResult('Informe a senha');
     }
 
     /**
