@@ -1,4 +1,4 @@
-if (dados.id == getCookie("id")) {
+if (dados.id == USER.id) {
     if(!isEmpty(dados.imagem) && dados.imagem !== "null") {
         dados.imagem = JSON.parse(dados.imagem)[0];
         delete dados.imagem.preview;
@@ -6,15 +6,12 @@ if (dados.id == getCookie("id")) {
         if (typeof dados.imagem === "object")
             dados.imagem = JSON.stringify(dados.imagem);
 
-        setCookie("imagem", dados.imagem);
-        localStorage.setItem("imagem", dados.imagem);
+        USER.imagem = dados.imagem;
     } else {
-        setCookie("imagem", "");
-        localStorage.setItem("imagem", "");
+        USER.imagem = "";
     }
 
-    setCookie("nome", dados.nome);
-    localStorage.setItem("nome", dados.nome);
+    USER.nome = dados.nome;
 
     menuHeader().then(() => {
         dashboardSidebarInfo();
