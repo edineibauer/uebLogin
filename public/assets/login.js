@@ -16,7 +16,12 @@ function login() {
                     toast(g, 3000, "toast-warning")
             } else {
                 setCookieUser(g).then(() => {
-                    pageTransition("dashboard", "route", "forward", "#core-content", null, null, !1);
+                    let destino = "dashboard";
+                    if(getCookie("redirectOnLogin") !== ""){
+                        destino = getCookie("redirectOnLogin");
+                        setCookie("redirectOnLogin", 1 ,-1);
+                    }
+                    pageTransition(destino, "route", "forward", "#core-content", null, null, !1);
                 })
             }
         })
