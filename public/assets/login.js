@@ -21,7 +21,7 @@ function login() {
                         destino = getCookie("redirectOnLogin");
                         setCookie("redirectOnLogin", 1 ,-1);
                     }
-                    pageTransition(destino, "route", "forward", "#core-content", null, null, !1);
+                    location.href = destino;
                 })
             }
         })
@@ -30,7 +30,7 @@ function login() {
 
 $(function () {
     if (getCookie("token") !== "" && getCookie("token") !== "0")
-        pageTransition("dashboard", "route", "fade", "#core-content", null, null, !1);
+        location.href = "dashboard";
 
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
