@@ -30,10 +30,6 @@ function exeLogin(email, senha, recaptcha) {
     }
 }
 
-function logout() {
-    return gapi.auth2.getAuthInstance().signOut();
-}
-
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
