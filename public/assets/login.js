@@ -1,31 +1,59 @@
 var loginFree = !0;
 
 function login() {
+    exeLogin($("#email").val(), $("#senha").val(), $("#g-recaptcha-response").val());
+}
+
+function exeLogin(email, senha, recaptcha) {
     if (loginFree) {
         $("#login-card").loading();
         loginFree = !1;
-        var email = $("#emaillog").val();
-        var pass = $("#passlog").val();
-        var recaptcha = $("#g-recaptcha-response").val();
-        toast("Validando dados!", 15000);
-        post('login', 'login', {email: email, pass: pass, recaptcha: recaptcha}, function (g) {
+        toast("Acessando...", 15000);
+        post('login', 'login', {email: email, pass: senha, recaptcha: recaptcha}, function (g) {
             if (typeof g === "string") {
-                navigator.vibrate(100);
                 loginFree = !0;
+                navigator.vibrate(100);
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
+                toast("Bem-vindo", 1500, "toast-success");
                 setCookieUser(g).then(() => {
                     let destino = "dashboard";
-                    if(getCookie("redirectOnLogin") !== ""){
+                    if (getCookie("redirectOnLogin") !== "") {
                         destino = getCookie("redirectOnLogin");
-                        setCookie("redirectOnLogin", 1 ,-1);
+                        setCookie("redirectOnLogin", 1, -1);
                     }
-                    location.href = destino;
+                    pageTransition(destino, "route", "forward", "#core-content");
                 })
             }
-        })
+        });
     }
+}
+
+function logout() {
+    return gapi.auth2.getAuthInstance().signOut();
+}
+
+function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
+        if(!isEmpty(r)) {
+            let user = r.clientes[0];
+            exeLogin(user.email, profile.getId());
+        } else {
+            db.exeCreate("clientes", {
+                nome: profile.getName(),
+                email: profile.getEmail(),
+                imagem_url: profile.getImageUrl(),
+                senha: profile.getId(),
+                ativo: 1
+            }).then(result => {
+                loginFree = !0;
+                if(result.db_errorback === 0)
+                    exeLogin(result.email, profile.getId());
+            });
+        }
+    });
 }
 
 $(function () {

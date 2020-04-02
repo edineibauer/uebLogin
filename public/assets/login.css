@@ -10,3 +10,9 @@
 #loginbtn {
     border-radius: 3px;
 }
+
+span[id^=not_signed_]:before, span[id^=connected]:before {
+    content: 'Acessar';
+    padding-right: 100px;
+    padding-left: 7px;
+}

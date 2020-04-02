@@ -6,7 +6,7 @@ if (!empty($_SESSION['userlogin']['token'])) {
     ?>
     <div class='row container font-large' style="max-width: 470px; margin: auto">
         <div class="container align-center upper panel color-text-grey" id="logoLogin">
-            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?=VERSION?>' height='60'
+            <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
                  style='height: 60px;float: initial;margin:initial'>
         </div>
         <div class='container align-center upper panel color-text-grey'>área restrita <?= SITENAME ?></div>
@@ -39,6 +39,8 @@ if (!empty($_SESSION['userlogin']['token'])) {
             </div>
         </div>
         <div class="row clearfix" style="padding: 2px"></div>
+
+        <?= (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID) ? '<div class="g-signin2" data-onsuccess="onSignIn"></div><script src="https://apis.google.com/js/platform.js" async defer></script><meta name="google-signin-client_id" content="' . GOOGLELOGINCLIENTID . '">' : '')?>
 
         <div class="row padding-medium padding-4">
             <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity"
