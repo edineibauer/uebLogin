@@ -123,11 +123,11 @@ class Login
                     /**
                      * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
                      */
-                    if (!empty($dados['info']['cpf']) && !in_array($dados['info']['cpf'], $dados['info']['unique']))
+                    if (!empty($dados['info']['cpf']) && (empty($dados['info']['unique']) || !in_array($dados['info']['cpf'], $dados['info']['unique'])))
                         $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['cpf']]['column'] . " = '{$this->user}'";
-                    if (!empty($dados['info']['email']) && !in_array($dados['info']['email'], $dados['info']['unique']))
+                    if (!empty($dados['info']['email']) && (empty($dados['info']['unique']) || !in_array($dados['info']['email'], $dados['info']['unique'])))
                         $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['email']]['column'] . " = '{$this->user}'";
-                    if (!empty($dados['info']['tel']) && !in_array($dados['info']['tel'], $dados['info']['unique']))
+                    if (!empty($dados['info']['tel']) && (empty($dados['info']['unique']) || !in_array($dados['info']['tel'], $dados['info']['unique'])))
                         $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['tel']]['column'] . " = '{$this->user}'";
 
                     $whereUser[$entity] .= $where . (!empty($where) ? ")" : "");
