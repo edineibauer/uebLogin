@@ -1,7 +1,7 @@
 var loginFree = !0;
 
 function login() {
-    exeLogin($("#email").val(), $("#senha").val(), $("#g-recaptcha-response").val());
+    exeLogin($("#emaillog").val(), $("#passlog").val(), $("#g-recaptcha-response").val());
 }
 
 function exeLogin(email, senha, recaptcha) {
