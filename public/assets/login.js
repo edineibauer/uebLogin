@@ -23,7 +23,7 @@ function exeLogin(email, senha, recaptcha) {
                         destino = getCookie("redirectOnLogin");
                         setCookie("redirectOnLogin", 1, -1);
                     }
-                    pageTransition(destino, "route", "forward", "#core-content");
+                    location.href = destino;
                 })
             }
         });
