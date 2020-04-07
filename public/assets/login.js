@@ -16,7 +16,7 @@ function exeLogin(email, senha, recaptcha) {
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
-                toast("Bem-vindo", 1500, "toast-success");
+                toast("Bem-vindo", 15000, "toast-success");
                 setCookieUser(g).then(() => {
                     let destino = "dashboard";
                     if (getCookie("redirectOnLogin") !== "") {
