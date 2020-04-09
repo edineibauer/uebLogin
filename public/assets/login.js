@@ -30,26 +30,31 @@ function exeLogin(email, senha, recaptcha) {
     }
 }
 
+var loadUserGoogle = 0;
 function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
-        if(!isEmpty(r)) {
-            let user = r.clientes[0];
-            exeLogin(user.email, profile.getId());
-        } else {
-            db.exeCreate("clientes", {
-                nome: profile.getName(),
-                email: profile.getEmail(),
-                imagem_url: profile.getImageUrl(),
-                senha: profile.getId(),
-                ativo: 1
-            }).then(result => {
-                loginFree = !0;
-                if(result.db_errorback === 0)
-                    exeLogin(result.email, profile.getId());
-            });
-        }
-    });
+    if(loadUserGoogle > 0) {
+        var profile = googleUser.getBasicProfile();
+        getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
+            if (!isEmpty(r.clientes)) {
+                exeLogin(profile.getEmail(), profile.getId())
+            } else {
+                db.exeCreate("clientes", {
+                    nome: profile.getName(),
+                    email: profile.getEmail(),
+                    imagem_url: profile.getImageUrl(),
+                    senha: profile.getId(),
+                    ativo: 1
+                }).then(result => {
+                    if (result.db_errorback === 0)
+                        exeLogin(result.email, profile.getId())
+                })
+            }
+        });
+    } else {
+        if(typeof gapi !== "undefined")
+            gapi.auth2.getAuthInstance().signOut();
+    }
+    loadUserGoogle++;
 }
 
 $(function () {
