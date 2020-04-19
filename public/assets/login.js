@@ -18,7 +18,7 @@ function exeLogin(email, senha, recaptcha) {
                 if (g !== "no-network")
                     toast(g, 3000, "toast-warning")
             } else {
-                toast("Entrando...", 15000, "toast-success");
+                toast("Seja bem vindo, entrando...", 15000, "toast-success");
                 setCookieUser(g).then(() => {
                     let destino = "dashboard";
                     if (getCookie("redirectOnLogin") !== "") {
@@ -32,11 +32,12 @@ function exeLogin(email, senha, recaptcha) {
     }
 }
 
-var loadUserGoogle = 0;
+var googleLogin = 0;
 function onSignIn(googleUser) {
-    if(loadUserGoogle > 0) {
-        if(loginFree)
-            toast("Carregando...", 15000, "toast-success");
+    if(googleLogin === 0) {
+        gapi.auth2.getAuthInstance().signOut();
+
+    } else {
         var profile = googleUser.getBasicProfile();
         getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
             if (!isEmpty(r.clientes)) {
@@ -54,11 +55,7 @@ function onSignIn(googleUser) {
                 })
             }
         });
-    } else {
-        if(typeof gapi !== "undefined")
-            gapi.auth2.getAuthInstance().signOut();
     }
-    loadUserGoogle++;
 }
 
 $(function () {
@@ -67,6 +64,9 @@ $(function () {
 
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
-            login()
-    })
+            login();
+
+    }).on("click", ".abcRioButtonContentWrapper", function() {
+        googleLogin = 1;
+    });
 });
