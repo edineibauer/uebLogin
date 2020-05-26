@@ -40,7 +40,7 @@ if (!empty($_SESSION['userlogin']['token'])) {
         </div>
         <div class="row clearfix" style="padding: 2px"></div>
 
-        <?= (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID) ? '<div class="g-signin2" data-onsuccess="onSignIn"></div><script src="https://apis.google.com/js/platform.js" async defer></script><meta name="google-signin-client_id" content="' . GOOGLELOGINCLIENTID . '">' : '')?>
+        <?= include_once PATH_HOME . VENDOR . "login/public/view/inc/googleLogin.php" ?>
 
         <div class="row padding-medium padding-4">
             <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity"
