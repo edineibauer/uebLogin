@@ -51,7 +51,7 @@ if ($email) {
     }
 
     $read = new \Conn\Read();
-    if (!empty($setor)) {
+    if (empty($setor)) {
         foreach (\Config\Config::getSetorSystem() as $setor) {
             $emailColumn = getEmailColumn($setor);
             if (!empty($emailColumn)) {
