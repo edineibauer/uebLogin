@@ -40,7 +40,7 @@ if (!empty($_SESSION['userlogin']['token'])) {
         </div>
         <div class="row clearfix" style="padding: 2px"></div>
 
-        <?= include_once PATH_HOME . VENDOR . "login/public/view/inc/googleLogin.php" ?>
+        <?php include_once PATH_HOME . VENDOR . "login/public/view/inc/googleLogin.php" ?>
 
         <div class="row padding-medium padding-4">
             <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity"
