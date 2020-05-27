@@ -107,39 +107,44 @@ class Login
     private function checkUserInfo()
     {
         if (!$this->getResult()) {
-            $dicionarios = Entity::dicionario(null, !0);
-
-            $whereUser = [];
-            foreach ($dicionarios as $entity => $dados) {
-                if (empty($whereUser[$entity]) && !empty($dados['info']['user']) && $dados['info']['user'] === 1) {
-                    $whereUser[$entity] = "WHERE usuarios_id = :id";
-                    $where = "";
-                    if (!empty($dados['info']['unique'])) {
-                        foreach ($dados['info']['unique'] as $id)
-                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$id]['column'] . " = '{$this->user}'";
-                    }
-
-
-                    /**
-                     * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
-                     */
-                    if (!empty($dados['info']['cpf']) && (empty($dados['info']['unique']) || !in_array($dados['info']['cpf'], $dados['info']['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['cpf']]['column'] . " = '{$this->user}'";
-                    if (!empty($dados['info']['email']) && (empty($dados['info']['unique']) || !in_array($dados['info']['email'], $dados['info']['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['email']]['column'] . " = '{$this->user}'";
-                    if (!empty($dados['info']['tel']) && (empty($dados['info']['unique']) || !in_array($dados['info']['tel'], $dados['info']['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['tel']]['column'] . " = '{$this->user}'";
-
-                    $whereUser[$entity] .= $where . (!empty($where) ? ")" : "");
-                }
-            }
 
             $user = null;
+
             $read = new Read();
-            $where = "WHERE password = :pass";
-            $read->exeRead(PRE . "usuarios", $where, "pass={$this->senha}");
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
             if ($read->getResult()) {
-                foreach ($read->getResult() as $users) {
+                $usuarios = $read->getResult();
+
+                $dicionarios = [];
+                $whereUser = [];
+                $setores = \Config\Config::getSetores();
+                foreach ($setores as $entity) {
+                    $dicionarios[$entity] = Metadados::getDicionario($entity);
+
+                    if (empty($whereUser[$entity])) {
+                        $whereUser[$entity] = "WHERE usuarios_id = :id";
+                        $where = "";
+                        if (!empty($dados['info']['unique'])) {
+                            foreach ($dados['info']['unique'] as $id)
+                                $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$id]['column'] . " = '{$this->user}'";
+                        }
+
+
+                        /**
+                         * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
+                         */
+                        if (!empty($dados['info']['cpf']) && (empty($dados['info']['unique']) || !in_array($dados['info']['cpf'], $dados['info']['unique'])))
+                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['cpf']]['column'] . " = '{$this->user}'";
+                        if (!empty($dados['info']['email']) && (empty($dados['info']['unique']) || !in_array($dados['info']['email'], $dados['info']['unique'])))
+                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['email']]['column'] . " = '{$this->user}'";
+                        if (!empty($dados['info']['tel']) && (empty($dados['info']['unique']) || !in_array($dados['info']['tel'], $dados['info']['unique'])))
+                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['tel']]['column'] . " = '{$this->user}'";
+
+                        $whereUser[$entity] .= $where . (!empty($where) ? ")" : "");
+                    }
+                }
+
+                foreach ($usuarios as $users) {
                     unset($users['password']);
                     if (strtolower($users['nome']) === strtolower($this->user)) {
                         if ($users['status'] === "1") {
