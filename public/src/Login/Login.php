@@ -115,32 +115,34 @@ class Login
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
+                $info = [];
                 $dicionarios = [];
                 $whereUser = [];
-                $setores = \Config\Config::getSetores();
-                foreach ($setores as $entity) {
-                    $dicionarios[$entity] = Metadados::getDicionario($entity);
+                foreach ($usuarios as $usuario) {
+                    if(!empty($usuario['setor']) && empty($dicionarios[$usuario['setor']])) {
+                        $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
+                        $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
 
-                    if (empty($whereUser[$entity])) {
-                        $whereUser[$entity] = "WHERE usuarios_id = :id";
-                        $where = "";
-                        if (!empty($dados['info']['unique'])) {
-                            foreach ($dados['info']['unique'] as $id)
-                                $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$id]['column'] . " = '{$this->user}'";
+                        if (empty($whereUser[$usuario['setor']])) {
+                            $whereUser[$usuario['setor']] = "WHERE usuarios_id = :id";
+                            $where = "";
+                            if (!empty($info[$usuario['setor']]['unique'])) {
+                                foreach ($info[$usuario['setor']]['unique'] as $id)
+                                    $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+                            }
+
+                            /**
+                             * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
+                             */
+                            if (!empty($info[$usuario['setor']]['cpf']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
+                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
+                            if (!empty($info[$usuario['setor']]['email']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
+                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
+                            if (!empty($info[$usuario['setor']]['tel']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
+                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
+
+                            $whereUser[$usuario['setor']] .= $where . (!empty($where) ? ")" : "");
                         }
-
-
-                        /**
-                         * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
-                         */
-                        if (!empty($dados['info']['cpf']) && (empty($dados['info']['unique']) || !in_array($dados['info']['cpf'], $dados['info']['unique'])))
-                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['cpf']]['column'] . " = '{$this->user}'";
-                        if (!empty($dados['info']['email']) && (empty($dados['info']['unique']) || !in_array($dados['info']['email'], $dados['info']['unique'])))
-                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['email']]['column'] . " = '{$this->user}'";
-                        if (!empty($dados['info']['tel']) && (empty($dados['info']['unique']) || !in_array($dados['info']['tel'], $dados['info']['unique'])))
-                            $where .= (empty($where) ? " && (" : " || ") . $dados['dicionario'][$dados['info']['tel']]['column'] . " = '{$this->user}'";
-
-                        $whereUser[$entity] .= $where . (!empty($where) ? ")" : "");
                     }
                 }
 
@@ -153,7 +155,7 @@ class Login
                                 if ($read->getResult()) {
                                     $users['setorData'] = $read->getResult()[0];
                                     unset($users['setorData']['usuarios_id']);
-                                    foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
+                                    foreach ($dicionarios[$users['setor']] as $col => $meta) {
                                         if ($meta['format'] === "password" || $meta['key'] === "information")
                                             unset($users['setorData'][$meta['column']]);
                                     }
@@ -174,7 +176,7 @@ class Login
                             if ($users['status'] === "1") {
                                 $users['setorData'] = $read->getResult()[0];
                                 unset($users['setorData']['usuarios_id']);
-                                foreach (Metadados::getDicionario($users['setor']) as $col => $meta) {
+                                foreach ($dicionarios[$users['setor']] as $col => $meta) {
                                     if ($meta['format'] === "password" || $meta['key'] === "information")
                                         unset($users['setorData'][$meta['column']]);
                                 }
