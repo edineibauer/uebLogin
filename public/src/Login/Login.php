@@ -163,6 +163,7 @@ class Login
                                 }
                             } else {
                                 $users['setor'] = "admin";
+                                $users['system'] = "";
                                 $users['setorData'] = "";
                                 $user = $users;
                             }
@@ -174,6 +175,7 @@ class Login
                         $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
                         if ($read->getResult()) {
                             if ($users['status'] === "1") {
+                                $users['system'] = \Entity\Entity::info($users['setor'])['system'] ?? "";
                                 $users['setorData'] = $read->getResult()[0];
                                 unset($users['setorData']['usuarios_id']);
                                 foreach ($dicionarios[$users['setor']] as $col => $meta) {
