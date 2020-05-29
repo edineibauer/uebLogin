@@ -111,7 +111,7 @@ class Login
             $user = null;
 
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}");
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
@@ -151,7 +151,7 @@ class Login
                     if (strtolower($users['nome']) === strtolower($this->user)) {
                         if ($users['status'] === "1") {
                             if (!empty($users['setor']) && $users['setor'] !== "admin") {
-                                $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
+                                $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}", !0);
                                 if ($read->getResult()) {
                                     $users['setorData'] = $read->getResult()[0];
 
@@ -167,7 +167,7 @@ class Login
                                     if(!empty($users['system'])) {
                                         foreach ($dicionarios[$users['setor']] as $dicionario) {
                                             if($dicionario['relation'] === $users['system']) {
-                                                $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}");
+                                                $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}", !0);
                                                 $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
                                                 $users['system_id'] = $users['systemData']['id'];
                                                 $users['setorData']['system_id'] = $users['systemData']['id'];
@@ -195,7 +195,7 @@ class Login
                         }
                         break;
                     } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
-                        $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
+                        $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}", !0);
                         if ($read->getResult()) {
                             if ($users['status'] === "1") {
                                 $users['setorData'] = $read->getResult()[0];
@@ -212,7 +212,7 @@ class Login
                                 if(!empty($users['system'])) {
                                     foreach ($dicionarios[$users['setor']] as $dicionario) {
                                         if($dicionario['relation'] === $users['system']) {
-                                            $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}");
+                                            $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}", !0);
                                             $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
                                             $users['system_id'] = $users['systemData']['id'];
                                             $users['setorData']['system_id'] = $users['systemData']['id'];
@@ -277,7 +277,7 @@ class Login
     {
         $ip = filter_var(Helper::getIP(), FILTER_VALIDATE_IP);
         $read = new Read();
-        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) && ip = '{$ip}' && email = '{$this->user}'");
+        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) && ip = '{$ip}' && email = '{$this->user}'", !0);
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
