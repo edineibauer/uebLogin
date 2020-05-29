@@ -153,8 +153,22 @@ class Login
                             if (!empty($users['setor']) && $users['setor'] !== "admin") {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
                                 if ($read->getResult()) {
-                                    $users['system'] = \Entity\Metadados::getInfo($users['setor'])['system'] ?? "";
                                     $users['setorData'] = $read->getResult()[0];
+
+                                    $info = \Entity\Metadados::getInfo($users['setor']);
+                                    $users['system'] = (!empty($info['system']) ? $info['system'] : "");
+
+                                    if(empty($users['setorData']['system_id'])) {
+                                        $users['systemData'] = [];
+                                    } else {
+                                        if(!empty($info['system'])) {
+                                            $read->exeRead($info['system'], "WHERE id = :id", "id={$users['setorData']['system_id']}");
+                                            $users['systemData'] = $read->exeRead() ? $read->exeRead()[0] : [];
+                                        } else {
+                                            $users['systemData'] = [];
+                                        }
+                                    }
+
                                     unset($users['setorData']['usuarios_id']);
                                     foreach ($dicionarios[$users['setor']] as $col => $meta) {
                                         if ($meta['format'] === "password" || $meta['key'] === "information")
@@ -164,8 +178,9 @@ class Login
                                 }
                             } else {
                                 $users['setor'] = "admin";
-                                $users['system'] = "";
                                 $users['setorData'] = "";
+                                $users['system'] = "";
+                                $users['systemData'] = [];
                                 $user = $users;
                             }
                         } else {
@@ -176,8 +191,22 @@ class Login
                         $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
                         if ($read->getResult()) {
                             if ($users['status'] === "1") {
-                                $users['system'] = \Entity\Metadados::getInfo($users['setor'])['system'] ?? "";
                                 $users['setorData'] = $read->getResult()[0];
+
+                                $info = \Entity\Metadados::getInfo($users['setor']);
+                                $users['system'] = (!empty($info['system']) ? $info['system'] : "");
+
+                                if(empty($users['setorData']['system_id'])) {
+                                    $users['systemData'] = [];
+                                } else {
+                                    if(!empty($info['system'])) {
+                                        $read->exeRead($info['system'], "WHERE id = :id", "id={$users['setorData']['system_id']}");
+                                        $users['systemData'] = $read->exeRead() ? $read->exeRead()[0] : [];
+                                    } else {
+                                        $users['systemData'] = [];
+                                    }
+                                }
+
                                 unset($users['setorData']['usuarios_id']);
                                 foreach ($dicionarios[$users['setor']] as $col => $meta) {
                                     if ($meta['format'] === "password" || $meta['key'] === "information")
