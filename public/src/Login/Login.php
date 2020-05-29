@@ -191,19 +191,6 @@ class Login
                         }
                     }
                 }
-
-                //busca informações do grupo de usuário pertencente
-                if (!empty($user)) {
-                    $user['groupData'] = "";
-                   /* if (!empty($user['setorData'])) {
-                        foreach ($dicionarios[$user['setor']]['dicionario'] as $meta) {
-                            if ($meta['format'] === "list" && $dicionarios[$meta['relation']]['info']['user'] === 2 && !empty($user['setorData'][$meta['column']])) {
-                                $read->exeRead($meta['relation'], "WHERE id = :rid", "rid={$user['setorData'][$meta['column']]}");
-                                $user['groupData'] = ($read->getResult() ? $read->getResult()[0] : "");
-                            }
-                        }
-                    }*/
-                }
             }
 
             if ($user) {
