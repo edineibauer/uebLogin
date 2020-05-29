@@ -153,7 +153,7 @@ class Login
                             if (!empty($users['setor']) && $users['setor'] !== "admin") {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}");
                                 if ($read->getResult()) {
-                                    $users['system'] = \Entity\Entity::info($users['setor'])['system'] ?? "";
+                                    $users['system'] = \Entity\Metadados::getInfo($users['setor'])['system'] ?? "";
                                     $users['setorData'] = $read->getResult()[0];
                                     unset($users['setorData']['usuarios_id']);
                                     foreach ($dicionarios[$users['setor']] as $col => $meta) {
@@ -176,7 +176,7 @@ class Login
                         $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}");
                         if ($read->getResult()) {
                             if ($users['status'] === "1") {
-                                $users['system'] = \Entity\Entity::info($users['setor'])['system'] ?? "";
+                                $users['system'] = \Entity\Metadados::getInfo($users['setor'])['system'] ?? "";
                                 $users['setorData'] = $read->getResult()[0];
                                 unset($users['setorData']['usuarios_id']);
                                 foreach ($dicionarios[$users['setor']] as $col => $meta) {
