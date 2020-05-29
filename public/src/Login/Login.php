@@ -155,17 +155,24 @@ class Login
                                 if ($read->getResult()) {
                                     $users['setorData'] = $read->getResult()[0];
 
-                                    $info = \Entity\Metadados::getInfo($users['setor']);
-                                    $users['system'] = (!empty($info['system']) ? $info['system'] : "");
+                                    if(!empty($dicionarios[$users['setor']]))
+                                        $dicionarios[$users['setor']] = Metadados::getDicionario($users['setor']);
 
-                                    if(empty($users['setorData']['system_id'])) {
-                                        $users['systemData'] = [];
-                                    } else {
-                                        if(!empty($info['system'])) {
-                                            $read->exeRead($info['system'], "WHERE id = :id", "id={$users['setorData']['system_id']}");
-                                            $users['systemData'] = $read->exeRead() ? $read->exeRead()[0] : [];
-                                        } else {
-                                            $users['systemData'] = [];
+                                    if(!empty($info[$users['setor']]))
+                                        $info[$users['setor']] = Metadados::getInfo($users['setor']);
+
+                                    $users['system'] = (!empty($info[$users['setor']]['system']) ? $info[$users['setor']]['system'] : "");
+                                    $users['systemData'] = [];
+
+                                    if(!empty($users['system'])) {
+                                        foreach ($dicionarios[$users['setor']] as $dicionario) {
+                                            if($dicionario['relation'] === $users['system']) {
+                                                $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}");
+                                                $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
+                                                $users['system_id'] = $users['systemData']['id'];
+                                                $users['setorData']['system_id'] = $users['systemData']['id'];
+                                                break;
+                                            }
                                         }
                                     }
 
@@ -193,17 +200,24 @@ class Login
                             if ($users['status'] === "1") {
                                 $users['setorData'] = $read->getResult()[0];
 
-                                $info = \Entity\Metadados::getInfo($users['setor']);
-                                $users['system'] = (!empty($info['system']) ? $info['system'] : "");
+                                if(!empty($dicionarios[$users['setor']]))
+                                    $dicionarios[$users['setor']] = Metadados::getDicionario($users['setor']);
 
-                                if(empty($users['setorData']['system_id'])) {
-                                    $users['systemData'] = [];
-                                } else {
-                                    if(!empty($info['system'])) {
-                                        $read->exeRead($info['system'], "WHERE id = :id", "id={$users['setorData']['system_id']}");
-                                        $users['systemData'] = $read->exeRead() ? $read->exeRead()[0] : [];
-                                    } else {
-                                        $users['systemData'] = [];
+                                if(!empty($info[$users['setor']]))
+                                    $info[$users['setor']] = Metadados::getInfo($users['setor']);
+
+                                $users['system'] = (!empty($info[$users['setor']]['system']) ? $info[$users['setor']]['system'] : "");
+                                $users['systemData'] = [];
+
+                                if(!empty($users['system'])) {
+                                    foreach ($dicionarios[$users['setor']] as $dicionario) {
+                                        if($dicionario['relation'] === $users['system']) {
+                                            $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}");
+                                            $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
+                                            $users['system_id'] = $users['systemData']['id'];
+                                            $users['setorData']['system_id'] = $users['systemData']['id'];
+                                            break;
+                                        }
                                     }
                                 }
 
