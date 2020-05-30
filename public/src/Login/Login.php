@@ -102,6 +102,93 @@ class Login
     }
 
     /**
+     * @param array $usuarios
+     * @return array
+     */
+    private function getWhereUser(array $usuarios): array
+    {
+        $info = [];
+        $dicionarios = [];
+        $whereUser = [];
+        foreach ($usuarios as $usuario) {
+            if(!empty($usuario['setor']) && empty($dicionarios[$usuario['setor']])) {
+                $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
+                $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
+
+                if (empty($whereUser[$usuario['setor']])) {
+                    $whereUser[$usuario['setor']] = "WHERE usuarios_id = :id";
+                    $where = "";
+                    if (!empty($info[$usuario['setor']]['unique'])) {
+                        foreach ($info[$usuario['setor']]['unique'] as $id)
+                            $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+                    }
+
+                    /**
+                     * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
+                     */
+                    if (!empty($info[$usuario['setor']]['cpf']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
+                    if (!empty($info[$usuario['setor']]['email']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
+                    if (!empty($info[$usuario['setor']]['tel']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
+
+                    $whereUser[$usuario['setor']] .= $where . (!empty($where) ? ")" : "");
+                }
+            }
+        }
+        return [$whereUser, $dicionarios, $info];
+    }
+
+    /**
+     * @param array $users
+     * @param array $setorData
+     * @param array $dicionarios
+     * @param array $info
+     * @return array
+     */
+    private function getUserData(array $users, array $setorData, array $dicionarios, array $info): array
+    {
+        $users['setorData'] = $setorData;
+
+        if(!empty($dicionarios[$users['setor']]))
+            $dicionarios[$users['setor']] = Metadados::getDicionario($users['setor']);
+
+        if(!empty($info[$users['setor']]))
+            $info[$users['setor']] = Metadados::getInfo($users['setor']);
+
+        $users['system'] = (!empty($info[$users['setor']]['system']) ? $info[$users['setor']]['system'] : "");
+        $users['systemData'] = [];
+
+        if(!empty($users['system'])) {
+            $read = new Read();
+            if(empty($users['setorData']['system_id'])) {
+                $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData']['system_id']}", !0);
+                $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
+                $users['system_id'] = $users['systemData']['id'];
+            } else {
+                foreach ($dicionarios[$users['setor']] as $dicionario) {
+                    if ($dicionario['relation'] === $users['system']) {
+                        $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}", !0);
+                        $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
+                        $users['system_id'] = $users['systemData']['id'];
+                        $users['setorData']['system_id'] = $users['systemData']['id'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        unset($users['setorData']['usuarios_id']);
+        foreach ($dicionarios[$users['setor']] as $col => $meta) {
+            if ($meta['format'] === "password" || $meta['key'] === "information")
+                unset($users['setorData'][$meta['column']]);
+        }
+
+        return $users;
+    }
+
+    /**
      * Vetifica usuário e senha no banco de dados!
      */
     private function checkUserInfo()
@@ -109,42 +196,12 @@ class Login
         if (!$this->getResult()) {
 
             $user = null;
-
             $read = new Read();
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
-                $info = [];
-                $dicionarios = [];
-                $whereUser = [];
-                foreach ($usuarios as $usuario) {
-                    if(!empty($usuario['setor']) && empty($dicionarios[$usuario['setor']])) {
-                        $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
-                        $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
-
-                        if (empty($whereUser[$usuario['setor']])) {
-                            $whereUser[$usuario['setor']] = "WHERE usuarios_id = :id";
-                            $where = "";
-                            if (!empty($info[$usuario['setor']]['unique'])) {
-                                foreach ($info[$usuario['setor']]['unique'] as $id)
-                                    $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
-                            }
-
-                            /**
-                             * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
-                             */
-                            if (!empty($info[$usuario['setor']]['cpf']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
-                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
-                            if (!empty($info[$usuario['setor']]['email']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
-                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
-                            if (!empty($info[$usuario['setor']]['tel']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
-                                $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
-
-                            $whereUser[$usuario['setor']] .= $where . (!empty($where) ? ")" : "");
-                        }
-                    }
-                }
+                list($whereUser, $dicionarios, $info) = $this->getWhereUser($usuarios);
 
                 foreach ($usuarios as $users) {
                     unset($users['password']);
@@ -153,35 +210,7 @@ class Login
                             if (!empty($users['setor']) && $users['setor'] !== "admin") {
                                 $read->exeRead($users['setor'], "WHERE usuarios_id = :uid", "uid={$users['id']}", !0);
                                 if ($read->getResult()) {
-                                    $users['setorData'] = $read->getResult()[0];
-
-                                    if(!empty($dicionarios[$users['setor']]))
-                                        $dicionarios[$users['setor']] = Metadados::getDicionario($users['setor']);
-
-                                    if(!empty($info[$users['setor']]))
-                                        $info[$users['setor']] = Metadados::getInfo($users['setor']);
-
-                                    $users['system'] = (!empty($info[$users['setor']]['system']) ? $info[$users['setor']]['system'] : "");
-                                    $users['systemData'] = [];
-
-                                    if(!empty($users['system'])) {
-                                        foreach ($dicionarios[$users['setor']] as $dicionario) {
-                                            if($dicionario['relation'] === $users['system']) {
-                                                $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}", !0);
-                                                $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
-                                                $users['system_id'] = $users['systemData']['id'];
-                                                $users['setorData']['system_id'] = $users['systemData']['id'];
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    unset($users['setorData']['usuarios_id']);
-                                    foreach ($dicionarios[$users['setor']] as $col => $meta) {
-                                        if ($meta['format'] === "password" || $meta['key'] === "information")
-                                            unset($users['setorData'][$meta['column']]);
-                                    }
-                                    $user = $users;
+                                    $user = $this->getUserData($users, $read->getResult()[0], $dicionarios, $info);
                                 }
                             } else {
                                 $users['setor'] = "admin";
@@ -198,35 +227,7 @@ class Login
                         $read->exeRead($users['setor'], $whereUser[$users['setor']], "id={$users['id']}", !0);
                         if ($read->getResult()) {
                             if ($users['status'] === "1") {
-                                $users['setorData'] = $read->getResult()[0];
-
-                                if(!empty($dicionarios[$users['setor']]))
-                                    $dicionarios[$users['setor']] = Metadados::getDicionario($users['setor']);
-
-                                if(!empty($info[$users['setor']]))
-                                    $info[$users['setor']] = Metadados::getInfo($users['setor']);
-
-                                $users['system'] = (!empty($info[$users['setor']]['system']) ? $info[$users['setor']]['system'] : "");
-                                $users['systemData'] = [];
-
-                                if(!empty($users['system'])) {
-                                    foreach ($dicionarios[$users['setor']] as $dicionario) {
-                                        if($dicionario['relation'] === $users['system']) {
-                                            $read->exeRead($users['system'], "WHERE id = :id", "id={$users['setorData'][$dicionario['column']]}", !0);
-                                            $users['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
-                                            $users['system_id'] = $users['systemData']['id'];
-                                            $users['setorData']['system_id'] = $users['systemData']['id'];
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                unset($users['setorData']['usuarios_id']);
-                                foreach ($dicionarios[$users['setor']] as $col => $meta) {
-                                    if ($meta['format'] === "password" || $meta['key'] === "information")
-                                        unset($users['setorData'][$meta['column']]);
-                                }
-                                $user = $users;
+                                $user = $this->getUserData($users, $read->getResult()[0], $dicionarios, $info);
                             } else {
                                 $this->setResult('Usuário Desativado!');
                             }
