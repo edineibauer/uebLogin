@@ -156,8 +156,11 @@ class Login
         $prazoTokenExpira = date('Y-m-d', strtotime("-12 months", strtotime(date("Y-m-d"))));
         $sql = new \Conn\SqlCommand();
         $sql->exeCommand("SELECT u.* FROM " . PRE . "usuarios as u JOIN " . PRE . "usuarios_token as t ON u.id = t.usuario WHERE t.token = '" . $this->token . "' AND u.status = 1 AND t.token_expira > " . $prazoTokenExpira);
-        if ($sql->getResult())
-            return $this->getUsuarioDataRelation($sql->getResult()[0]);
+        if ($sql->getResult()) {
+            $user = $sql->getResult()[0];
+            unset($user['password']);
+            return $this->getUsuarioDataRelation($user);
+        }
 
         return [];
     }
