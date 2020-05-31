@@ -190,10 +190,10 @@ class Login
             /**
              * Obtém System Data
              */
-            if (!empty($dicionarios[$usuario['setor']]))
+            if (empty($dicionarios[$usuario['setor']]))
                 $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
 
-            if (!empty($info[$usuario['setor']]))
+            if (empty($info[$usuario['setor']]))
                 $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
 
             $usuario['system'] = (!empty($info[$usuario['setor']]['system']) ? $info[$usuario['setor']]['system'] : "");
