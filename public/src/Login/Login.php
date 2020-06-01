@@ -128,17 +128,24 @@ class Login
 
                 foreach ($usuarios as $users) {
                     if (strtolower($users['nome']) === strtolower($this->user)) {
-                        if ($users['status'] === "1") {
+                        if ($users['status'] === "1")
                             $user = $this->getUsuarioDataRelation($users, "", $dicionarios, $info);
-                        } else {
+                        else
                             $this->setResult('Usuário Desativado!');
-                        }
+
                         break;
                     } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
-                        $user = $this->getUsuarioDataRelation($users, $whereUser[$users['setor']], $dicionarios, $info);
+                        $usuarioAutenticado = $this->getUsuarioDataRelation($users, $whereUser[$users['setor']], $dicionarios, $info);
 
-                        if ($user['status'] !== "1")
-                            $this->setResult('Usuário Desativado!');
+                        if(!empty($usuarioAutenticado['setorData'])) {
+                            if ($usuarioAutenticado['status'] === "1")
+                                $user = $usuarioAutenticado;
+                            else
+                                $this->setResult('Usuário Desativado!');
+
+                            break;
+                        }
+
                     }
                 }
             }
