@@ -193,7 +193,7 @@ class Login
          * Obtém Setor Data
          */
         $read = new Read();
-        $read->exeRead($usuario['setor'], $whereSetor ?? "WHERE usuarios_id = {$usuario['id']}", null, !0);
+        $read->exeRead($usuario['setor'], "WHERE usuarios_id = {$usuario['id']}" . $whereSetor, null, !0);
         if ($read->getResult()) {
             $usuario['setorData'] = $read->getResult()[0];
 
@@ -240,10 +240,8 @@ class Login
         $info = [];
         $dicionarios = [];
         $whereUser = [];
-        $userSetorIds = [];
         foreach ($usuarios as $usuario) {
             if (!empty($usuario['setor'])) {
-                $userSetorIds[$usuario['setor']][] = $usuario['id'];
 
                 if (empty($dicionarios[$usuario['setor']])) {
                     $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
@@ -252,7 +250,7 @@ class Login
                     $where = "";
                     if (!empty($info[$usuario['setor']]['unique'])) {
                         foreach ($info[$usuario['setor']]['unique'] as $id)
-                            $where .= (empty($where) ? "" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+                            $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
                     }
 
                     /**
@@ -265,14 +263,9 @@ class Login
                     if (!empty($info[$usuario['setor']]['tel']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
                         $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
 
-                    $whereUser[$usuario['setor']] = (!empty($where) ? "WHERE ({$where})" : "WHERE id = -1");
+                    $whereUser[$usuario['setor']] = $where . (!empty($where) ? ")" : "");
                 }
             }
-        }
-
-        foreach ($whereUser as $setor => $item) {
-            if(!empty($userSetorIds[$setor]))
-                $whereUser[$setor] .= " && usuarios_id IN(" . implode(", ", $userSetorIds[$setor]) . ")";
         }
 
         return [$whereUser, $dicionarios, $info];
