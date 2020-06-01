@@ -118,7 +118,7 @@ class Login
     {
         if (!$this->getResult()) {
 
-            $user = null;
+            $user = [];
             $read = new Read();
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}", !0);
             if ($read->getResult()) {
