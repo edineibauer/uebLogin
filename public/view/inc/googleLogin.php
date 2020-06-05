@@ -12,11 +12,19 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) { ?>
                 gapi.auth2.getAuthInstance().signOut();
 
             } else {
-                var profile = googleUser.getBasicProfile();
+                let profile = googleUser.getBasicProfile();
+                toast("Implemente a função `onSignIn`", 5000, "toast-warning");
+
+                console.log(profile);
+
+                /*//Verifica se este usuário já existe
                 getJSON(HOME + "app/find/clientes/email/" + profile.getEmail()).then(r => {
                     if (!isEmpty(r.clientes)) {
+                        //se já existe, tenta logar com email e código
                         exeLogin(profile.getEmail(), profile.getId())
                     } else {
+
+                        //se não existe, cria novo
                         db.exeCreate("clientes", {
                             nome: profile.getName(),
                             email: profile.getEmail(),
@@ -24,11 +32,13 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) { ?>
                             senha: profile.getId(),
                             ativo: 1
                         }).then(result => {
+
+                            //depois de criar, tenta logar
                             if (result.db_errorback === 0)
                                 exeLogin(result.email, profile.getId())
                         })
                     }
-                });
+                });*/
             }
         }
 
