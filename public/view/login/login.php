@@ -1,8 +1,5 @@
 <?php
-if (!empty($_SESSION['userlogin']['token'])) {
-    $data = ["response" => 3, "data" => HOME . "dashboard", "error" => []];
-} else {
-    ob_start();
+if (empty($_SESSION['userlogin'])) {
     ?>
     <div class='row container font-large' style="max-width: 470px; margin: auto">
         <div class="container align-center upper panel color-text-grey" id="logoLogin">
@@ -41,7 +38,7 @@ if (!empty($_SESSION['userlogin']['token'])) {
         <div class="row clearfix" style="padding: 2px"></div>
 
         <div class="row padding-medium">
-            <?php include_once PATH_HOME . VENDOR . "login/public/view/inc/googleLogin.php" ?>
+            <?php include_once PATH_HOME . VENDOR . "login/public/view/login/inc/googleLogin.php" ?>
         </div>
 
         <div class="row padding-medium padding-4">
@@ -67,6 +64,4 @@ if (!empty($_SESSION['userlogin']['token'])) {
         <div class="clear"><br><br><br></div>
     </div>
     <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
 }

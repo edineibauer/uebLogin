@@ -1,8 +1,5 @@
 <?php
-if (!empty($_SESSION['userlogin']['token'])) {
-    $data = ["response" => 3, "data" => HOME . "dashboard", "error" => []];
-} else {
-    ob_start();
+if (empty($_SESSION['userlogin'])) {
     ?>
     <div class='row font-large' style="max-width: 450px; margin: auto">
         <div class="clear"><br><br><br></div>
@@ -32,6 +29,4 @@ if (!empty($_SESSION['userlogin']['token'])) {
     </div>
 
     <?php
-    $data['data'] = ob_get_contents();
-    ob_end_clean();
 }

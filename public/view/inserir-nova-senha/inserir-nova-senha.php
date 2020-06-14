@@ -1,7 +1,4 @@
 <?php
-
-ob_start();
-
 $code = explode('get/inserir-nova-senha/', $_SERVER['REQUEST_URI']);
 if(!empty($code[1])){
     $code = $code[1];
@@ -55,5 +52,3 @@ if(!empty($code[1])){
     </div>
     <?php
 }
-$data['data'] = ob_get_contents();
-ob_end_clean();
