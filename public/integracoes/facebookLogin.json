@@ -1,0 +1,14 @@
+{
+  "nome": "Facebook Login",
+  "link": "https://developers.facebook.com/apps/",
+  "constantes": {
+    "Id do Aplicativo": {
+      "input": "text",
+      "column": "facebookaplicationid"
+    },
+    "Versão do Facebook (v7.0)": {
+      "input": "text",
+      "column": "facebookversion"
+    }
+  }
+}

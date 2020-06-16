@@ -4,11 +4,11 @@
   "constantes": {
     "Client ID": {
       "input": "text",
-      "column": "googleLoginClientID"
+      "column": "googleloginclientid"
     },
     "Client Secret": {
       "input": "text",
-      "column": "googleLoginClientSecret"
+      "column": "googleloginclientsecret"
     }
   }
 }

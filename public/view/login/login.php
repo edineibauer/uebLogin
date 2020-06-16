@@ -38,7 +38,8 @@ if (empty($_SESSION['userlogin'])) {
         <div class="row clearfix" style="padding: 2px"></div>
 
         <div class="row padding-medium">
-            <?php include_once PATH_HOME . VENDOR . "login/public/view/login/inc/googleLogin.php" ?>
+            <?php \Login\Social::googleLogin(); ?>
+            <?php \Login\Social::facebookLogin(); ?>
         </div>
 
         <div class="row padding-medium padding-4">
