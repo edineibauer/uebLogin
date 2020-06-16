@@ -6,17 +6,16 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
          * Login with the user facebook
          */
         async function loginUserFBBase() {
+            let user = await getUserFB();
+            user.image = user.picture.data.url;
+            delete(user.picture);
+
             if(typeof loginFacebook === "function") {
-                loginFacebook(await getUserFB());
+                loginFacebook(user);
             } else {
                 toast("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning");
-                console.log("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", await getUserFB());
+                console.log("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", user);
             }
-
-            /**
-             * after work with the data user, logout
-             */
-            FB.logout();
         }
 
         /**

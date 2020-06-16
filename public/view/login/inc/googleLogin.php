@@ -6,11 +6,17 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) { ?>
     <script>
         function loginUserGoogleBase(googleUser) {
             let profile = googleUser.getBasicProfile();
+            let user = {
+                id: profile.getId(),
+                name: profile.getName(),
+                email: profile.getEmail(),
+                image: profile.getImageUrl(),
+            }
             if (typeof loginGoogle === "function") {
-                loginGoogle(googleUser.getBasicProfile());
+                loginGoogle(user);
             } else {
                 toast("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning")
-                console.log("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", profile);
+                console.log("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", user);
             }
 
             /**
