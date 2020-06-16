@@ -2,6 +2,39 @@
 if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
     ?>
     <script>
+        /**
+         * Login with the user facebook
+         */
+        async function loginUserFBBase() {
+            if(typeof loginFacebook === "function") {
+                loginFacebook(await getUserFB());
+            } else {
+                toast("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning");
+                console.log("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", await getUserFB());
+            }
+
+            /**
+             * after work with the data user, logout
+             */
+            FB.logout();
+        }
+
+        /**
+         * Get the facebook perfil
+         */
+        async function getUserFB() {
+            return new Promise(s => {
+                FB.api(
+                    '/me',
+                    'GET',
+                    {"fields":"id,name,picture{url},email"},
+                    function(response) {
+                        s(response);
+                    }
+                );
+            });
+        }
+
         window.fbAsyncInit = function () {
             FB.init({
                 appId: '<?=FACEBOOKAPLICATIONID?>',
@@ -9,26 +42,6 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
                 xfbml: true,
                 version: '<?=defined('FACEBOOKVERSION') && !empty(FACEBOOKVERSION) ? FACEBOOKVERSION : "v7.0"?>'
             });
-
-            FB.AppEvents.logPageView();
-
-            /**
-             * Obter status de login
-             */
-            FB.getLoginStatus(function (response) {
-                console.log("status: ", response);
-                statusChangeCallback(response);
-            });
-
-            /**
-             * Função a ser disparada depois que obtiver a resposta do facebook
-             */
-            function checkLoginState() {
-                FB.getLoginStatus(function (response) {
-                    console.log("login: ", response);
-                    statusChangeCallback(response);
-                });
-            }
         };
 
         (function (d, s, id) {
@@ -45,7 +58,8 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
     </script>
 
     <div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default"
-         data-auto-logout-link="false" data-use-continue-as="true" data-width="" onlogin="checkLoginState();"></div>
+         data-auto-logout-link="false" data-use-continue-as="true" data-width="" onlogin="loginUserFBBase();"></div>
+
     <style>
         .fb-login-button {
             float: right;
