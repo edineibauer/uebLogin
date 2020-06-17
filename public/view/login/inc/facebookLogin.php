@@ -41,6 +41,19 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
                 xfbml: true,
                 version: '<?=defined('FACEBOOKVERSION') && !empty(FACEBOOKVERSION) ? FACEBOOKVERSION : "v7.0"?>'
             });
+
+            $(".facebook-login").one("click", function () {
+                FB.getLoginStatus(function(response) {
+                    if (response.status === 'connected') {
+                        loginUserFBBase();
+                    } else {
+                        FB.login(function(response) {
+                            if (response.authResponse)
+                                loginUserFBBase();
+                        });
+                    }
+                });
+            });
         };
 
         (function (d, s, id) {
@@ -56,12 +69,24 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
 
     </script>
 
-    <div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default"
-         data-auto-logout-link="false" data-use-continue-as="true" data-width="" onlogin="loginUserFBBase();"></div>
+    <button class="facebook-login">
+        facebook login
+    </button>
 
     <style>
-        .fb-login-button {
-            float: right;
+        .facebook-login {
+            background-image: url("<?=HOME . VENDOR?>login/public/assets/img/facebook.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-color: #1877f2;
+            width: 100%;
+            height: 40px;
+            color: #ffffff;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+            border: none;
+            border-radius: 4px!important;
+            font-size: 13px!important;
         }
     </style>
     <?php
