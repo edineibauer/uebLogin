@@ -42,7 +42,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
                 version: '<?=defined('FACEBOOKVERSION') && !empty(FACEBOOKVERSION) ? FACEBOOKVERSION : "v7.0"?>'
             });
 
-            $(".facebook-login").one("click", function () {
+            $(".facebook-login").off("click").on("click", function () {
                 FB.getLoginStatus(function(response) {
                     if (response.status === 'connected') {
                         loginUserFBBase();
