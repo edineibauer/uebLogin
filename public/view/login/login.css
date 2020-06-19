@@ -7,6 +7,12 @@
     border-radius: 3px;
 }
 
+#logoLogin {
+    margin: auto;
+    float: initial;
+    display: block;
+}
+
 #loginbtn {
     border-radius: 3px;
     margin: auto;

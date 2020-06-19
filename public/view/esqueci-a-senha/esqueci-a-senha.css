@@ -2,9 +2,13 @@
 background: {{theme}};
 }
 
+#logoLogin {
+    margin: auto;
+    float: initial;
+    display: block;
+}
 
 /* Animation */
-
 
 .waves {
     position: fixed;
