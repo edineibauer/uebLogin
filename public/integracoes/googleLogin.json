@@ -9,6 +9,10 @@
     "Client Secret": {
       "input": "text",
       "column": "googleloginclientsecret"
+    },
+    "Entidade para Cadastrar": {
+      "input": "text",
+      "column": "googleentity"
     }
   }
 }

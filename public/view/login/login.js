@@ -7,6 +7,39 @@ function login() {
     exeLogin($("#emaillog").val(), $("#passlog").val(), $("#g-recaptcha-response").val());
 }
 
+/**
+ * login Social work with the user data to
+ * create a new user or login
+ */
+function loginSocial(profile, social) {
+    //search for the user email
+    let entity = eval(social.toUpperCase() + "entity".toUpperCase());
+    getJSON(HOME + "app/find/" + entity + "/email/" + profile.email).then(r => {
+        if (!isEmpty(r.clientes)) {
+            exeLogin(profile.email, profile.id)
+        } else {
+            db.exeCreate(entity, {
+                nome: profile.name,
+                email: profile.email,
+                imagem_url: profile.image,
+                senha: profile.id,
+                ativo: 1
+            }).then(result => {
+                if (result.db_errorback === 0)
+                    exeLogin(result.email, profile.id)
+            })
+        }
+    });
+}
+
+function loginFacebook(profile) {
+    loginSocial(profile, 'facebook');
+}
+
+function loginGoogle(profile) {
+    loginSocial(profile, 'google');
+}
+
 function exeLogin(email, senha, recaptcha) {
     if (loginFree) {
         $("#login-card").loading();

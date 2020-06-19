@@ -43,16 +43,26 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
             });
 
             $(".facebook-login").off("click").on("click", function () {
-                FB.getLoginStatus(function(response) {
-                    if (response.status === 'connected') {
-                        loginUserFBBase();
-                    } else {
-                        FB.login(function(response) {
-                            if (response.authResponse)
-                                loginUserFBBase();
-                        });
-                    }
-                });
+                <?php
+                if(defined("FACEBOOKENTITY") && !empty(FACEBOOKENTITY)) {
+                    ?>
+
+                    FB.getLoginStatus(function(response) {
+                        if (response.status === 'connected') {
+                            loginUserFBBase();
+                        } else {
+                            FB.login(function(response) {
+                                if (response.authResponse)
+                                    loginUserFBBase();
+                            });
+                        }
+                    });
+
+                <?php
+                } else {
+                    echo "toast('defina a entidade do facebook');";
+                }
+                ?>
             });
         };
 
