@@ -16,9 +16,9 @@ function exeLogin(email, senha, recaptcha) {
                 loginFree = !0;
                 navigator.vibrate(100);
                 if (g !== "no-network")
-                    toast(g, 3000, "toast-warning")
+                    toast(g, 3000, "toast-error")
             } else {
-                toast("Seja bem vindo, entrando...", 15000, "toast-success");
+                toast("Seja bem vindo, acessando...", 15000, "toast-success");
                 setCookieUser(g).then(() => {
                     let destino = "dashboard";
                     if (getCookie("redirectOnLogin") !== "") {

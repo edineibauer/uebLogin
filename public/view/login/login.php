@@ -1,12 +1,12 @@
 <?php
 if (empty($_SESSION['userlogin'])) {
     ?>
-    <div class='row container font-large' style="max-width: 470px; margin: auto">
-        <div class="container align-center upper panel color-text-grey" id="logoLogin">
+    <div class='row container font-large' style="z-index:100;position:relative;max-width: 470px; margin: auto">
+        <div class="container align-center upper panel color-text-grey padding-64 padding-bottom" id="logoLogin">
             <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
                  style='height: 60px;float: initial;margin:initial'>
         </div>
-        <div class='container align-center upper panel color-text-grey'>área restrita <?= SITENAME ?></div>
+        <div class='container align-center upper panel theme-text-aux'>acesso <?= SITENAME ?></div>
         <div class="row padding-medium">
             <div class="row z-depth-2 color-white" id="login-card">
                 <div class="panel">
@@ -32,6 +32,10 @@ if (empty($_SESSION['userlogin'])) {
                         <input type="hidden" id="g-recaptcha-response"/>
                         <?php } ?>
                     </div>
+                    <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity"
+                            onclick="login();">
+                        Entrar
+                    </button>
                 </div>
             </div>
         </div>
@@ -42,27 +46,29 @@ if (empty($_SESSION['userlogin'])) {
             <?php \Login\Social::facebookLogin(); ?>
         </div>
 
-        <div class="row padding-medium padding-4">
-            <button id="loginbtn" class="col s-font-large upper btn-large theme-d2 hover-opacity-off opacity"
-                    onclick="login();">
-                Entrar
-            </button>
-        </div>
-
-        <div class="row clearfix"><br></div>
-
         <div class="row upper color-text-grey font-small padding-medium padding-4">
-            <!--<a href="<? /*= defined('HOME') ? HOME : "" */ ?>cadastro-usuario"
-               class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
-                Cadastre-se
-            </a>-->
             <a href="<?= defined('HOME') ? HOME : "" ?>esqueci-a-senha"
-               class="right btn color-white color-text-grey hover-opacity-off opacity"
+               class="right btn radius color-white color-text-grey hover-opacity-off opacity"
                style="text-decoration: none; margin-right:0">
                 esqueci a senha
             </a>
         </div>
         <div class="clear"><br><br><br></div>
     </div>
+
+    <!--Waves Container-->
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+    </svg>
+    <!--Waves end-->
     <?php
 }

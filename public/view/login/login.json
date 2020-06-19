@@ -3,5 +3,6 @@
   "subtitle": "faça login para continuar",
   "type": "page",
   "css": ["w3"],
+  "header": false,
   "navbar": false
 }

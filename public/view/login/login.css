@@ -1,5 +1,5 @@
 {
-    background: #eeeeee;
+    background: {{theme}};
 }
 
 #login-card {
@@ -9,6 +9,10 @@
 
 #loginbtn {
     border-radius: 3px;
+    margin: auto;
+    float: initial;
+    display: block;
+    padding: 10px 50px;
 }
 
 .abcRioButtonContents > span {
@@ -20,4 +24,74 @@ span[id^=not_signed_]:before, span[id^=connected]:before {
     padding-right: 100px;
     padding-left: 7px;
     font-size: 13px;
+}
+
+
+
+/* Animation */
+
+
+.waves {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    width: 500%;
+    height: 600px;
+    margin-bottom: -7px; /*Fix for safari gap*/
+}
+
+.content {
+    position: relative;
+    height: 20vh;
+    text-align: center;
+    background-color: white;
+}
+
+.parallax > use {
+    animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+}
+
+.parallax > use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 17s;
+}
+
+.parallax > use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 20s;
+}
+
+.parallax > use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 23s;
+}
+
+.parallax > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 30s;
+}
+
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+    100% {
+        transform: translate3d(85px, 0, 0);
+    }
+}
+
+/*Shrinking for mobile*/
+@media (max-width: 768px) {
+    .waves {
+        height: 40px;
+        min-height: 40px;
+    }
+
+    .content {
+        height: 30vh;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
 }
