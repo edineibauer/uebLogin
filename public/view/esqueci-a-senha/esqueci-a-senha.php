@@ -3,10 +3,10 @@ if (empty($_SESSION['userlogin'])) {
     ?>
     <div class='row font-large' style="z-index:100; position: relative; max-width: 450px; margin: auto">
         <div class="clear"><br></div>
-        <div class="container align-center upper panel color-text-grey padding-64 padding-bottom" id="logoLogin">
+        <a href="<?=HOME?>" class="container align-center upper panel color-text-grey padding-64 padding-bottom" id="logoLogin">
             <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
                  style='height: 60px;float: initial;margin:initial'>
-        </div>
+        </a>
         <div class='container align-center upper panel font-light theme-text-aux'>Recuperar senha</div>
         <div class="row z-depth-2 radius color-white padding-medium margin-medium padding-4">
             <div class="panel">

@@ -2,10 +2,10 @@
 if (empty($_SESSION['userlogin'])) {
     ?>
     <div class='row container font-large' style="z-index:100;position:relative;max-width: 470px; margin: auto">
-        <div class="container align-center upper panel color-text-grey padding-64 padding-bottom" id="logoLogin">
+        <a href="<?=HOME?>" class="container align-center upper panel color-text-grey padding-64 padding-bottom" id="logoLogin">
             <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
                  style='height: 60px;float: initial;margin:initial'>
-        </div>
+        </a>
         <div class='container align-center upper panel theme-text-aux'>acesso <?= SITENAME ?></div>
         <div class="row padding-medium">
             <div class="row z-depth-2 color-white" id="login-card">
