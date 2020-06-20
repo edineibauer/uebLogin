@@ -3,8 +3,8 @@
   "subtitle": "restauração da senha",
   "type": "page",
   "css": ["w3"],
+  "link": "core/backgroundThemeWave",
+  "templates": ["wavesBottom"],
   "header": false,
-  "navbar": false,
-  "setor": "0",
-  "redirect": "dashboard"
+  "navbar": false
 }

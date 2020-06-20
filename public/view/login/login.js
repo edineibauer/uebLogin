@@ -82,6 +82,13 @@ function onSignIn(googleUser) {
 }
 
 $(function () {
+
+    if(!$("svg.waves").length) {
+        getTemplates().then(tpl => {
+            $("#core-content").after(Mustache.render(tpl.wavesBottom));
+        });
+    }
+
     if (getCookie("token") !== "" && getCookie("token") !== "0")
         location.href = "dashboard";
 
