@@ -5,28 +5,20 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) { ?>
     <meta name="google-signin-client_id" content="<?=GOOGLELOGINCLIENTID?>">
     <script>
         function loginUserGoogleBase(googleUser) {
-            <?php
-            if(defined("GOOGLEENTITY") && !empty(GOOGLEENTITY)) {
-            ?>
-                let profile = googleUser.getBasicProfile();
-                let user = {
-                    id: profile.getId(),
-                    name: profile.getName(),
-                    email: profile.getEmail(),
-                    image: profile.getImageUrl(),
-                }
-                if (typeof loginGoogle === "function") {
-                    loginGoogle(user);
-                } else {
-                    toast("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning")
-                    console.log("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", user);
-                }
-            <?php
-            } else {
-                echo "toast('defina a entidade do google');";
+            let profile = googleUser.getBasicProfile();
+            let user = {
+                id: profile.getId(),
+                name: profile.getName(),
+                email: profile.getEmail(),
+                image: profile.getImageUrl(),
+                token: googleUser.wc.id_token
             }
-            ?>
-
+            if (typeof loginGoogle === "function") {
+                loginGoogle(user);
+            } else {
+                toast("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning")
+                console.log("Admin! Implemente a função `loginGoogle(profile)` em seu código para fazer algo com os dados retornados!", user);
+            }
             /**
              * after work with the data user, logout
              */

@@ -36,10 +36,10 @@ class Social
     public static function googleGetId():string
     {
         if(!empty($_SESSION['googleToken']) && defined('GOOGLELOGINCLIENTID') && !empty(GOOGLELOGINCLIENTID) && defined('GOOGLEENTITY')) {
-            $data = file_get_contents("https://graph.facebook.com/" . FACEBOOKVERSION . "/me?fields=id&access_token=" . $_SESSION['facebookToken']);
+            $data = file_get_contents("https://oauth2.googleapis.com/tokeninfo?id_token=" . $_SESSION['googleToken']);
             if(!empty($data) && Check::isJson($data)) {
-                $idFacebook = json_decode($data, !0);
-                return !empty($idFacebook['id']) ? $idFacebook['id'] : "";
+                $idGoogle = json_decode($data, !0);
+                return !empty($idGoogle['sub']) ? $idGoogle['sub'] : "";
             }
         }
     }
