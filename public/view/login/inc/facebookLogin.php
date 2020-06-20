@@ -46,6 +46,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
             $(".facebook-login").off("click").on("click", function () {
                 FB.getLoginStatus(function(response) {
                     if (response.status === 'connected' && response.authResponse) {
+                        toast("acessando...", "toast-success");
                         loginUserFBBase(response.authResponse.accessToken);
                     } else {
                         FB.login(function(response) {
