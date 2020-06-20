@@ -293,43 +293,39 @@
     "indice": "6"
   },
   "8": {
-    "format": "boolean",
-    "type": "tinyint",
+    "format": "number",
+    "type": "int",
     "nome": "Login Social",
     "column": "login_social",
     "minimo": "",
-    "size": "1",
+    "size": "false",
     "key": "",
-    "group": "boolean",
+    "group": "",
+    "inputName": "N\u00famero Inteiro",
+    "inputType": "generico",
+    "lib": "entity-ui",
+    "js": "",
+    "css": "",
     "unique": "false",
-    "default": "0",
+    "default": "",
     "update": "true",
     "relation": "",
     "allow": {
       "regexp": "",
-      "options": [
-        {
-          "option": "0",
-          "name": "não"
-        },
-        {
-          "option": "1",
-          "name": "sim"
-        }
-      ],
+      "options": "",
       "validate": ""
     },
     "form": {
-      "input": "switch",
+      "input": "input",
       "cols": "12",
-      "colm": "2",
+      "colm": "",
       "coll": "",
       "orientation": "0",
       "class": "",
       "style": "",
       "template": "",
       "atributos": "",
-      "type": "text"
+      "type": "number"
     },
     "datagrid": {
       "grid_relevant": "",
@@ -340,6 +336,6 @@
     "select": "",
     "filter": "",
     "value": "",
-    "indice": "9"
+    "indice": "2"
   }
 }
