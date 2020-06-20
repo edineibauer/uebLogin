@@ -132,7 +132,6 @@ class Login
                      */
                     if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::googleGetId())) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
-                        unset($_SESSION['googleToken']);
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
                     }
@@ -143,7 +142,6 @@ class Login
                      */
                     if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::facebookGetId())) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
-                        unset($_SESSION['facebookToken']);
                     } else {
                         $this->setResult('Token do facebook não condiz com o Usuário!');
                     }
@@ -180,6 +178,11 @@ class Login
                     }
                 }
             }
+            if(!empty($_SESSION['googleToken']))
+                unset($_SESSION['googleToken']);
+
+            if(!empty($_SESSION['facebookToken']))
+                unset($_SESSION['facebookToken']);
 
             $this->setLogin($user);
         }
