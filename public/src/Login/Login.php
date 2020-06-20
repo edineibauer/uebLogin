@@ -118,14 +118,14 @@ class Login
     {
         if (!$this->getResult()) {
 
-            $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? "= 2" : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? "= 1" : "IS NULL"));
+            $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? 2 : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? 1 : 0));
             $user = [];
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND login_social " . $socialUser, "pass={$this->senha}", !0);
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND login_social = " . $socialUser, "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
-                if($socialUser === "= 1") {
+                if($socialUser === 1) {
                     /**
                      * Login social
                      * validate info with the token
@@ -135,7 +135,7 @@ class Login
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
                     }
-                } elseif($socialUser === "= 2") {
+                } elseif($socialUser === 2) {
                     /**
                      * Login social
                      * validate info with the token
