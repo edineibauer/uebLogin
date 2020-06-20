@@ -12,22 +12,12 @@ function login() {
  * create a new user or login
  */
 function loginSocial(profile, social) {
-    //search for the user email
-    let entity = eval(social.toUpperCase() + "entity".toUpperCase());
-    getJSON(HOME + "app/find/" + entity + "/email/" + profile.email).then(r => {
-        if (!isEmpty(r.clientes)) {
-            exeLogin(profile.email, profile.id)
+    return AJAX.post("checkUserLoginSocial", Object.assign({"social": social}, profile)).then(result => {
+        if(isEmpty(result)) {
+            return exeLogin(profile.name, profile.id);
         } else {
-            db.exeCreate(entity, {
-                nome: profile.name,
-                email: profile.email,
-                imagem_url: profile.image,
-                senha: profile.id,
-                ativo: 1
-            }).then(result => {
-                if (result.db_errorback === 0)
-                    exeLogin(result.email, profile.id)
-            })
+            console.log(result);
+            toast("Erro ao cadastrar usuário! Verifique o console para mais detalhes", 5000, "toast-error");
         }
     });
 }

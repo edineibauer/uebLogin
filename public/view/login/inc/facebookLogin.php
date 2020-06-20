@@ -5,9 +5,10 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
         /**
          * Login with the user facebook
          */
-        async function loginUserFBBase() {
+        async function loginUserFBBase(token) {
             let user = await getUserFB();
             user.image = user.picture.data.url;
+            user.token = token;
             delete(user.picture);
 
             if(typeof loginFacebook === "function") {
@@ -43,26 +44,16 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
             });
 
             $(".facebook-login").off("click").on("click", function () {
-                <?php
-                if(defined("FACEBOOKENTITY") && !empty(FACEBOOKENTITY)) {
-                    ?>
-
-                    FB.getLoginStatus(function(response) {
-                        if (response.status === 'connected') {
-                            loginUserFBBase();
-                        } else {
-                            FB.login(function(response) {
-                                if (response.authResponse)
-                                    loginUserFBBase();
-                            });
-                        }
-                    });
-
-                <?php
-                } else {
-                    echo "toast('defina a entidade do facebook');";
-                }
-                ?>
+                FB.getLoginStatus(function(response) {
+                    if (response.status === 'connected' && response.authResponse) {
+                        loginUserFBBase(response.authResponse.accessToken);
+                    } else {
+                        FB.login(function(response) {
+                            if (response.authResponse)
+                                loginUserFBBase(response.authResponse.accessToken);
+                        });
+                    }
+                });
             });
         };
 
@@ -90,13 +81,15 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
             background-repeat: no-repeat;
             background-position: left center;
             background-color: #1877f2;
-            width: 100%;
             height: 40px;
             color: #ffffff;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
             border: none;
             border-radius: 4px!important;
             font-size: 13px!important;
+            width: 160px;
+            float: right;
+            padding-left: 30px!important;
         }
     </style>
     <?php

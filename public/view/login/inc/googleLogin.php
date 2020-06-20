@@ -37,7 +37,7 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) { ?>
         .g-signin2 > .abcRioButton {
             height: 40px!important;
             padding: 3px 5px;
-            width: 120px;
+            width: 160px!important;
             border-radius: 3px;
         }
 

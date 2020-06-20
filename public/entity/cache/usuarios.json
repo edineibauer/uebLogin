@@ -291,5 +291,55 @@
     "value": "",
     "input": "input",
     "indice": "6"
+  },
+  "8": {
+    "format": "boolean",
+    "type": "tinyint",
+    "nome": "Login Social",
+    "column": "login_social",
+    "minimo": "",
+    "size": "1",
+    "key": "",
+    "group": "boolean",
+    "unique": "false",
+    "default": "0",
+    "update": "true",
+    "relation": "",
+    "allow": {
+      "regexp": "",
+      "options": [
+        {
+          "option": "0",
+          "name": "não"
+        },
+        {
+          "option": "1",
+          "name": "sim"
+        }
+      ],
+      "validate": ""
+    },
+    "form": {
+      "input": "switch",
+      "cols": "12",
+      "colm": "2",
+      "coll": "",
+      "orientation": "0",
+      "class": "",
+      "style": "",
+      "template": "",
+      "atributos": "",
+      "type": "text"
+    },
+    "datagrid": {
+      "grid_relevant": "",
+      "grid_class": "",
+      "grid_style": "",
+      "grid_template": ""
+    },
+    "select": "",
+    "filter": "",
+    "value": "",
+    "indice": "9"
   }
 }

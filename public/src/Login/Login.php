@@ -118,34 +118,63 @@ class Login
     {
         if (!$this->getResult()) {
 
+            $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? "= 2" : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? "= 1" : "IS NULL"));
             $user = [];
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass", "pass={$this->senha}", !0);
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND login_social " . $socialUser, "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
-                list($whereUser, $dicionarios, $info) = $this->getWhereUser($usuarios);
+                if($socialUser === "= 1") {
+                    /**
+                     * Login social
+                     * validate info with the token
+                     */
+                    if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::googleGetId())) {
+                        $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
+                    } else {
+                        $this->setResult('Token do google não condiz com o Usuário!');
+                    }
+                } elseif($socialUser === "= 2") {
+                    /**
+                     * Login social
+                     * validate info with the token
+                     */
+                    if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::facebookGetId())) {
+                        $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
+                    } else {
+                        $this->setResult('Token do facebook não condiz com o Usuário!');
+                    }
 
-                foreach ($usuarios as $users) {
-                    if (strtolower($users['nome']) === strtolower($this->user)) {
-                        if ($users['status'] === "1")
-                            $user = $this->getUsuarioDataRelation($users, "", $dicionarios, $info);
-                        else
-                            $this->setResult('Usuário Desativado!');
+                } else {
+                    /**
+                     * Login normal
+                     */
+                    list($whereUser, $dicionarios, $info) = $this->getWhereUser($usuarios);
 
-                        break;
-                    } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
-                        $usuarioAutenticado = $this->getUsuarioDataRelation($users, $whereUser[$users['setor']], $dicionarios, $info);
-
-                        if(!empty($usuarioAutenticado['setorData'])) {
-                            if ($usuarioAutenticado['status'] === "1")
-                                $user = $usuarioAutenticado;
-                            else
+                    foreach ($usuarios as $users) {
+                        if (strtolower($users['nome']) === strtolower($this->user)) {
+                            if ($users['status'] === "1") {
+                                $user = $this->getUsuarioDataRelation($users, "", $dicionarios, $info);
+                            } else {
                                 $this->setResult('Usuário Desativado!');
+                            }
 
                             break;
-                        }
+                        } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
+                            $usuarioAutenticado = $this->getUsuarioDataRelation($users, $whereUser[$users['setor']], $dicionarios, $info);
 
+                            if (!empty($usuarioAutenticado['setorData'])) {
+                                if ($usuarioAutenticado['status'] === "1") {
+                                    $user = $usuarioAutenticado;
+                                } else {
+                                    $this->setResult('Usuário Desativado!');
+                                }
+
+                                break;
+                            }
+
+                        }
                     }
                 }
             }
