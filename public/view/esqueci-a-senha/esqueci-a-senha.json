@@ -4,5 +4,7 @@
   "type": "page",
   "css": ["w3"],
   "header": false,
-  "navbar": false
+  "navbar": false,
+  "setor": "0",
+  "redirect": "dashboard"
 }
