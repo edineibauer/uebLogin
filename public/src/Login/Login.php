@@ -118,10 +118,10 @@ class Login
     {
         if (!$this->getResult()) {
 
-            $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? 2 : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? 1 : 0));
+            $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? 2 : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? 1 : "0 || login_social IS NULL"));
             $user = [];
             $read = new Read();
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND login_social = " . $socialUser, "pass={$this->senha}", !0);
+            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
