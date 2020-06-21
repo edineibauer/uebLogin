@@ -96,6 +96,6 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
         </style>
         <?php
     } else {
-        echo 'toast("facebook login: Entidade `' . FACEBOOKENTITY . '` não existe", 4000, "toast-error");';
+        echo '<script>toast("facebook login: Entidade `' . FACEBOOKENTITY . '` não existe", 4000, "toast-error");</script>';
     }
 }

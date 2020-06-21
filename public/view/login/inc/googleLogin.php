@@ -42,6 +42,6 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) {
         </style>
         <?php
     } else {
-        echo 'toast("google login: Entidade `' . GOOGLEENTITY . '` não existe", 4000, "toast-error");';
+        echo '<script>toast("google login: Entidade `' . GOOGLEENTITY . '` não existe", 4000, "toast-error");</script>';
     }
 }
