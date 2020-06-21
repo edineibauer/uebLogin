@@ -7,6 +7,7 @@ use Conn\TableCrud;
 use Conn\Update;
 use Conn\Create;
 use Entity\Metadados;
+use Entity\Entity;
 use Helpers\Check;
 use Helpers\Helper;
 use ReCaptcha\ReCaptcha;
@@ -121,26 +122,27 @@ class Login
             $socialUser = (defined('FACEBOOKAPLICATIONID') && !empty($_SESSION['facebookToken']) ? 2 : (defined('GOOGLELOGINCLIENTID') && !empty($_SESSION['googleToken']) ? 1 : "0 || login_social IS NULL"));
             $user = [];
             $read = new Read();
+            $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
             $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}", !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
                 if($socialUser === 1) {
                     /**
-                     * Login social
+                     * Login social google
                      * validate info with the token
                      */
-                    if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::googleGetId())) {
+                    if(!empty($usuarios) && $this->senha === Check::password(Social::googleGetId())) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
                     }
                 } elseif($socialUser === 2) {
                     /**
-                     * Login social
+                     * Login social facebook
                      * validate info with the token
                      */
-                    if($read->getRowCount() === 1 && $usuarios[0]['password'] === Check::password(Social::facebookGetId())) {
+                    if(!empty($usuarios) && $this->senha === Check::password(Social::facebookGetId())) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
                     } else {
                         $this->setResult('Token do facebook não condiz com o Usuário!');

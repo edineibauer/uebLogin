@@ -28,6 +28,8 @@ class Social
                 return !empty($idFacebook['id']) ? $idFacebook['id'] : "";
             }
         }
+
+        return "";
     }
 
     /**
@@ -42,5 +44,7 @@ class Social
                 return !empty($idGoogle['sub']) ? $idGoogle['sub'] : "";
             }
         }
+
+        return "";
     }
 }
