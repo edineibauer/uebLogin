@@ -44,7 +44,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                     version: '<?=defined('FACEBOOKVERSION') && !empty(FACEBOOKVERSION) ? FACEBOOKVERSION : "v7.0"?>'
                 });
 
-                $(".facebook-login").off("click").on("click", function () {
+                $("#app").off("click", ".facebook-login").on("click", ".facebook-login", function () {
                     FB.getLoginStatus(function (response) {
                         if (response.status === 'connected' && response.authResponse) {
                             toast("acessando...", "toast-success");
