@@ -1,6 +1,6 @@
 <?php
-if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID)) {
-    if (defined('GOOGLEENTITY') && !empty(GOOGLEENTITY) && file_exists(PATH_HOME . "entity/cache/" . GOOGLEENTITY . ".json")) {
+if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID) && defined('GOOGLEENTITY') && !empty(GOOGLEENTITY)) {
+    if (file_exists(PATH_HOME . "entity/cache/" . GOOGLEENTITY . ".json")) {
         ?>
         <div class="g-signin2" data-onsuccess="loginUserGoogleBase"></div>
         <script src="https://apis.google.com/js/platform.js" async defer></script>

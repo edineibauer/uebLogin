@@ -1,6 +1,6 @@
 <?php
-if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID)) {
-    if (defined('FACEBOOKENTITY') && !empty(FACEBOOKENTITY) && file_exists(PATH_HOME . "entity/cache/" . FACEBOOKENTITY . ".json")) {
+if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('FACEBOOKENTITY') && !empty(FACEBOOKENTITY)) {
+    if (file_exists(PATH_HOME . "entity/cache/" . FACEBOOKENTITY . ".json")) {
         ?>
         <script>
             /**
