@@ -3,6 +3,8 @@
   "subtitle": "restauração da senha",
   "type": "page",
   "css": ["w3"],
+  "setor": "0",
+  "redirect": "index",
   "link": "core/backgroundThemeWave",
   "templates": ["wavesBottom"],
   "header": false,

@@ -1,12 +1,7 @@
 <?php
 
-if (empty($_SESSION['userlogin']) && !empty($post['social']) && !empty($post['token'])) {
+if (empty($post['maestruToken']) && !empty($post['social']) && !empty($post['token'])) {
     $entity = constant(strtoupper($post['social']) . "ENTITY");
-
-    /**
-     * define token social
-     */
-    $_SESSION[$post['social'] . 'Token'] = $post['token'];
 
     /**
      * Search for the user
@@ -17,7 +12,6 @@ if (empty($_SESSION['userlogin']) && !empty($post['social']) && !empty($post['to
         /**
          * User not exist, so create
          */
-
         $userData = [];
         $findImage = !1;
 
@@ -44,6 +38,9 @@ if (empty($_SESSION['userlogin']) && !empty($post['social']) && !empty($post['to
             }
         }
 
+        /**
+         * Create new user with setor $entity
+         */
         $d = new \Entity\Dicionario($entity);
         $d->setData($userData);
         $d->save();

@@ -3,6 +3,8 @@
   "subtitle": "faça login para continuar",
   "type": "page",
   "css": ["w3"],
+  "setor": "0",
+  "redirect": "dashboard",
   "link": "core/backgroundThemeWave",
   "templates": ["wavesBottom"],
   "header": false,
