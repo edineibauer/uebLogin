@@ -322,8 +322,6 @@ class Login
             if(empty($this->token)) {
                 $this->token = $this->getToken();
 
-                $this->setCookie("token", $this->token);
-
                 //atualiza banco com token
                 $up = new Update();
                 $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", "id={$usuario['id']}");
@@ -369,12 +367,6 @@ class Login
         }
 
         return $this->getResult() ? false : true;
-    }
-
-    private function setCookie($name, $value, int $dias = 360)
-    {
-        $tempo = $dias < 0 ? time() - 1 : time() + (86400 * $dias);
-        setcookie($name, $value, $tempo, "/"); // 2 meses de cookie
     }
 
     /**

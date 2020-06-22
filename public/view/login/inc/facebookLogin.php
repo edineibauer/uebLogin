@@ -39,7 +39,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
             window.fbAsyncInit = function () {
                 FB.init({
                     appId: '<?=FACEBOOKAPLICATIONID?>',
-                    cookie: true,
+                    cookie: false,
                     xfbml: true,
                     version: '<?=defined('FACEBOOKVERSION') && !empty(FACEBOOKVERSION) ? FACEBOOKVERSION : "v7.0"?>'
                 });

@@ -44,9 +44,9 @@ function exeLogin(email, senha, recaptcha) {
                 toast("Seja bem vindo, acessando...", 15000, "toast-success");
                 setCookieUser(g).then(() => {
                     let destino = "dashboard";
-                    if (getCookie("redirectOnLogin") !== "") {
-                        destino = getCookie("redirectOnLogin");
-                        setCookie("redirectOnLogin", 1, -1);
+                    if (!!localStorage.redirectOnLogin) {
+                        destino = localStorage.redirectOnLogin;
+                        localStorage.removeItem("redirectOnLogin");
                     }
                     location.href = destino;
                 })
@@ -89,7 +89,7 @@ $(function () {
         });
     }
 
-    if (getCookie("token") !== "" && getCookie("token") !== "0")
+    if (!!localStorage.token && localStorage.token !== "0")
         location.href = "dashboard";
 
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
