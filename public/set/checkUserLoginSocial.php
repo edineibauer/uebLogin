@@ -1,6 +1,6 @@
 <?php
 
-if (empty($post['maestruToken']) && !empty($post['social']) && !empty($post['token'])) {
+if (empty($_SESSION['userlogin']['token']) && !empty($post['social'])) {
     $entity = constant(strtoupper($post['social']) . "ENTITY");
 
     /**
