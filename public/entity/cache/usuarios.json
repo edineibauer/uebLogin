@@ -55,7 +55,44 @@
     "relation": "",
     "allow": {
       "regexp": "",
-      "options": ["png","jpg","jpeg","gif","bmp","tif","tiff","psd","svg"],
+      "options": [
+        {
+          "valor": "png",
+          "representacao": "png"
+        },
+        {
+          "valor": "jpg",
+          "representacao": "jpg"
+        },
+        {
+          "valor": "jpeg",
+          "representacao": "jpeg"
+        },
+        {
+          "valor": "gif",
+          "representacao": "gif"
+        },
+        {
+          "valor": "bmp",
+          "representacao": "bmp"
+        },
+        {
+          "valor": "tif",
+          "representacao": "tif"
+        },
+        {
+          "valor": "tiff",
+          "representacao": "tiff"
+        },
+        {
+          "valor": "psd",
+          "representacao": "psd"
+        },
+        {
+          "valor": "svg",
+          "representacao": "svg"
+        }
+      ],
       "validate": ""
     },
     "form": {
@@ -132,7 +169,16 @@
     "relation": "",
     "allow": {
       "regexp": "",
-      "options": ["desativado", "ativado"],
+      "options": [
+        {
+          "valor": "0",
+          "representacao": "desativado"
+        },
+        {
+          "valor": "1",
+          "representacao": "ativado"
+        }
+      ],
       "validate": ""
     },
     "form": {
