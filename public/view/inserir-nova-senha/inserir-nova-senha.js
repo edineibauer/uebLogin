@@ -4,7 +4,7 @@ function newPassword() {
     if (novaSenha) {
         novaSenha = false;
         if ($("#nova-senha").val() === $("#nova-senha-confirm").val()) {
-            post('login', 'setNewPassword', {senha: $("#nova-senha").val(), code: $("#code").val()}, function (g) {
+            AJAX.post('setNewPassword', {senha: $("#nova-senha").val(), code: $("#code").val()}).then(g => {
                 if (g === "1") {
                     toast('Senha Modificada, redirecionando...', 1200);
                     setTimeout(function () {
