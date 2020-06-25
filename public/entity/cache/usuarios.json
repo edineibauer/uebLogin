@@ -55,44 +55,7 @@
     "relation": "",
     "allow": {
       "regexp": "",
-      "options": [
-        {
-          "valor": "png",
-          "representacao": "png"
-        },
-        {
-          "valor": "jpg",
-          "representacao": "jpg"
-        },
-        {
-          "valor": "jpeg",
-          "representacao": "jpeg"
-        },
-        {
-          "valor": "gif",
-          "representacao": "gif"
-        },
-        {
-          "valor": "bmp",
-          "representacao": "bmp"
-        },
-        {
-          "valor": "tif",
-          "representacao": "tif"
-        },
-        {
-          "valor": "tiff",
-          "representacao": "tiff"
-        },
-        {
-          "valor": "psd",
-          "representacao": "psd"
-        },
-        {
-          "valor": "svg",
-          "representacao": "svg"
-        }
-      ],
+      "options": ["png","jpg","jpeg","gif","bmp","tif","tiff","psd","svg"],
       "validate": ""
     },
     "form": {
@@ -169,16 +132,7 @@
     "relation": "",
     "allow": {
       "regexp": "",
-      "options": [
-        {
-          "option": "0",
-          "name": "desativado"
-        },
-        {
-          "option": "1",
-          "name": "ativado"
-        }
-      ],
+      "options": ["desativado", "ativado"],
       "validate": ""
     },
     "form": {
