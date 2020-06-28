@@ -7,29 +7,6 @@ function login() {
     exeLogin($("#emaillog").val(), $("#passlog").val(), null, null, $("#g-recaptcha-response").val());
 }
 
-/**
- * login Social work with the user data to
- * create a new user or login
- */
-function loginSocial(profile, social) {
-    return AJAX.post("checkUserLoginSocial", Object.assign({"social": social}, profile)).then(result => {
-        if(isEmpty(result)) {
-            return exeLogin(profile.name, profile.id, social, profile.token);
-        } else {
-            console.log(result);
-            toast("Erro ao cadastrar usuário! Verifique o console para mais detalhes", 5000, "toast-error");
-        }
-    });
-}
-
-function loginFacebook(profile) {
-    loginSocial(profile, 'facebook');
-}
-
-function loginGoogle(profile) {
-    loginSocial(profile, 'google');
-}
-
 function exeLogin(email, senha, social, token, recaptcha) {
     if (loginFree) {
         $("#login-card").loading();

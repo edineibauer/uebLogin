@@ -3,6 +3,53 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
     if (file_exists(PATH_HOME . "entity/cache/" . FACEBOOKENTITY . ".json")) {
         ?>
         <script>
+
+            if (typeof loginSocial !== "function") {
+                function loginSocial(profile, social) {
+                    return AJAX.post("checkUserLoginSocial", Object.assign({"social": social}, profile)).then(result => {
+                        if (isEmpty(result)) {
+                            return exeLogin(profile.name, profile.id, social, profile.token);
+                        } else {
+                            console.log(result);
+                            toast("Erro ao cadastrar usuário! Verifique o console para mais detalhes", 5000, "toast-error");
+                        }
+                    });
+                }
+            }
+
+            if (typeof exeLogin !== "function") {
+                function exeLogin(email, senha, social, token, recaptcha) {
+                    if (loginFree) {
+                        $("#login-card").loading();
+                        loginFree = !1;
+                        AJAX.post('login', {
+                            email: email,
+                            pass: senha,
+                            social: social,
+                            token: token,
+                            recaptcha: recaptcha
+                        }).then(g => {
+                            if (typeof g === "string") {
+                                loginFree = !0;
+                                navigator.vibrate(100);
+                                if (g !== "no-network")
+                                    toast(g, 3000, "toast-error")
+                            } else {
+                                toast("Seja bem vindo, acessando...", 15000, "toast-success");
+                                setCookieUser(g).then(() => {
+                                    let destino = "dashboard";
+                                    if (!!localStorage.redirectOnLogin) {
+                                        destino = localStorage.redirectOnLogin;
+                                        localStorage.removeItem("redirectOnLogin");
+                                    }
+                                    location.href = destino;
+                                })
+                            }
+                        });
+                    }
+                }
+            }
+
             /**
              * Login with the user facebook
              */
@@ -12,12 +59,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                 user.token = token;
                 delete (user.picture);
 
-                if (typeof loginFacebook === "function") {
-                    loginFacebook(user);
-                } else {
-                    toast("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", 10000, "toast-warning");
-                    console.log("Admin! Implemente a função `loginFacebook(profile)` em seu código para fazer algo com os dados retornados!", user);
-                }
+                loginSocial(user, 'facebook');
             }
 
             /**
