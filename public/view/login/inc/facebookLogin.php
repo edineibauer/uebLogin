@@ -110,7 +110,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
 
         <style>
             .facebook-login {
-                background-image: url("<?=HOME . VENDOR?>login/public/assets/img/facebook.png");
+                background-image: url("<?=SERVER . VENDOR?>login/public/assets/img/facebook.png");
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: left center;
