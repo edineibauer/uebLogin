@@ -21,7 +21,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                         } else {
                             toast("Seja bem vindo, acessando...", 15000, "toast-success");
                             setCookieUser(g).then(() => {
-                                let destino = "dashboard";
+                                let destino = "index";
                                 if (!!localStorage.redirectOnLogin) {
                                     destino = localStorage.redirectOnLogin;
                                     localStorage.removeItem("redirectOnLogin");
@@ -60,7 +60,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                     FB.api(
                         '/me',
                         'GET',
-                        {"fields": "id,name,picture{url},email"},
+                        {"fields": "id,name,email,picture{url}"},
                         function (response) {
                             s(response);
                         }
