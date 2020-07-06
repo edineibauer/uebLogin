@@ -1,13 +1,22 @@
 <?php
 
-if (empty($_SESSION['userlogin']['token']) && !empty($post['social'])) {
-    $entity = constant(strtoupper($post['social']) . "ENTITY");
+$token = filter_input(INPUT_POST, 'token', FILTER_DEFAULT);
+$social = filter_input(INPUT_POST, 'social', FILTER_DEFAULT);
+$post = [
+    "id" => trim(strip_tags(filter_input(INPUT_POST, 'id', FILTER_DEFAULT))),
+    "name" => trim(strip_tags(filter_input(INPUT_POST, 'name', FILTER_DEFAULT))),
+    "image" => trim(strip_tags(filter_input(INPUT_POST, 'image', FILTER_DEFAULT))),
+    "email" => trim(strip_tags(filter_input(INPUT_POST, 'email', FILTER_DEFAULT)))
+];
+
+if (empty($token) && !empty($social)) {
+    $entity = constant(strtoupper($social) . "ENTITY");
 
     /**
      * Search for the user
      */
     $read = new \Conn\Read();
-    $read->exeRead("usuarios", "WHERE password = '" . \Helpers\Check::password($post['id']) . "' AND login_social = " . ($post['social'] === "facebook" ? 2 : 1) . " AND status = 1 AND setor = '{$entity}'");
+    $read->exeRead("usuarios", "WHERE password = '" . \Helpers\Check::password($post['id']) . "' AND login_social = " . ($social === "facebook" ? 2 : 1) . " AND setor = '{$entity}'");
     if (!$read->getResult()) {
         /**
          * User not exist, so create
@@ -37,6 +46,11 @@ if (empty($_SESSION['userlogin']['token']) && !empty($post['social'])) {
                     }
             }
         }
+
+        /**
+         * Define session socialToken to create user social
+         */
+        $_SESSION['userlogin']['socialToken'] = $token;
 
         /**
          * Create new user with setor $entity

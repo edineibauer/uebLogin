@@ -44,7 +44,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
 
                 return AJAX.post("checkUserLoginSocial", Object.assign({"social": "facebook"}, profile)).then(result => {
                     if (isEmpty(result)) {
-                        return exeLogin(profile.name, profile.id, "facebook", profile.token);
+                        return exeLoginFacebook(profile.email, profile.id, "facebook", profile.token);
                     } else {
                         console.log(result);
                         toast("Erro ao cadastrar usuário! Verifique o console para mais detalhes", 5000, "toast-error");

@@ -139,7 +139,7 @@ class Login
                      * Login social google
                      * validate info with the token
                      */
-                    if(!empty($usuarios) && $this->senha === Check::password(Social::googleGetId($this->socialToken))) {
+                    if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::googleGetId($this->socialToken))) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
@@ -149,7 +149,7 @@ class Login
                      * Login social facebook
                      * validate info with the token
                      */
-                    if(!empty($usuarios) && $this->senha === Check::password(Social::facebookGetId($this->socialToken))) {
+                    if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::facebookGetId($this->socialToken))) {
                         $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
                     } else {
                         $this->setResult('Token do facebook não condiz com o Usuário!');
