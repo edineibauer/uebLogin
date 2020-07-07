@@ -9,7 +9,7 @@ $post = [
     "email" => trim(strip_tags(filter_input(INPUT_POST, 'email', FILTER_DEFAULT)))
 ];
 
-if (empty($token) && !empty($social)) {
+if (!empty($token) && !empty($social)) {
     $entity = constant(strtoupper($social) . "ENTITY");
 
     /**
