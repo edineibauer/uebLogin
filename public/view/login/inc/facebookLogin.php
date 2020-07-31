@@ -85,7 +85,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                             FB.login(function (response) {
                                 if (response.authResponse)
                                     loginUserFBBase(response.authResponse.accessToken);
-                            });
+                            }, {scope: 'email'});
                         }
                     });
                 });
