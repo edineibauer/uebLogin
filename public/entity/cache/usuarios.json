@@ -98,7 +98,7 @@
     "form": {
       "input": "file_list",
       "cols": "12",
-      "colm": "",
+      "colm": "6",
       "coll": "",
       "orientation": "0",
       "class": "",
@@ -139,7 +139,7 @@
     "form": {
       "input": "input",
       "cols": "12",
-      "colm": "6",
+      "colm": "5",
       "coll": "",
       "orientation": "0",
       "class": "",
@@ -184,7 +184,7 @@
     "form": {
       "input": "switch",
       "cols": "12",
-      "colm": "2",
+      "colm": "1",
       "coll": "",
       "orientation": "0",
       "class": "",
@@ -315,18 +315,7 @@
       "options": "",
       "validate": ""
     },
-    "form": {
-      "input": "input",
-      "cols": "12",
-      "colm": "",
-      "coll": "",
-      "orientation": "0",
-      "class": "",
-      "style": "",
-      "template": "",
-      "atributos": "",
-      "type": "number"
-    },
+    "form": "false",
     "datagrid": {
       "grid_relevant": "",
       "grid_class": "",
