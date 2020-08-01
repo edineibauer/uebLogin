@@ -139,7 +139,7 @@
     "form": {
       "input": "input",
       "cols": "12",
-      "colm": "5",
+      "colm": "6",
       "coll": "",
       "orientation": "0",
       "class": "",
@@ -181,18 +181,7 @@
       ],
       "validate": ""
     },
-    "form": {
-      "input": "switch",
-      "cols": "12",
-      "colm": "1",
-      "coll": "",
-      "orientation": "0",
-      "class": "",
-      "style": "padding-top: 8px;",
-      "template": "",
-      "atributos": "",
-      "type": "text"
-    },
+    "form": "false",
     "datagrid": {
       "grid_relevant": "",
       "grid_class": "",
