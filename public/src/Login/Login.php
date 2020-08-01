@@ -316,10 +316,7 @@ class Login
     public function setLogin(array $usuario)
     {
         if ($usuario) {
-            if (!empty($usuario['imagem'])) {
-                $usuario['imagem'] = json_decode($usuario['imagem'], !0)[0];
-                unset($usuario['imagem']['preview']);
-            }
+            $usuario['imagem'] = (!empty($usuario['imagem']) ? json_decode($usuario['imagem'], !0)[0] : null);
 
             if(empty($this->token)) {
                 $this->token = $this->getToken();
