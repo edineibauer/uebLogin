@@ -105,7 +105,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
         </script>
 
         <button class="facebook-login">
-            facebook login
+            facebook
         </button>
 
         <style>
@@ -121,7 +121,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                 border: none;
                 border-radius: 4px !important;
                 font-size: 13px !important;
-                width: 160px;
+                width: 125px;
                 float: right;
                 padding-left: 30px !important;
             }

@@ -2,7 +2,7 @@
 if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID) && defined('GOOGLEENTITY') && !empty(GOOGLEENTITY)) {
     if (file_exists(PATH_HOME . "entity/cache/" . GOOGLEENTITY . ".json")) {
         ?>
-        <div id="googleBtnLogin" onclick="appStart()">google login</div>
+        <div id="googleBtnLogin" onclick="appStart()">google</div>
         <script src="https://apis.google.com/js/platform.js" defer async></script>
         <script>
             var auth2; // The Sign-In object.
@@ -117,7 +117,7 @@ if (defined("GOOGLELOGINCLIENTID") && !empty(GOOGLELOGINCLIENTID) && defined('GO
                 height: 40px !important;
                 padding: 8px 5px;
                 text-align: center;
-                width: 160px !important;
+                width: 125px !important;
                 border-radius: 4px;
                 font-size: 13px !important;
                 float: left;
