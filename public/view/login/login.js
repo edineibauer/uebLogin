@@ -42,5 +42,7 @@ $(function () {
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
             login();
+    }).off("click", "#loginbtn").on("click", "#loginbtn", function () {
+        login();
     });
 });

@@ -30,8 +30,7 @@
                     <input type="hidden" id="g-recaptcha-response"/>
                     <?php } ?>
                 </div>
-                <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity"
-                        onclick="login();">
+                <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity">
                     Entrar
                 </button>
             </div>
