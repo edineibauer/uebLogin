@@ -2,12 +2,12 @@
 
 namespace Login;
 
+use Config\Config;
 use Conn\Read;
 use Conn\TableCrud;
 use Conn\Update;
 use Conn\Create;
 use Entity\Metadados;
-use Entity\Entity;
 use Helpers\Check;
 use Helpers\Helper;
 use ReCaptcha\ReCaptcha;
@@ -140,7 +140,7 @@ class Login
                      * validate info with the token
                      */
                     if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::googleGetId($this->socialToken))) {
-                        $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
+                        $user = $this->getUsuarioDataRelation($usuarios[0]);
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
                     }
@@ -150,7 +150,7 @@ class Login
                      * validate info with the token
                      */
                     if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::facebookGetId($this->socialToken))) {
-                        $user = $this->getUsuarioDataRelation($usuarios[0], "", Entity::dicionario($usuarios[0]['setor']), Entity::info($usuarios[0]['setor']));
+                        $user = $this->getUsuarioDataRelation($usuarios[0]);
                     } else {
                         $this->setResult('Token do facebook não condiz com o Usuário!');
                     }
@@ -159,30 +159,27 @@ class Login
                     /**
                      * Login normal
                      */
-                    list($whereUser, $dicionarios, $info) = $this->getWhereUser($usuarios);
+                    $whereUser = $this->getWhereUser($usuarios);
 
                     foreach ($usuarios as $users) {
                         if (strtolower($users['nome']) === strtolower($this->user)) {
                             if ($users['status'] === "1") {
-                                $user = $this->getUsuarioDataRelation($users, "", $dicionarios, $info);
+                                $user = $this->getUsuarioDataRelation($users);
                             } else {
                                 $this->setResult('Usuário Desativado!');
                             }
 
                             break;
                         } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
-                            $usuarioAutenticado = $this->getUsuarioDataRelation($users, $whereUser[$users['setor']], $dicionarios, $info);
-
-                            if (!empty($usuarioAutenticado['setorData'])) {
-                                if ($usuarioAutenticado['status'] === "1") {
-                                    $user = $usuarioAutenticado;
-                                } else {
-                                    $this->setResult('Usuário Desativado!');
-                                }
-
-                                break;
+                            /**
+                             * Obtém Setor Data
+                             */
+                            $read->exeRead($users['setor'], "WHERE usuarios_id = {$users['id']}" . $whereUser[$users['setor']], null, !0);
+                            if ($read->getResult()) {
+                                $user = $this->getUsuarioDataRelation($users);
+                            } else {
+                                $this->setResult('Usuário Desativado!');
                             }
-
                         }
                     }
                 }
@@ -212,61 +209,17 @@ class Login
 
     /**
      * @param array $usuario
-     * @param string $whereSetor
-     * @param array $dicionarios
-     * @param array $info
      * @return array
      */
-    private function getUsuarioDataRelation(array $usuario, string $whereSetor = "", array $dicionarios = [], array $info = []): array
+    private function getUsuarioDataRelation(array $usuario): array
     {
-        if (empty($usuario['setor']) || $usuario['setor'] === "admin") {
-            $usuario['setor'] = "admin";
-            $usuario['setorData'] = "";
-            $usuario['system'] = "";
-            $usuario['systemData'] = [];
-            return $usuario;
-        }
+        $this->token = $this->getToken();
+        $create = new Create();
+        $create->exeCreate("usuarios_token", ['token' => $this->token, "token_expira" => date("Y-m-d H:i:s"), "usuario" => $usuario['id']]);
+        if($create->getResult())
+            Config::setUser($this->token);
 
-        /**
-         * Obtém Setor Data
-         */
-        $read = new Read();
-        $read->exeRead($usuario['setor'], "WHERE usuarios_id = {$usuario['id']}" . $whereSetor, null, !0);
-        if ($read->getResult()) {
-            $usuario['setorData'] = $read->getResult()[0];
-
-            /**
-             * Obtém System Data
-             */
-            if (empty($dicionarios[$usuario['setor']]))
-                $dicionarios[$usuario['setor']] = Metadados::getDicionario($usuario['setor']);
-
-            if (empty($info[$usuario['setor']]))
-                $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
-
-            $usuario['system'] = (!empty($info[$usuario['setor']]['system']) ? $info[$usuario['setor']]['system'] : "");
-            $usuario['systemData'] = [];
-
-            if (!empty($usuario['system'])) {
-                if (!empty($usuario['setorData']['system_id'])) {
-                    $read->exeRead($usuario['system'], "WHERE id = :id", "id={$usuario['setorData']['system_id']}", !0);
-                    $usuario['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
-                    $usuario['system_id'] = $usuario['systemData']['id'];
-                } else {
-                    foreach ($dicionarios[$usuario['setor']] as $dicionario) {
-                        if ($dicionario['relation'] === $usuario['system']) {
-                            $read->exeRead($usuario['system'], "WHERE id = :id", "id={$usuario['setorData'][$dicionario['column']]}", !0);
-                            $usuario['systemData'] = $read->getResult() ? $read->getResult()[0] : [];
-                            $usuario['system_id'] = $usuario['systemData']['id'];
-                            $usuario['setorData']['system_id'] = $usuario['systemData']['id'];
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $usuario;
+        return $create->getResult() ? $_SESSION['userlogin'] : [];
     }
 
     /**
@@ -306,7 +259,7 @@ class Login
             }
         }
 
-        return [$whereUser, $dicionarios, $info];
+        return $whereUser;
     }
 
     /**
@@ -316,20 +269,11 @@ class Login
     public function setLogin(array $usuario)
     {
         if ($usuario) {
-            $usuario['imagem'] = (!empty($usuario['imagem']) ? json_decode($usuario['imagem'], !0)[0] : null);
-
-            if(empty($this->token)) {
-                $this->token = $this->getToken();
-
-                //atualiza banco com token
-                $up = new Update();
-                $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", "id={$usuario['id']}");
-
-                $create = new Create();
-                $create->exeCreate("usuarios_token", ['token' => $this->token, "token_expira" => date("Y-m-d H:i:s"), "usuario" => $usuario['id']]);
-            }
-
             $usuario['token'] = $this->token;
+
+            //disable usuario recovery password
+            $up = new Update();
+            $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", "id={$usuario['id']}");
 
             $this->setResult($usuario);
 
