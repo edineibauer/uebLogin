@@ -176,11 +176,13 @@ class Login
                             $read->exeRead($users['setor'], "WHERE usuarios_id = {$users['id']}" . $whereUser[$users['setor']], null, !0);
                             if ($read->getResult()) {
                                 $user = $this->getUsuarioDataRelation($users);
-                            } else {
-                                $this->setResult('Usuário Desativado!');
+                                break;
                             }
                         }
                     }
+
+                    if(empty($user))
+                        $this->setResult('Usuário Desativado!');
                 }
             }
 
