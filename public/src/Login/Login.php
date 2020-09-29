@@ -4,7 +4,6 @@ namespace Login;
 
 use Config\Config;
 use Conn\Read;
-use Conn\TableCrud;
 use Conn\Update;
 use Conn\Create;
 use Entity\Metadados;
@@ -280,9 +279,8 @@ class Login
         } elseif (empty($this->getResult())) {
             $this->setResult('Login Inválido!');
 
-            $attempt = new TableCrud("login_attempt");
-            $attempt->loadArray(array("ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user));
-            $attempt->save();
+            $create = new Create();
+            $create->exeCreate("login_attempt", ["ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
         }
     }
 
