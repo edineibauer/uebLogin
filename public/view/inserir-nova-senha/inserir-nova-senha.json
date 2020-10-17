@@ -3,5 +3,6 @@
   "subtitle": "restauração da senha",
   "type": "page",
   "css": ["w3"],
+  "header": false,
   "navbar": false
 }

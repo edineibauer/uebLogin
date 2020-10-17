@@ -4,39 +4,54 @@ $data['data'] = 0;
 $email = trim(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
 $setor = trim(filter_input(INPUT_POST, 'setor', FILTER_DEFAULT));
 
-if ($email) {
+if (!empty($email) && !empty($setor)) {
 
     /**
-     * @param int $id
-     * @param string $setor
+     * @param array $setorData
      * @return string
      */
-    function setRecoveryCode(int $id, string $setor): string
+    function setRecoveryCode(array $setorData): string
     {
         $code = md5(base64_encode(date('Y-m-d H:i:s') . "recovery-pass"));
         $up = new \Conn\Update();
-        $up->exeUpdate($setor, ['token_recovery' => $code], "WHERE id = :id", "id={$id}");
+        $up->exeUpdate("usuarios", ['token_recovery' => $code], "WHERE id = :id", "id={$setorData['usuarios_id']}");
 
         return $code;
     }
 
     /**
-     * @param int $id
+     * @param array $setorData
      * @param string $email
-     * @param string $setor
      */
-    function sendEmailRecovery(int $id, string $email, string $setor)
+    function sendEmailRecovery(array $setorData, string $email)
     {
-        $code = setRecoveryCode($id, $setor);
-        $envio = new \Email\EmailEnvio();
-        $envio->setAssunto("Recuperação de Senha");
-        $envio->setDestinatarioEmail($email);
-        $envio->setBtnLink(HOME . "inserir-nova-senha/{$code}");
-        $envio->setBtnText("<b style='font-size:25px;color:white'>Redefinir Senha</b>");
-        $envio->setMensagem("Para redefinir sua senha, clique no link abaixo.");
-        $envio->enviar();
+        $code = setRecoveryCode($setorData);
+        $result = !0;
+        if (defined("EMAIL")) {
+            try {
 
-        return !0;
+                $emailSend = new \Email\Email();
+                $emailSend->setDestinatarioEmail($email);
+                $emailSend->setAssunto("Recuperação de Senha");
+                $emailSend->setMensagem("Para redefinir sua senha, clique no link abaixo.");
+                $emailSend->setDestinatarioNome("");
+                $emailSend->setVariables([
+                    'id' => "",
+                    'image' => "",
+                    'background' => "",
+                    'btn' => "Criar nova senha",
+                    'link' => HOME . "inserir-nova-senha/{$code}",
+                ]);
+                $emailSend->enviar();
+
+            } catch (Exception $e) {
+                return !1;
+            }
+
+            $result = empty($emailSend->getError());
+        }
+
+        return $result;
     }
 
     /**
@@ -50,22 +65,11 @@ if ($email) {
         return $metaEmail ? $metaEmail->getColumn() : "";
     }
 
-    $read = new \Conn\Read();
-    if (empty($setor)) {
-        foreach (\Config\Config::getSetorSystem() as $setor) {
-            $emailColumn = getEmailColumn($setor);
-            if (!empty($emailColumn)) {
-                $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
-                if ($read->getResult())
-                    $data['data'] = sendEmailRecovery($read->getResult()[0]['id'], $read->getResult()[0][$emailColumn], $setor);
-            }
-        }
-    } else {
-        $emailColumn = getEmailColumn($setor);
-        if (!empty($emailColumn)) {
-            $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
-            if ($read->getResult())
-                $data['data'] = sendEmailRecovery($read->getResult()[0]['id'], $read->getResult()[0][$emailColumn], $setor);
-        }
+    $emailColumn = getEmailColumn($setor);
+    if (!empty($emailColumn)) {
+        $read = new \Conn\Read();
+        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
+        if ($read->getResult())
+            $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
     }
 }

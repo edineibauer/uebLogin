@@ -1,0 +1,30 @@
+<div class='row font-large justify-content-center padding-medium' style="max-width: 450px; margin: auto">
+    <div class="clear"><br>
+        <img src="{{home}}{{favicon}}" height="80px" style="display: block;margin: auto;"/>
+    </div>
+    <div class='container align-center upper panel font-light color-text-grey'>Redefinir Senha</div>
+    <div class="col s12 z-depth-2" style="background: #ffffff10">
+        <div class="col s12 padding-medium">
+            <label class="font-small" style="color: {{themetext}}" for="nova-senha">Digite Nova Senha</label>
+            <input id="nova-senha" autocomplete="new-password" type="password" style="color: {{themetext}};margin-bottom: 10px">
+        </div>
+        <div class="col s12 padding-medium" style="margin-bottom: 0">
+            <label class="font-small" style="color: {{themetext}}" for="nova-senha-confirm">Digite Novamente</label>
+            <input id="nova-senha-confirm" autocomplete="new-password" type="password" style="color: {{themetext}};margin-bottom: 10px">
+        </div>
+    </div>
+    <div class="col s12" style="margin-top: 10px;">
+        <button class="col btn radius padding-12 theme-l4 opacity hover-shadow hover-opacity-off"
+                style="float:initial!important;"
+                onclick="newPassword();">
+            Criar nova senha
+        </button>
+    </div>
+    <div class="col s12 margin-top upper color-text-grey font-small">
+        <a href="login"
+           class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
+            fazer login
+        </a>
+    </div>
+    <div class="row clear"><br><br><br><br></div>
+</div>
