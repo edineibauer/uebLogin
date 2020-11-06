@@ -33,12 +33,6 @@ function exeLogin(email, senha, social, token, recaptcha) {
 }
 
 $(function () {
-    if(!$("svg.waves").length) {
-        getTemplates().then(tpl => {
-            $("#core-content").after(Mustache.render(tpl.wavesBottom));
-        });
-    }
-
     $("#app").off("keyup", "#emaillog, #passlog").on("keyup", "#emaillog, #passlog", function (e) {
         if (e.which === 13)
             login();

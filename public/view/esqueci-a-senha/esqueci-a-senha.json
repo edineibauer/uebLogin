@@ -4,8 +4,7 @@
   "type": "page",
   "setor": "0",
   "redirect": "index",
-  "css": ["w3", "core/backgroundThemeWave"],
-  "templates": ["wavesBottom"],
+  "css": ["w3"],
   "header": false,
   "navbar": false
 }
