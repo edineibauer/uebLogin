@@ -4,7 +4,7 @@ function newPassword() {
     if (novaSenha) {
         novaSenha = false;
         if ($("#nova-senha").val() === $("#nova-senha-confirm").val()) {
-            AJAX.post('setNewPassword', {senha: $("#nova-senha").val(), code: URL[0]}).then(g => {
+            AJAX.post('setNewPassword', {senha: $("#nova-senha").val(), code: PARAM[0]}).then(g => {
                 if (g === "1") {
                     toast('Salvo com sucesso', 1200, "toast-success");
                     pageTransition("index");
