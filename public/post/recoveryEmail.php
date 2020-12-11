@@ -1,6 +1,6 @@
 <?php
 
-$data['data'] = 0;
+$data['data'] = !1;
 $email = trim(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
 $setor = trim(filter_input(INPUT_POST, 'setor', FILTER_DEFAULT));
 
