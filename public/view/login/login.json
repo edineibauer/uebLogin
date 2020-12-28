@@ -6,5 +6,6 @@
   "redirect": "dashboard",
   "css": ["w3"],
   "header": false,
-  "navbar": false
+  "navbar": false,
+  "menu": false
 }
