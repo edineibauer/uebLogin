@@ -161,15 +161,7 @@ class Login
                     $whereUser = $this->getWhereUser($usuarios);
 
                     foreach ($usuarios as $users) {
-                        if (strtolower($users['nome']) === strtolower($this->user)) {
-                            if ($users['status'] === "1") {
-                                $user = $this->getUsuarioDataRelation($users);
-                            } else {
-                                $this->setResult('Usuário Desativado!');
-                            }
-
-                            break;
-                        } elseif (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
+                        if (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
                             /**
                              * Obtém Setor Data
                              */
