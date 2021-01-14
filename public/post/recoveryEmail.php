@@ -68,7 +68,7 @@ if (!empty($email) && !empty($setor)) {
     $emailColumn = getEmailColumn($setor);
     if (!empty($emailColumn)) {
         $read = new \Conn\Read();
-        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
+        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'", !0, !0);
         if ($read->getResult())
             $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
     }
