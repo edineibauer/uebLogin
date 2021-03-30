@@ -33,7 +33,7 @@ class Login
             if (!empty($data['recaptcha']))
                 $this->setRecaptcha($data['recaptcha']);
 
-            if(!empty($data['social']) && !empty($data['socialToken'])) {
+            if(!empty($data['social']) AND !empty($data['socialToken'])) {
                 $this->social = $data['social'];
                 $this->socialToken = $data['socialToken'];
             }
@@ -108,11 +108,11 @@ class Login
     {
         if (!empty($this->token)) {
             $this->setLogin($this->checkToken());
-        } elseif ($this->user && $this->senha && !$this->attemptExceded()) {
+        } elseif ($this->user AND $this->senha AND !$this->attemptExceded()) {
             if ($this->isHuman())
                 $this->checkUserInfo();
 
-        } elseif ($this->user && $this->senha) {
+        } elseif ($this->user AND $this->senha) {
             $cont = 10 - $this->attempts;
             $this->setResult($cont > 0 ? "{$cont} tentativas faltantes" : " bloqueado por 15 minutos");
         }
@@ -125,7 +125,7 @@ class Login
     {
         if (!$this->getResult()) {
 
-            $socialUser = (empty($this->social) ? "0 || login_social IS NULL" : ($this->social === "facebook" ? 2 : 1));
+            $socialUser = (empty($this->social) ? "0 OR login_social IS NULL" : ($this->social === "facebook" ? 2 : 1));
             $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
@@ -138,7 +138,7 @@ class Login
                      * Login social google
                      * validate info with the token
                      */
-                    if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::googleGetId($this->socialToken))) {
+                    if(!empty($usuarios) AND !empty($this->socialToken) AND $this->senha === Check::password(Social::googleGetId($this->socialToken))) {
                         $user = $this->getUsuarioDataRelation($usuarios[0]);
                     } else {
                         $this->setResult('Token do google não condiz com o Usuário!');
@@ -148,7 +148,7 @@ class Login
                      * Login social facebook
                      * validate info with the token
                      */
-                    if(!empty($usuarios) && !empty($this->socialToken) && $this->senha === Check::password(Social::facebookGetId($this->socialToken))) {
+                    if(!empty($usuarios) AND !empty($this->socialToken) AND $this->senha === Check::password(Social::facebookGetId($this->socialToken))) {
                         $user = $this->getUsuarioDataRelation($usuarios[0]);
                     } else {
                         $this->setResult('Token do facebook não condiz com o Usuário!');
@@ -161,7 +161,7 @@ class Login
                     $whereUser = $this->getWhereUser($usuarios);
 
                     foreach ($usuarios as $users) {
-                        if (!empty($users['setor']) && !empty($whereUser[$users['setor']])) {
+                        if (!empty($users['setor']) AND !empty($whereUser[$users['setor']])) {
                             /**
                              * Obtém Setor Data
                              */
@@ -177,7 +177,7 @@ class Login
                         }
                     }
 
-                    if(empty($user) && empty($this->result))
+                    if(empty($user) AND empty($this->result))
                         $this->setResult('Login Inválido');
                 }
             }
@@ -238,18 +238,18 @@ class Login
                     $where = "";
                     if (!empty($info[$usuario['setor']]['unique'])) {
                         foreach ($info[$usuario['setor']]['unique'] as $id)
-                            $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+                            $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
                     }
 
                     /**
                      * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
                      */
-                    if (!empty($info[$usuario['setor']]['cpf']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
-                    if (!empty($info[$usuario['setor']]['email']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
-                    if (!empty($info[$usuario['setor']]['tel']) && (empty($info[$usuario['setor']]['unique']) || !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " && (" : " || ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
+                    if (!empty($info[$usuario['setor']]['cpf']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
+                    if (!empty($info[$usuario['setor']]['email']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
+                    if (!empty($info[$usuario['setor']]['tel']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
+                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
 
                     $whereUser[$usuario['setor']] = $where . (!empty($where) ? ")" : "");
                 }
@@ -286,7 +286,7 @@ class Login
     {
         $ip = filter_var(Helper::getIP(), FILTER_VALIDATE_IP);
         $read = new Read();
-        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) && ip = '{$ip}' && email = '{$this->user}'", null, !0, !0, !0);
+        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = '{$ip}' AND email = '{$this->user}'", null, !0, !0, !0);
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
