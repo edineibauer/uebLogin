@@ -1,13 +1,14 @@
 <?php
 
 /**
+ * Exclui todo o cache
+ */
+if(file_exists(PATH_HOME . "_cdn/userSSE/" . $_SESSION['userlogin']['id']))
+    \Helpers\Helper::recurseDelete(PATH_HOME . "_cdn/userSSE/" . $_SESSION['userlogin']['id']);
+
+/**
  * Read table token and remove toke access
  */
-$data['data'] = "";
-$read = new \Conn\Read();
-$read->exeRead("usuarios_token", "WHERE token = :t", "t={$_SESSION['userlogin']['token']}", !0, !0, !0);
-if($read->getResult()) {
-    $del = new \Conn\Delete();
-    $del->exeDelete("usuarios_token", "WHERE token = :t", "t={$_SESSION['userlogin']['token']}");
-    $data['data'] = "1";
-}
+$del = new \Conn\Delete();
+$del->exeDelete("usuarios_token", "WHERE token = :t", "t={$_SESSION['userlogin']['token']}");
+$data['data'] = "1";
