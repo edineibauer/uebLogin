@@ -4,7 +4,7 @@
         <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
              style='height: 60px;float: initial;margin:initial'>
     </a>
-    <div class='container align-center upper panel theme-text-aux' style="color: var(--colorText)">acesso <?= SITENAME ?></div>
+    <div class='container align-center upper panel' style="color: var(--colorText)">acesso <?= SITENAME ?></div>
     <div class="col-12 mb-3 z-depth-2 color-white" id="login-card">
         <div class="panel">
             <div class="panel pl-4 pr-4">
