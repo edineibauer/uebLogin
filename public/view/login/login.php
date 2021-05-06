@@ -4,49 +4,46 @@
         <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
              style='height: 60px;float: initial;margin:initial'>
     </a>
-    <div class='container align-center upper panel theme-text-aux'>acesso <?= SITENAME ?></div>
-    <div class="row padding-medium">
-        <div class="row z-depth-2 color-white" id="login-card">
-            <div class="panel">
-                <div class="panel">
-                    <label class="row">
-                        <span>Email</span>
-                        <input id="emaillog" type="email" class="font-light font-large">
-                    </label>
-                    <label class="row">
-                        <span>Senha</span>
-                        <input id="passlog" type="password" class="font-light font-large">
-                    </label>
+    <div class='container align-center upper panel theme-text-aux' style="color: var(--colorText)">acesso <?= SITENAME ?></div>
+    <div class="col-12 mb-3 z-depth-2 color-white" id="login-card">
+        <div class="panel">
+            <div class="panel pl-4 pr-4">
+                <label class="row">
+                    <span>Email</span>
+                    <input id="emaillog" type="email" class="font-light font-large">
+                </label>
+                <label class="row">
+                    <span>Senha</span>
+                    <input id="passlog" type="password" class="font-light font-large">
+                </label>
 
-                    <?php if (defined("RECAPTCHASITE")) { ?>
-                        <div class="container">
-                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHASITE ?>"></div>
-                            <br>
-                        </div>
-                        <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
+                <?php if (defined("RECAPTCHASITE")) { ?>
+                    <div class="container">
+                        <div class="g-recaptcha" data-sitekey="<?= RECAPTCHASITE ?>"></div>
+                        <br>
+                    </div>
+                    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 
-                    <?php } else { ?>
+                <?php } else { ?>
 
-                    <input type="hidden" id="g-recaptcha-response"/>
-                    <?php } ?>
-                </div>
-                <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity">
-                    Entrar
-                </button>
+                <input type="hidden" id="g-recaptcha-response"/>
+                <?php } ?>
             </div>
+            <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity">
+                Entrar
+            </button>
         </div>
     </div>
-    <div class="row clearfix" style="padding: 2px"></div>
 
-    <div class="row padding-medium">
+    <div class="col-12 p-0">
         <?php \Login\Social::googleLogin(); ?>
         <?php \Login\Social::facebookLogin(); ?>
     </div>
 
-    <div class="row upper color-text-grey font-small padding-medium padding-4">
+    <div class="col-12 p-0 upper color-text-grey">
         <a href="<?= defined('HOME') ? HOME : "" ?>esqueci-a-senha"
            class="right btn radius color-white color-text-grey hover-opacity-off opacity"
-           style="text-decoration: none; margin-right:0">
+           style="text-decoration: none; margin-right:0;font-size:12px">
             esqueci a senha
         </a>
     </div>

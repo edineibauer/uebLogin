@@ -5,7 +5,7 @@
              style='height: 60px;float: initial;margin:initial'>
     </a>
     <div class='container align-center upper panel font-light theme-text-aux'>Recuperar senha</div>
-    <div class="row z-depth-2 radius color-white padding-medium margin-medium padding-4">
+    <div class="col-12 z-depth-2 radius color-white padding-medium margin-medium padding-4">
         <div class="panel">
             <label class="font-small" for="recovery-email">Digite seu Email</label>
             <input id="recovery-email" type="email">
@@ -19,9 +19,9 @@
         </div>
     </div>
 
-    <div class="row upper color-text-grey font-small padding-medium padding-4">
+    <div class="col-12 upper color-text-grey padding-medium padding-4">
         <a href="<?= defined('HOME') ? HOME : "" ?>login"
-           class="left btn color-white color-text-grey radius hover-opacity-off opacity" style="text-decoration: none">
+           class="left btn color-white color-text-grey radius hover-opacity-off opacity" style="font-size:12px;text-decoration: none">
             fazer login
         </a>
     </div>
