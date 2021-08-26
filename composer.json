@@ -12,6 +12,7 @@
     "require": {
         "php": ">=7.1",
         "ueb/dashboard": "*",
+        "ueb/email": "*",
         "google/recaptcha": "~1.1",
         "2tvenom/cborencode": "^1.0",
         "phpseclib/phpseclib": "^2.0"
