@@ -43,7 +43,7 @@ if (!empty($email) && !empty($setor)) {
                     'image' => "",
                     'background' => "",
                     'btn' => "Criar nova senha",
-                    'link' => $home . "inserir-nova-senha/{$code}",
+                    'link' => $home . "index.html?url=inserir-nova-senha/{$code}",
                 ]);
                 $emailSend->enviar();
 
