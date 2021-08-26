@@ -2,7 +2,8 @@
 
 $data['data'] = !1;
 $email = trim(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-$setor = trim(filter_input(INPUT_POST, 'setor', FILTER_DEFAULT));
+$setor = trim(filter_input(INPUT_POST, 'setor'));
+$home = trim(filter_input(INPUT_POST, 'home')) ?? HOME;
 
 if (!empty($email) && !empty($setor)) {
 
@@ -22,8 +23,10 @@ if (!empty($email) && !empty($setor)) {
     /**
      * @param array $setorData
      * @param string $email
+     * @param string $home
+     * @return bool
      */
-    function sendEmailRecovery(array $setorData, string $email)
+    function sendEmailRecovery(array $setorData, string $email, string $home)
     {
         $code = setRecoveryCode($setorData);
         $result = !0;
@@ -40,7 +43,7 @@ if (!empty($email) && !empty($setor)) {
                     'image' => "",
                     'background' => "",
                     'btn' => "Criar nova senha",
-                    'link' => HOME . "inserir-nova-senha/{$code}",
+                    'link' => $home . "inserir-nova-senha/{$code}",
                 ]);
                 $emailSend->enviar();
 
@@ -70,6 +73,6 @@ if (!empty($email) && !empty($setor)) {
         $read = new \Conn\Read();
         $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'", !0, !0, !0);
         if ($read->getResult())
-            $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
+            $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn], $home);
     }
 }
