@@ -15,7 +15,7 @@ async function newPassword() {
             novaSenha = true;
 
         } else {
-            let g = await AJAX.post('setNewPassword', {senha: senha, code: PARAM.url[0]});
+            let g = await AJAX.post('setNewPassword', {senha: senha, code: app.param.url[0]});
 
             if (g === "1") {
                 toast('Salvo com sucesso', 1200, "toast-success");
