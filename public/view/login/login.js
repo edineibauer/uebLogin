@@ -20,7 +20,7 @@ function exeLogin(email, senha, social, token, recaptcha) {
             } else {
                 toast("Seja bem vindo, acessando...", 15000, "toast-success");
                 setCookieUser(g).then(() => {
-                    let destino = "dashboard";
+                    let destino = "admin";
                     if (!!localStorage.redirectOnLogin) {
                         destino = localStorage.redirectOnLogin;
                         localStorage.removeItem("redirectOnLogin");

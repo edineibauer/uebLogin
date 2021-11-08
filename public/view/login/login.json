@@ -3,7 +3,7 @@
   "subtitle": "faça login para continuar",
   "type": "page",
   "setor": "0",
-  "redirect": "dashboard",
+  "redirect": "admin",
   "css": ["w3"],
   "header": false,
   "navbar": false,
