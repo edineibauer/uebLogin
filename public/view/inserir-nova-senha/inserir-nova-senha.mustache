@@ -1,12 +1,8 @@
 <div class='row font-large justify-content-center padding-medium' style="max-width: 450px; margin: auto">
-    <div class="clear"><br>
-        <img src="{{home}}{{favicon}}" height="80px" style="display: block;margin: auto;"/>
-        <h4 style="text-align: center; padding: 0 5px">{{sitename}}</h4>
-    </div>
-    <div class='container align-center upper panel font-light color-text-grey'>Recuperação de senha</div>
+    <div class='container align-center upper panel font-light color-text-grey'>Atualizar senha</div>
     <div class="col s12 z-depth-2 card" style="border-radius: 5px">
         <div class="col s12 padding-medium">
-            <label class="font-small" style="color: {{themetext}}" for="nova-senha">Digite a Nova Senha</label>
+            <label class="font-small" style="color: {{themetext}}" for="nova-senha">Nova Senha</label>
             <input id="nova-senha" autocomplete="new-password" type="password" style="color: {{themetext}};margin-bottom: 2px">
             <small class="col s12 font-tiny opacity">mínimo 3 caracteres</small>
         </div>
@@ -22,9 +18,13 @@
             Salvar nova senha
         </button>
     </div>
+    <a href="index" class="clear"><br>
+        <img src="{{home}}{{favicon}}" height="80px" style="display: block;margin: auto;"/>
+        <h4 style="text-align: center; padding: 0 5px">{{sitename}}</h4>
+    </a>
     <div class="col s12 margin-top upper color-text-grey font-small">
         <a href="index"
-           class="left btn color-white color-text-grey hover-opacity-off opacity" style="text-decoration: none">
+           class="btn color-text-grey hover-opacity-off opacity radius voltarinicio">
             voltar ao início
         </a>
     </div>

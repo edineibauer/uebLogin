@@ -15,13 +15,14 @@ async function newPassword() {
             novaSenha = true;
 
         } else {
+            toast("Solicitando alteração...", 100000);
             let g = await AJAX.post('setNewPassword', {senha: senha, code: app.param.url[0]});
 
             if (g === "1") {
                 toast('Salvo com sucesso', 1200, "toast-success");
                 pageTransition("index");
             } else if(g !== "no-network"){
-                toast("Erro! Tente solicitar o email novamente.", 6000, "toast-error");
+                toast("Erro! Tente solicitar novamente.", 6000, "toast-error");
             }
 
             novaSenha = true;
