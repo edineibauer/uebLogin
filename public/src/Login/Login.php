@@ -129,7 +129,7 @@ class Login
             $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
-            $read->exeRead(PRE . "usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}", !0, !0, !0);
+            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}", !0, !0, !0);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
@@ -286,7 +286,7 @@ class Login
     {
         $ip = filter_var(Helper::getIP(), FILTER_VALIDATE_IP);
         $read = new Read();
-        $read->exeRead(PRE . "login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = '{$ip}' AND email = '{$this->user}'", null, !0, !0, !0);
+        $read->exeRead("login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = '{$ip}' AND username = '{$this->user}'", null, !0, !0, !0);
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
