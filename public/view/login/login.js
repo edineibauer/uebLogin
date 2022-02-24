@@ -14,7 +14,8 @@ function exeLogin(email, senha, social, token, recaptcha) {
         AJAX.post('login', {email: email, pass: senha, social: social, token: token, recaptcha: recaptcha}).then(g => {
             if (typeof g === "string") {
                 loginFree = !0;
-                navigator.vibrate(100);
+                if(typeof navigator.vibrate !== "undefined")
+                    navigator.vibrate(100);
                 if (g !== "no-network")
                     toast(g, 3000, "toast-error")
             } else {
