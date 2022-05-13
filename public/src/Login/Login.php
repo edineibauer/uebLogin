@@ -129,7 +129,7 @@ class Login
             $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
-            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}", !0, !0, !0);
+            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = " . $socialUser . ")", "pass={$this->senha}");
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
@@ -165,9 +165,9 @@ class Login
                             /**
                              * Obtém Setor Data
                              */
-                            $read->exeRead($users['setor'], "WHERE usuarios_id = {$users['id']}" . $whereUser[$users['setor']], null, !0, !0, !0);
+                            $read->exeRead($users['setor'], "WHERE usuarios_id = {$users['id']}" . $whereUser[$users['setor']]);
                             if ($read->getResult()) {
-                                if ($users['status'] === "1") {
+                                if ($users['status'] == 1) {
                                     $user = $this->getUsuarioDataRelation($users);
                                 } else {
                                     $this->setResult('Usuário Desativado!');
@@ -286,7 +286,7 @@ class Login
     {
         $ip = filter_var(Helper::getIP(), FILTER_VALIDATE_IP);
         $read = new Read();
-        $read->exeRead("login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = '{$ip}' AND username = '{$this->user}'", null, !0, !0, !0);
+        $read->exeRead("login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = '{$ip}' AND username = '{$this->user}'");
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
