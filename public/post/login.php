@@ -5,8 +5,9 @@ use Entity\Json;
 
 $dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "email")));
 $dados['password'] = trim(filter_input(INPUT_POST, "pass"));
+$dados['token'] = filter_input(INPUT_POST, "token");
 $dados['social'] = filter_input(INPUT_POST, "social");
-$dados['socialToken'] = filter_input(INPUT_POST, "token");
+$dados['socialToken'] = $dados['token'];
 $dados['recaptcha'] = filter_input(INPUT_POST, "recaptcha");
 
 if(!empty($dados['user']) && !empty($dados['password'])) {
