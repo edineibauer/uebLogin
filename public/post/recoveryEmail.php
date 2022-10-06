@@ -22,12 +22,11 @@ if (!empty($email) && !empty($setor)) {
     /**
      * @param array $setorData
      * @param string $email
-     * @return bool
+     * @return string
      */
-    function sendEmailRecovery(array $setorData, string $email)
+    function sendEmailRecovery(array $setorData, string $email): string
     {
         $code = setRecoveryCode($setorData);
-        $result = !0;
         if (defined("EMAIL")) {
             try {
 
@@ -46,13 +45,13 @@ if (!empty($email) && !empty($setor)) {
                 $emailSend->enviar();
 
             } catch (Exception $e) {
-                return !1;
+                return $e;
             }
 
-            $result = empty($emailSend->getError());
+            return empty($emailSend->getError()) ? "1" : $emailSend->getError();
         }
 
-        return $result;
+        return "Erro, sistema de emails offline";
     }
 
     /**
@@ -69,8 +68,13 @@ if (!empty($email) && !empty($setor)) {
     $emailColumn = getEmailColumn($setor);
     if (!empty($emailColumn)) {
         $read = new \Conn\Read();
-        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'", !0, !0, !0);
-        if ($read->getResult())
+        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
+        if ($read->getResult()) {
             $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
+            if($data['data'] !== "1")
+                $data['error'] = $data['data'];
+        } else {
+            $data['error'] = "Email não encontrado";
+        }
     }
 }

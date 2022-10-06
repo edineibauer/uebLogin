@@ -11,13 +11,9 @@ function recoveryEmail() {
         let email = $("#recovery-email").val();
         if(validateEmail(email)) {
             AJAX.post('recoveryEmail', {email: email, home: HOME}).then(g => {
-                if (!g) {
-                    toast('Email não encontrado!', 4000, "toast-warning");
-                } else {
-                    if(g !== "no-network") {
-                        toast('Link de Recuperação enviada ao email', 4000, "toast-success");
-                        $("#recovery-email").val("");
-                    }
+                if (g == 1) {
+                    toast('Link de Recuperação enviada ao email', 4000, "toast-success");
+                    $("#recovery-email").val("");
                 }
 
                 recoveryFree = true;
