@@ -8,16 +8,20 @@ $senha = strip_tags(trim(filter_input(INPUT_POST, 'senha')));
 $restoreCode = filter_input(INPUT_POST, 'code');
 
 $d = new \Entity\Dicionario("usuarios");
-$passColumn = $d->search($d->getInfo()['password'])->getColumn();
+
+$dadosUpdate = [
+    "token_recovery" => "",
+    $d->search($d->getInfo()['password'])->getColumn() => Check::password($senha)
+];
+
+if(!empty($d->getInfo()['status']))
+    $dadosUpdate[$d->search($d->getInfo()['status'])->getColumn()] = 1;
 
 $banco = new TableCrud("usuarios");
 $banco->load("token_recovery", $restoreCode);
 if ($banco->exist()) {
     $id = $banco->getDados()['id'];
-    $banco->setDados([
-        "token_recovery" => "",
-        $passColumn => Check::password($senha)
-    ]);
+    $banco->setDados($dadosUpdate);
     $banco->save();
 
     $del = new Delete();
