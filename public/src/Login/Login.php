@@ -14,6 +14,9 @@ use ReCaptcha\ReCaptcha;
 class Login
 {
     private $user;
+    private $email;
+    private $cpf;
+    private $nome;
     private $senha;
     private $token;
     private $social;
@@ -41,8 +44,19 @@ class Login
             if (!empty($data['token'])) {
                 $this->setToken($data['token']);
             } else {
+
                 if (!empty($data['user']))
                     $this->setUser($data['user']);
+
+                if (!empty($data['nome']))
+                    $this->setNome($data['nome']);
+
+                if (!empty($data['email']))
+                    $this->setEmail($data['email']);
+
+                if (!empty($data['cpf']))
+                    $this->setCpf($data['cpf']);
+
                 if (!empty($data['password']))
                     $this->setSenha($data['password'], $passEncripty);
             }
@@ -68,12 +82,43 @@ class Login
     }
 
     /**
-     * @param string $email
+     * @param string $user
+     * @return void
      */
-    public function setUser($user)
+    public function setUser(string $user)
     {
         if (!empty($user))
             $this->user = (string)strip_tags(trim($user));
+    }
+
+    /**
+     * @param string $nome
+     * @return void
+     */
+    public function setNome(string $nome)
+    {
+        if (!empty($nome))
+            $this->nome = (string)strip_tags(trim($nome));
+    }
+
+    /**
+     * @param string $email
+     * @return void
+     */
+    public function setEmail(string $email)
+    {
+        if (!empty($email) && Check::email($email))
+            $this->email = (string)strip_tags(trim($email));
+    }
+
+    /**
+     * @param string $cpf
+     * @return void
+     */
+    public function setCpf(string $cpf)
+    {
+        if (!empty($cpf) && Check::cpf($cpf))
+            $this->cpf = (string)str_replace([".", "-"], "", strip_tags(trim($cpf)));
     }
 
     /**
@@ -108,13 +153,16 @@ class Login
     {
         if (!empty($this->token)) {
             $this->setLogin($this->checkToken());
-        } elseif ($this->user AND $this->senha AND !$this->attemptExceded()) {
+
+        } elseif (($this->user OR $this->email OR $this->cpf OR $this->nome) AND $this->senha AND !$this->attemptExceded()) {
             if ($this->isHuman())
                 $this->checkUserInfo();
 
-        } elseif ($this->user AND $this->senha) {
+        } elseif (($this->user OR $this->email OR $this->cpf OR $this->nome) AND $this->senha) {
             $cont = 10 - $this->attempts;
             $this->setResult($cont > 0 ? "{$cont} tentativas faltantes" : " bloqueado por 15 minutos");
+        } else {
+            $this->setResult("Informações de login inválidas");
         }
     }
 
@@ -161,13 +209,17 @@ class Login
                     $whereUser = $this->getWhereUser($usuarios);
 
                     foreach ($usuarios as $users) {
+
                         if (!empty($users['setor']) AND !empty($whereUser[$users['setor']])) {
                             /**
                              * Obtém Setor Data
                              */
                             $read->exeRead($users['setor'], "WHERE usuarios_id = {$users['id']}" . $whereUser[$users['setor']]);
                             if ($read->getResult()) {
-                                if ($users['status'] == 1) {
+                                $info = Metadados::getInfo($users['setor']);
+                                $dicionario = Metadados::getDicionario($users['setor']);
+
+                                if ($users['status'] == 1 && (empty($info['status']) || $read->getResult()[0][$dicionario[$info['status']]['column']] == 1)) {
                                     $user = $this->getUsuarioDataRelation($users);
                                 } else {
                                     $this->setResult('Usuário Desativado!');
@@ -236,22 +288,36 @@ class Login
                     $info[$usuario['setor']] = Metadados::getInfo($usuario['setor']);
 
                     $where = "";
-                    if (!empty($info[$usuario['setor']]['unique'])) {
-                        foreach ($info[$usuario['setor']]['unique'] as $id)
-                            $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+
+                    if($this->email && !empty($info[$usuario['setor']]['email'])) {
+                        $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->email}'";
+
+                    } elseif($this->cpf && !empty($info[$usuario['setor']]['cpf'])) {
+                        $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->cpf}'";
+
+                    } elseif($this->nome && !empty($info[$usuario['setor']]['title'])) {
+                        $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['title']]['column'] . " = '{$this->nome}'";
+
+                    } elseif($this->user) {
+                        if (!empty($info[$usuario['setor']]['unique'])) {
+                            foreach ($info[$usuario['setor']]['unique'] as $id)
+                                $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$id]['column'] . " = '{$this->user}'";
+                        }
+
+                        /**
+                         * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
+                         */
+                        if (!empty($info[$usuario['setor']]['cpf']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
+                            $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
+                        if (!empty($info[$usuario['setor']]['email']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
+                            $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
+                        if (!empty($info[$usuario['setor']]['tel']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
+                            $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
+
+                        $where .= (!empty($where) ? ")" : "");
                     }
 
-                    /**
-                     * Mesmo que não seja informado como único, verifica campos de CPF, email e telefone
-                     */
-                    if (!empty($info[$usuario['setor']]['cpf']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['cpf'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->user}'";
-                    if (!empty($info[$usuario['setor']]['email']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['email'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->user}'";
-                    if (!empty($info[$usuario['setor']]['tel']) AND (empty($info[$usuario['setor']]['unique']) OR !in_array($info[$usuario['setor']]['tel'], $info[$usuario['setor']]['unique'])))
-                        $where .= (empty($where) ? " AND (" : " OR ") . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['tel']]['column'] . " = '{$this->user}'";
-
-                    $whereUser[$usuario['setor']] = $where . (!empty($where) ? ")" : "");
+                    $whereUser[$usuario['setor']] = $where;
                 }
             }
         }
