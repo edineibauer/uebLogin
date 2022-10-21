@@ -16,9 +16,6 @@ $dados['social'] = filter_input(INPUT_POST, "social");
 $dados['socialToken'] = $dados['token'];
 $dados['recaptcha'] = filter_input(INPUT_POST, "recaptcha");
 
-if(empty($dados['user']) && !empty($dados['email']))
-    $dados['user'] = $dados['email'];
-
 if(((!empty($dados['email']) || !empty($dados['cpf']) || !empty($dados['nome']) || !empty($dados['user'])) && !empty($dados['password'])) || !empty($dados['token'])) {
     $login = new Login($dados);
     $data['data'] = $login->getResult();
