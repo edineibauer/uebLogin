@@ -11,7 +11,7 @@ function exeLogin(email, senha, social, token, recaptcha) {
     if (loginFree) {
         $("#login-card").loading();
         loginFree = !1;
-        AJAX.post('login', {email: email, pass: senha, social: social, token: token, recaptcha: recaptcha}).then(g => {
+        AJAX.post('login', {user: email, pass: senha, social: social, token: token, recaptcha: recaptcha}).then(g => {
             if (typeof g === "string") {
                 loginFree = !0;
                 if(typeof navigator.vibrate !== "undefined")

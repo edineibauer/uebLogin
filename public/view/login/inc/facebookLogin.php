@@ -8,7 +8,7 @@ if (defined("FACEBOOKAPLICATIONID") && !empty(FACEBOOKAPLICATIONID) && defined('
                     $("#login-card").loading();
                     loginFree = !1;
                     AJAX.post('login', {
-                        email: email,
+                        user: email,
                         pass: senha,
                         social: social,
                         token: token
