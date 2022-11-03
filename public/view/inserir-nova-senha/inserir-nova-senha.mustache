@@ -1,28 +1,28 @@
 <div class='row font-large justify-content-center padding-medium' style="max-width: 450px; margin: auto">
-    <div class='container align-center upper panel font-light color-text-grey'>Atualizar senha</div>
-    <div class="col s12 z-depth-2 card" style="border-radius: 5px">
-        <div class="col s12 padding-medium">
-            <label class="font-small" style="color: {{themetext}}" for="nova-senha">Nova Senha</label>
-            <input id="nova-senha" autocomplete="new-password" type="password" style="color: {{themetext}};margin-bottom: 2px">
-            <small class="col s12 font-tiny opacity">mínimo 3 caracteres</small>
-        </div>
-        <div class="col s12 padding-medium" style="margin-bottom: 0">
-            <label class="font-small" style="color: {{themetext}}" for="nova-senha-confirm">Digite Novamente</label>
-            <input id="nova-senha-confirm" autocomplete="new-password" type="password" style="color: {{themetext}};margin-bottom: 10px">
-        </div>
-    </div>
-    <div class="col s12" style="margin-top: 10px;">
-        <button class="col btn radius padding-12 theme-l4 opacity hover-shadow hover-opacity-off"
-                style="float:initial!important;"
-                onclick="newPassword();">
-            Salvar nova senha
-        </button>
-    </div>
     <a href="index" class="clear"><br>
         <img src="{{home}}{{favicon}}" height="80px" style="display: block;margin: auto;"/>
         <h4 style="text-align: center; padding: 0 5px">{{sitename}}</h4>
     </a>
-    <div class="col s12 margin-top upper color-text-grey font-small">
+    <div class='container align-center upper panel font-light'>Atualizar senha</div>
+    <div class="col s12 z-depth-2 card" style="border-radius: 5px">
+        <div class="col s12 padding-medium">
+            <label class="font-small" for="nova-senha">Nova Senha</label>
+            <input id="nova-senha" autocomplete="new-password" type="password" style="color:var(--colorText);margin-bottom: 2px">
+            <small class="col s12 font-tiny opacity">mínimo 3 caracteres</small>
+        </div>
+        <div class="col s12 padding-medium" style="margin-bottom: 0">
+            <label class="font-small" for="nova-senha-confirm">Digite Novamente</label>
+            <input id="nova-senha-confirm" autocomplete="new-password" type="password" style="color:var(--colorText);margin-bottom: 10px">
+        </div>
+        <div class="col s11" style="margin: 0 auto 10px;display: block;float: initial">
+            <button class="col btn radius padding-12 theme hover-shadow"
+                    style="float:initial!important;"
+                    onclick="newPassword();">
+                Salvar nova senha
+            </button>
+        </div>
+    </div>
+    <div class="col s12 upper color-text-grey font-small">
         <a href="index"
            class="btn color-text-grey hover-opacity-off opacity radius voltarinicio">
             voltar ao início

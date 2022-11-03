@@ -5,7 +5,7 @@
              style='height: 60px;float: initial;margin:initial'>
     </a>
     <div class='container align-center upper panel mode-text-colorText'>acesso <?= SITENAME ?></div>
-    <div class="col-12 mb-3 z-depth-2 color-white" id="login-card">
+    <div class="col-12 mb-3 z-depth-2" id="login-card">
         <div class="panel">
             <div class="panel pl-4 pr-4">
                 <label class="row">
@@ -42,7 +42,7 @@
 
     <div class="col-12 p-0 upper color-text-grey">
         <a href="<?= defined('HOME') ? HOME : "" ?>esqueci-a-senha"
-           class="right btn radius color-white color-text-grey hover-opacity-off opacity"
+           class="right btn radius hover-opacity-off opacity"
            style="text-decoration: none; margin-right:0;font-size:12px">
             esqueci a senha
         </a>

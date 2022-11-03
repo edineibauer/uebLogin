@@ -1,12 +1,17 @@
 #login-card {
     padding: 0 15px;
     border-radius: 3px;
+    background: var(--colorBox);
 }
 
 #logoLogin {
     margin: auto;
     float: initial;
     display: block;
+}
+
+input {
+    color: var(--colorText)!important;
 }
 
 #loginbtn {

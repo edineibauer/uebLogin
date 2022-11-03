@@ -4,11 +4,11 @@
         <img src='<?= HOME ?>assetsPublic/img/favicon-256.png?v=<?= VERSION ?>' height='60'
              style='height: 60px;float: initial;margin:initial'>
     </a>
-    <div class='container align-center upper panel font-light theme-text-aux'>Recuperar senha</div>
-    <div class="col-12 z-depth-2 radius color-white padding-medium margin-medium padding-4">
+    <div class='container align-center upper panel font-light'>Recuperar senha</div>
+    <div class="col-12 z-depth-2 radius padding-medium margin-medium padding-4" style="background: var(--colorBox)">
         <div class="panel">
             <label class="font-small" for="recovery-email">Digite seu Email</label>
-            <input id="recovery-email" type="email">
+            <input id="recovery-email" type="email" style="color:var(--colorText)">
         </div>
         <div class="row padding-medium margin-bottom padding-4" style="margin-top: 3px;">
             <button class="col radius s-font-medium theme-d2 hover-opacity-off opacity hover-shadow"
@@ -21,7 +21,7 @@
 
     <div class="col-12 upper color-text-grey padding-medium padding-4">
         <a href="<?= defined('HOME') ? HOME : "" ?>login"
-           class="left btn color-white color-text-grey radius hover-opacity-off opacity" style="font-size:12px;text-decoration: none">
+           class="left btn radius hover-opacity-off opacity" style="font-size:12px;text-decoration: none">
             fazer login
         </a>
     </div>
