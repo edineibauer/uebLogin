@@ -10,7 +10,7 @@ function recoveryEmail() {
         recoveryFree = false;
         let email = $("#recovery-email").val();
         if(validateEmail(email)) {
-            AJAX.post('recoveryEmail', {email: email, home: HOME}).then(g => {
+            AJAX.post('recoveryEmail', {email: email}).then(g => {
                 if (g == 1) {
                     toast('Link de Recuperação enviada ao email', 4000, "toast-success");
                     $("#recovery-email").val("");

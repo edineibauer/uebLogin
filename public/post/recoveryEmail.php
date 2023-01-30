@@ -4,7 +4,7 @@ $data['data'] = !1;
 $email = trim(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
 $setor = trim(filter_input(INPUT_POST, 'setor'));
 
-if (!empty($email) && !empty($setor)) {
+if (!empty($email)) {
 
     /**
      * @param array $setorData
@@ -65,16 +65,33 @@ if (!empty($email) && !empty($setor)) {
         return $metaEmail ? $metaEmail->getColumn() : "";
     }
 
-    $emailColumn = getEmailColumn($setor);
-    if (!empty($emailColumn)) {
-        $read = new \Conn\Read();
-        $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
-        if ($read->getResult()) {
-            $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
-            if($data['data'] !== "1")
-                $data['error'] = $data['data'];
-        } else {
-            $data['error'] = "Email não encontrado";
+    if(empty($setor)) {
+        foreach (\Helpers\Helper::listFolder(PATH_HOME . "entity/cache/info") as $entity) {
+            $infoEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/info/" . $entity), true);
+            if($infoEntity['user'] == 1) {
+                $cacheEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/" . $entity), true);
+                $emailColumn = $cacheEntity[$infoEntity['email']]['column'];
+
+                $read->exeRead(str_replace(".json", "", $entity), "WHERE {$emailColumn} = '{$email}'");
+                if($read->getResult()) {
+                    $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
+                    if($data['data'] !== "1")
+                        $data['error'] = $data['data'];
+                }
+            }
+        }
+    } else {
+        $emailColumn = getEmailColumn($setor);
+        if (!empty($emailColumn)) {
+            $read = new \Conn\Read();
+            $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
+            if ($read->getResult()) {
+                $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
+                if ($data['data'] !== "1")
+                    $data['error'] = $data['data'];
+            } else {
+                $data['error'] = "Email não encontrado";
+            }
         }
     }
 }
