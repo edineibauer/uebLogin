@@ -65,6 +65,7 @@ if (!empty($email)) {
         return $metaEmail ? $metaEmail->getColumn() : "";
     }
 
+    $read = new \Conn\Read();
     if(empty($setor)) {
         foreach (\Helpers\Helper::listFolder(PATH_HOME . "entity/cache/info") as $entity) {
             $infoEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/info/" . $entity), true);
@@ -72,7 +73,6 @@ if (!empty($email)) {
                 $cacheEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/" . $entity), true);
                 $emailColumn = $cacheEntity[$infoEntity['email']]['column'];
 
-                $read = new \Conn\Read();
                 $read->exeRead(str_replace(".json", "", $entity), "WHERE {$emailColumn} = '{$email}'");
                 if($read->getResult()) {
                     $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
@@ -84,7 +84,6 @@ if (!empty($email)) {
     } else {
         $emailColumn = getEmailColumn($setor);
         if (!empty($emailColumn)) {
-            $read = new \Conn\Read();
             $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
             if ($read->getResult()) {
                 $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
