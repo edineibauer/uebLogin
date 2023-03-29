@@ -16,7 +16,7 @@ if (!empty($token) && !empty($social)) {
      * Search for the user
      */
     $read = new \Conn\Read();
-    $read->exeRead("usuarios", "WHERE password = '" . \Helpers\Check::password($post['id']) . "' AND login_social = " . ($social === "facebook" ? 2 : 1) . " AND setor = '{$entity}'", !0, !0, !0);
+    $read->exeRead("usuarios", "WHERE password = :p AND login_social = :ls AND setor = :ss", ["p" => \Helpers\Check::password($post['id']), "ls" => ($social === "facebook" ? 2 : 1), "ss" => $entity]);
     if (!$read->getResult()) {
         /**
          * User not exist, so create

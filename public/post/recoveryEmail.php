@@ -73,7 +73,7 @@ if (!empty($email)) {
                 $cacheEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/" . $entity), true);
                 $emailColumn = $cacheEntity[$infoEntity['email']]['column'];
 
-                $read->exeRead(str_replace(".json", "", $entity), "WHERE {$emailColumn} = '{$email}'");
+                $read->exeRead(str_replace(".json", "", $entity), "WHERE {$emailColumn} = :ee", ["ee" => $email]);
                 if($read->getResult()) {
                     $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
                     if($data['data'] !== "1")
@@ -84,7 +84,7 @@ if (!empty($email)) {
     } else {
         $emailColumn = getEmailColumn($setor);
         if (!empty($emailColumn)) {
-            $read->exeRead($setor, "WHERE {$emailColumn} = '{$email}'");
+            $read->exeRead($setor, "WHERE {$emailColumn} = :ee", ["ee" => $email]);
             if ($read->getResult()) {
                 $data['data'] = sendEmailRecovery($read->getResult()[0], $read->getResult()[0][$emailColumn]);
                 if ($data['data'] !== "1")
