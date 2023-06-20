@@ -137,7 +137,7 @@ class Login
     {
         if($this->isArrayofStrings($setores)) {
             $this->setor = array_map(function ($item) {
-                return trim(strip_tags($item));
+                return explode(" ", trim(strip_tags($item)))[0];
             }, $setores);
         }
     }
