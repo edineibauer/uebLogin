@@ -58,8 +58,12 @@ class Login
                 if (!empty($data['cpf']))
                     $this->setCpf($data['cpf']);
 
-                if (!empty($data['setor']))
-                    $this->setSetor($data['setor']);
+                if (!empty($data['setor'])) {
+                    if(is_string($data['setor']))
+                        $this->setSetor([$data['setor']]);
+                    elseif(is_array($data['setor']))
+                        $this->setSetor($data['setor']);
+                }
 
                 if (!empty($data['password']))
                     $this->setSenha($data['password'], $passEncripty);
@@ -126,12 +130,16 @@ class Login
     }
 
     /**
-     * @param string $setor
+     * @param array $setores
      * @return void
      */
-    public function setSetor(string $setor): void
+    public function setSetor(array $setores): void
     {
-        $this->setor = $setor;
+        if($this->isArrayofStrings($setores)) {
+            $this->setor = array_map(function ($item) {
+                return trim(strip_tags($item));
+            }, $setores);
+        }
     }
 
     /**
@@ -162,6 +170,22 @@ class Login
         return $this->result;
     }
 
+    /**
+     * @param $array
+     * @return bool
+     */
+    private function isArrayofStrings($array): bool {
+        if (!is_array($array))
+            return false;
+
+        foreach ($array as $item) {
+            if (!is_string($item))
+                return false;
+        }
+
+        return true;
+    }
+
     private function start()
     {
         if (!empty($this->token)) {
@@ -187,14 +211,10 @@ class Login
         if (!$this->getResult()) {
 
             $socialUser = (empty($this->social) ? "0 OR login_social IS NULL" : ($this->social === "facebook" ? 2 : 1));
-            $variaveisLogin = ["pass" => $this->senha, "ss" => $socialUser];
-            if(!empty($this->setor))
-                $variaveisLogin["s"] = $this->setor;
-
             $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
-            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = :ss)" . (!empty($this->setor) ? " AND setor = :s" : ""), $variaveisLogin);
+            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = :ss)" . (!empty($this->setor) ? " AND setor IN('" . implode("','", $this->setor) . "')" : ""), ["pass" => $this->senha, "ss" => $socialUser]);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 

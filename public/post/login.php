@@ -9,6 +9,13 @@ $dados['nome'] = strip_tags(trim(filter_input(INPUT_POST, "nome")));
 $dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "user")));
 $dados['setor'] = strip_tags(trim(filter_input(INPUT_POST, "setor")));
 
+if(empty($dados['setor']))
+    $dados['setor'] = filter_input(INPUT_POST, "setor", FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+elseif(is_string($dados['setor']))
+    $dados['setor'] = [$dados['setor']];
+else
+    $dados['setor'] = null;
+
 $dados['password'] = trim(filter_input(INPUT_POST, "pass"));
 
 $dados['token'] = filter_input(INPUT_POST, "token");
