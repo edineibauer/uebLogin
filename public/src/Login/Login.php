@@ -19,6 +19,7 @@ class Login
     private $nome;
     private $senha;
     private $token;
+    private $setor;
     private $social;
     private $socialToken;
     private $recaptcha;
@@ -56,6 +57,9 @@ class Login
 
                 if (!empty($data['cpf']))
                     $this->setCpf($data['cpf']);
+
+                if (!empty($data['setor']))
+                    $this->setSetor($data['setor']);
 
                 if (!empty($data['password']))
                     $this->setSenha($data['password'], $passEncripty);
@@ -122,6 +126,15 @@ class Login
     }
 
     /**
+     * @param string $setor
+     * @return void
+     */
+    public function setSetor(string $setor): void
+    {
+        $this->setor = $setor;
+    }
+
+    /**
      * @param $senha
      * @param bool $passEncripty
      */
@@ -174,10 +187,14 @@ class Login
         if (!$this->getResult()) {
 
             $socialUser = (empty($this->social) ? "0 OR login_social IS NULL" : ($this->social === "facebook" ? 2 : 1));
+            $variaveisLogin = ["pass" => $this->senha, "ss" => $socialUser];
+            if(!empty($this->setor))
+                $variaveisLogin["s"] = $this->setor;
+
             $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "login_social", "system_id"]);
-            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = :ss)", ["pass" => $this->senha, "ss" => $socialUser]);
+            $read->exeRead("usuarios", "WHERE password = :pass AND (login_social = :ss)" . (!empty($this->setor) ? " AND setor = :s" : ""), $variaveisLogin);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 

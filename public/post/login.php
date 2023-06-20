@@ -7,6 +7,7 @@ $dados['email'] = strip_tags(trim(filter_input(INPUT_POST, "email")));
 $dados['cpf'] = str_replace([".", "-"], "", strip_tags(trim(filter_input(INPUT_POST, "cpf"))));
 $dados['nome'] = strip_tags(trim(filter_input(INPUT_POST, "nome")));
 $dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "user")));
+$dados['setor'] = strip_tags(trim(filter_input(INPUT_POST, "setor")));
 
 $dados['password'] = trim(filter_input(INPUT_POST, "pass"));
 
