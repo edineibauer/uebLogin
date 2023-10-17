@@ -27,31 +27,29 @@ if (!empty($email)) {
     function sendEmailRecovery(array $setorData, string $email): string
     {
         $code = setRecoveryCode($setorData);
-        if (defined("EMAIL")) {
-            try {
 
-                $emailSend = new \Email\Email();
-                $emailSend->setDestinatarioEmail($email);
-                $emailSend->setAssunto("Recuperação de Senha");
-                $emailSend->setMensagem("Para redefinir sua senha, clique no link abaixo.");
-                $emailSend->setDestinatarioNome("");
-                $emailSend->setVariables([
-                    'id' => "",
-                    'image' => "",
-                    'background' => "",
-                    'btn' => "Criar nova senha",
-                    'link' => HOME_PRODUCTION . "index.html?url=inserir-nova-senha/{$code}",
-                ]);
-                $emailSend->enviar();
+        try {
 
-            } catch (Exception $e) {
-                return $e;
-            }
+            $emailSend = new \Email\Email();
+            $emailSend->setDestinatarioEmail($email);
+            $emailSend->setAssunto("Recuperação de Senha");
+            $emailSend->setMensagem("Para redefinir sua senha, clique no link abaixo.");
+            $emailSend->setDestinatarioNome("");
+            $emailSend->setIpPoolPrivado(true);
+            $emailSend->setVariables([
+                'id' => "",
+                'image' => "",
+                'background' => "",
+                'btn' => "Criar nova senha",
+                'link' => HOME_PRODUCTION . "index.html?url=inserir-nova-senha/{$code}",
+            ]);
+            $emailSend->enviar();
 
-            return empty($emailSend->getError()) ? "1" : $emailSend->getError();
+        } catch (Exception $e) {
+            return $e;
         }
 
-        return "Erro, sistema de emails offline";
+        return empty($emailSend->getError()) ? "1" : $emailSend->getError();
     }
 
     /**
