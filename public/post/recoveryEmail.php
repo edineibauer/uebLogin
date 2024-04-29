@@ -52,24 +52,19 @@ if (!empty($email)) {
         return empty($emailSend->getError()) ? "1" : $emailSend->getError();
     }
 
-    /**
-     * @param string $setor
-     * @return string
-     */
-    function getEmailColumn(string $setor): string
-    {
-        $dic = new \Entity\Dicionario($setor);
-        $metaEmail = $dic->search("format", "email");
-        return $metaEmail ? $metaEmail->getColumn() : "";
-    }
-
     $read = new \Conn\Read();
     if(empty($setor)) {
         foreach (\Helpers\Helper::listFolder(PATH_HOME . "entity/cache/info") as $entity) {
+            if(empty($entity) || pathinfo($entity, PATHINFO_EXTENSION) !== "json")
+                continue;
+
             $infoEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/info/" . $entity), true);
-            if($infoEntity['user'] == 1) {
+            if($infoEntity['user'] == 1 && !empty($infoEntity['email'])) {
                 $cacheEntity = json_decode(file_get_contents(PATH_HOME . "entity/cache/" . $entity), true);
                 $emailColumn = $cacheEntity[$infoEntity['email']]['column'];
+
+                if(empty($emailColumn))
+                    continue;
 
                 $read->exeRead(str_replace(".json", "", $entity), "WHERE {$emailColumn} = :ee", ["ee" => $email]);
                 if($read->getResult()) {
@@ -80,7 +75,10 @@ if (!empty($email)) {
             }
         }
     } else {
-        $emailColumn = getEmailColumn($setor);
+        $dic = new \Entity\Dicionario($setor);
+        $metaEmail = $dic->search("format", "email");
+        $emailColumn = $metaEmail ? $metaEmail->getColumn() : "";
+
         if (!empty($emailColumn)) {
             $read->exeRead($setor, "WHERE {$emailColumn} = :ee", ["ee" => $email]);
             if ($read->getResult()) {
