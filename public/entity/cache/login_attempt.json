@@ -22,7 +22,7 @@
     "type": "varchar",
     "nome": "ip",
     "column": "ip",
-    "size": "32",
+    "size": "64",
     "key": "",
     "unique": "false",
     "default": "",
