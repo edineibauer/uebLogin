@@ -281,13 +281,24 @@ class Login
      */
     private function checkToken(): array
     {
-        $prazoTokenExpira = date('Y-m-d', strtotime("-12 months", strtotime(date("Y-m-d"))));
-        $sql = new \Conn\SqlCommand();
-        $sql->exeCommand("SELECT u.* FROM usuarios as u JOIN usuarios_token as t ON u.id = t.usuario WHERE t.token = '" . $this->token . "' AND u.status = 1 AND t.token_expira > " . $prazoTokenExpira);
-        if ($sql->getResult()) {
-            $user = $sql->getResult()[0];
-            unset($user['password']);
-            return $this->getUsuarioDataRelation($user);
+        if(strpos($this->token, "T!") === 0) {
+            return [
+                "id" => str_replace("T!", "", $this->token),
+                "nome" => "Anônimo " . substr($this->token, - 6),
+                "imagem" => null,
+                "status" => 1,
+                "setor" => 0,
+                "setorData" => []
+            ];
+        } else {
+            $prazoTokenExpira = date('Y-m-d', strtotime("-12 months", strtotime(date("Y-m-d"))));
+            $sql = new \Conn\SqlCommand();
+            $sql->exeCommand("SELECT u.* FROM usuarios as u JOIN usuarios_token as t ON u.id = t.usuario WHERE t.token = '" . $this->token . "' AND u.status = 1 AND t.token_expira > " . $prazoTokenExpira);
+            if ($sql->getResult()) {
+                $user = $sql->getResult()[0];
+                unset($user['password']);
+                return $this->getUsuarioDataRelation($user);
+            }
         }
 
         return [];
@@ -372,8 +383,10 @@ class Login
             $usuario['token'] = $this->token;
 
             //disable usuario recovery password
-            $up = new Update();
-            $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", "id={$usuario['id']}");
+            if(strpos($this->token, "T!") === 0) {
+                $up = new Update();
+                $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", ["id" => $usuario['id']]);
+            }
 
             $this->setResult($usuario);
 
