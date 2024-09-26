@@ -16,18 +16,6 @@
                     <span>Senha</span>
                     <input id="passlog" type="password" class="font-light font-large">
                 </label>
-
-                <?php if (defined("RECAPTCHASITE")) { ?>
-                    <div class="container">
-                        <div class="g-recaptcha" data-sitekey="<?= RECAPTCHASITE ?>"></div>
-                        <br>
-                    </div>
-                    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
-
-                <?php } else { ?>
-
-                <input type="hidden" id="g-recaptcha-response"/>
-                <?php } ?>
             </div>
             <button id="loginbtn" class="s-font-large upper margin-bottom theme-d2 hover-opacity-off opacity">
                 Entrar
@@ -35,13 +23,8 @@
         </div>
     </div>
 
-    <div class="col-12 p-0">
-        <?php \Login\Social::googleLogin(); ?>
-        <?php \Login\Social::facebookLogin(); ?>
-    </div>
-
     <div class="col-12 p-0 upper color-text-grey">
-        <a href="<?= defined('HOME') ? HOME : "" ?>esqueci-a-senha"
+        <a href="<?= HOME ?>esqueci-a-senha"
            class="right btn radius hover-opacity-off opacity"
            style="text-decoration: none; margin-right:0;font-size:12px">
             esqueci a senha

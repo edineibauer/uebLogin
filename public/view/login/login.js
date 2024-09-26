@@ -4,14 +4,14 @@ function login() {
     if(loginFree)
         toast("Carregando...", 15000);
 
-    exeLogin($("#emaillog").val(), $("#passlog").val(), null, null, $("#g-recaptcha-response").val());
+    exeLogin($("#emaillog").val(), $("#passlog").val());
 }
 
-function exeLogin(email, senha, social, token, recaptcha) {
+function exeLogin(email, senha) {
     if (loginFree) {
         $("#login-card").loading();
         loginFree = !1;
-        AJAX.post('login', {user: email, pass: senha, social: social, token: token, recaptcha: recaptcha}).then(g => {
+        AJAX.post('login', {user: email, pass: senha}).then(g => {
             if (typeof g === "string") {
                 loginFree = !0;
                 if(typeof navigator.vibrate !== "undefined")
