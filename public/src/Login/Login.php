@@ -361,18 +361,21 @@ class Login
 
             $this->setResult($usuario);
 
+            $create = new Create();
+            $create->exeCreate("login_attempt", ["system_entity" => "login_valido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
+
         } elseif (empty($this->getResult())) {
             $this->setResult('Login Inválido');
 
             $create = new Create();
-            $create->exeCreate("login_attempt", ["ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
+            $create->exeCreate("login_attempt", ["system_entity" => "login_invalido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
         }
     }
 
     private function attemptExceded()
     {
         $read = new Read();
-        $read->exeRead("login_attempt", "WHERE data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = :ip AND username = :un", ["ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "un" => $this->user]);
+        $read->exeRead("login_attempt", "WHERE system_entity = 'login_invalido' AND data > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND ip = :ip AND username = :un", ["ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "un" => $this->user]);
         $this->attempts = $read->getRowCount();
 
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
