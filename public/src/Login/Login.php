@@ -379,7 +379,7 @@ class Login
     }
 
     private function getToken() {
-        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_';
         $sequencia = '';
         $max = strlen($caracteres) - 1;
 
