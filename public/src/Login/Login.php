@@ -378,11 +378,14 @@ class Login
         return ($this->attempts > 10); // maximo de 10 tentativas por IP e email iguais em um intervalo de 15 minutos
     }
 
-    /**
-     * @return string
-     */
-    private function getToken()
-    {
-        return md5("tokes" . rand(9999, 99999) . md5(base64_encode(date("Y-m-d H:i:s"))) . rand(0, 9999)) . md5(time() . rand(99999999, 999999999));
+    private function getToken() {
+        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+        $sequencia = '';
+        $max = strlen($caracteres) - 1;
+
+        for ($i = 0; $i < 64; $i++)
+            $sequencia .= $caracteres[random_int(0, $max)];
+
+        return $sequencia;
     }
 }
