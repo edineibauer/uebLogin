@@ -379,11 +379,11 @@ class Login
     }
 
     private function getToken() {
-        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $sequencia = '';
         $max = strlen($caracteres) - 1;
 
-        for ($i = 0; $i < 64; $i++)
+        for ($i = 0; $i < 96; $i++)
             $sequencia .= $caracteres[random_int(0, $max)];
 
         return $sequencia;
