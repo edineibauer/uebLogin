@@ -263,6 +263,25 @@ class Login
     private function getUsuarioDataRelation(array $usuario): array
     {
         $this->token = $this->getToken();
+
+        /**
+         * Mantem apenas os últimos 2 tokens desse usuário + o que esta a ser criado
+         */
+        $sql = new \Conn\SqlCommand();
+        $sql->exeCommand("
+            DELETE FROM usuarios_token
+            WHERE usuario = " . $usuario['id'] . "
+            AND id NOT IN (
+                SELECT id FROM (
+                    SELECT id 
+                    FROM usuarios_token 
+                    WHERE usuario = " . $usuario['id'] . " 
+                    ORDER BY id DESC 
+                    LIMIT 2
+                ) as temp
+            )
+        ");
+
         $create = new Create();
         $create->exeCreate("usuarios_token", ['token' => $this->token, "token_expira" => date("Y-m-d H:i:s"), "usuario" => $usuario['id']]);
         if($create->getResult())
@@ -364,6 +383,6 @@ class Login
      */
     private function getToken()
     {
-        return md5("tokes" . rand(9999, 99999) . md5(base64_encode(date("Y-m-d H:i:s"))) . rand(0, 9999));
+        return md5("tokes" . rand(9999, 99999) . md5(base64_encode(date("Y-m-d H:i:s"))) . rand(0, 9999)) . md5(time() . rand(99999999, 999999999));
     }
 }
