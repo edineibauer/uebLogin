@@ -169,7 +169,8 @@ class Login
     private function start()
     {
         if (!empty($this->token)) {
-            $this->setLogin($this->checkToken());
+            Config::setUser($this->token);
+            $this->setResult($_SESSION['userlogin']);
 
         } elseif (($this->user OR $this->email OR $this->cpf OR $this->nome) AND $this->senha AND !$this->attemptExceded()) {
             $this->checkUserInfo();
@@ -189,7 +190,6 @@ class Login
     {
         if (!$this->getResult()) {
 
-            $user = [];
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "system_id"]);
             $read->exeRead("usuarios", "WHERE password = :pass" . (!empty($this->setor) ? " AND setor IN('" . implode("','", $this->setor) . "')" : ""), ["pass" => $this->senha]);
@@ -213,7 +213,13 @@ class Login
                             $dicionario = Metadados::getDicionario($users['setor']);
 
                             if ($users['status'] == 1 && (empty($info['status']) || $read->getResult()[0][$dicionario[$info['status']]['column']] == 1)) {
-                                $user = $this->getUsuarioDataRelation($users);
+                                $this->createTokenUser($users['id']);
+                                Config::setUser($this->token);
+                                $this->setResult($_SESSION['userlogin']);
+
+                                $create = new Create();
+                                $create->exeCreate("login_attempt", ["system_entity" => "login_valido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
+
                             } else {
                                 $this->setResult('Usuário Desativado!');
                             }
@@ -223,71 +229,40 @@ class Login
                 }
             }
 
-            $this->setLogin($user);
-        }
-    }
+            if(empty($this->token)) {
+                $this->setResult('Login Inválido');
 
-    /**
-     * Return user data
-     * @return array
-     */
-    private function checkToken(): array
-    {
-        if(strpos($this->token, "T!") === 0) {
-            return [
-                "id" => str_replace("T!", "", $this->token),
-                "nome" => "Anônimo " . substr($this->token, - 6),
-                "imagem" => null,
-                "status" => 1,
-                "setor" => 0,
-                "setorData" => []
-            ];
-        } else {
-            $prazoTokenExpira = date('Y-m-d', strtotime("-12 months", strtotime(date("Y-m-d"))));
-            $sql = new \Conn\SqlCommand();
-            $sql->exeCommand("SELECT u.* FROM usuarios as u JOIN usuarios_token as t ON u.id = t.usuario WHERE t.token = '" . $this->token . "' AND u.status = 1 AND t.token_expira > " . $prazoTokenExpira);
-            if ($sql->getResult()) {
-                $user = $sql->getResult()[0];
-                unset($user['password']);
-                return $this->getUsuarioDataRelation($user);
+                $create = new Create();
+                $create->exeCreate("login_attempt", ["system_entity" => "login_invalido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
             }
         }
-
-        return [];
     }
 
     /**
-     * @param array $usuario
-     * @return array
+     * @param int $user
+     * @return void
      */
-    private function getUsuarioDataRelation(array $usuario): array
-    {
-        $this->token = $this->getToken();
+    private function createTokenUser(int $user) {
 
-        /**
-         * Mantem apenas os últimos 2 tokens desse usuário + o que esta a ser criado
-         */
+        //Mantem apenas os últimos 2 tokens desse usuário + o que esta a ser criado
         $sql = new \Conn\SqlCommand();
         $sql->exeCommand("
             DELETE FROM usuarios_token
-            WHERE usuario = " . $usuario['id'] . "
+            WHERE usuario = " . $user . "
             AND id NOT IN (
                 SELECT id FROM (
                     SELECT id 
                     FROM usuarios_token 
-                    WHERE usuario = " . $usuario['id'] . " 
+                    WHERE usuario = " . $user . " 
                     ORDER BY id DESC 
-                    LIMIT 2
+                    LIMIT 4
                 ) as temp
             )
         ");
 
+        $this->setToken($this->getToken());
         $create = new Create();
-        $create->exeCreate("usuarios_token", ['token' => $this->token, "token_expira" => date("Y-m-d H:i:s"), "usuario" => $usuario['id']]);
-        if($create->getResult())
-            Config::setUser($this->token);
-
-        return $create->getResult() ? $_SESSION['userlogin'] : [];
+        $create->exeCreate("usuarios_token", ['token' => $this->token, "token_expira" => date("Y-m-d H:i:s"), "usuario" => $user]);
     }
 
     /**
@@ -342,34 +317,6 @@ class Login
         }
 
         return $whereUser;
-    }
-
-    /**
-     * Seta dados de um usuário como login de acesso
-     * @param array $usuario
-     */
-    public function setLogin(array $usuario)
-    {
-        if ($usuario) {
-            $usuario['token'] = $this->token;
-
-            //disable usuario recovery password
-            if(strpos($this->token, "T!") === 0) {
-                $up = new Update();
-                $up->exeUpdate("usuarios", ["token_recovery" => null], "WHERE id = :id", ["id" => $usuario['id']]);
-            }
-
-            $this->setResult($usuario);
-
-            $create = new Create();
-            $create->exeCreate("login_attempt", ["system_entity" => "login_valido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
-
-        } elseif (empty($this->getResult())) {
-            $this->setResult('Login Inválido');
-
-            $create = new Create();
-            $create->exeCreate("login_attempt", ["system_entity" => "login_invalido","ip" => filter_var(Helper::getIP(), FILTER_VALIDATE_IP), "data" => date("Y-m-d H:i:s"), "username" => $this->user]);
-        }
     }
 
     private function attemptExceded()
