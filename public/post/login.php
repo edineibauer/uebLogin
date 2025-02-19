@@ -8,6 +8,7 @@ $dados['cpf'] = str_replace([".", "-"], "", strip_tags(trim(filter_input(INPUT_P
 $dados['nome'] = strip_tags(trim(filter_input(INPUT_POST, "nome")));
 $dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "user")));
 $dados['setor'] = strip_tags(trim(filter_input(INPUT_POST, "setor")));
+$dados['system_id'] = filter_input(INPUT_POST, "system_id", FILTER_VALIDATE_INT);
 $userCache = filter_input(INPUT_POST, "userCache", FILTER_VALIDATE_BOOLEAN);
 
 if(empty($dados['setor']))

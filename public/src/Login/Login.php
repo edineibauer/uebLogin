@@ -12,6 +12,7 @@ use Helpers\Helper;
 
 class Login
 {
+    private $system;
     private $user;
     private $email;
     private $cpf;
@@ -33,6 +34,9 @@ class Login
             if (!empty($data['token'])) {
                 $this->setToken($data['token']);
             } else {
+
+                if (!empty($data['system_id']))
+                    $this->setSystem($data['system_id']);
 
                 if (!empty($data['user']))
                     $this->setUser($data['user']);
@@ -62,6 +66,14 @@ class Login
     }
 
     /**
+     * @param string $system
+     */
+    public function setSystem(string $system)
+    {
+        $this->system = strip_tags(trim($system));
+    }
+
+    /**
      * @param mixed $result
      */
     public function setResult($result)
@@ -84,7 +96,7 @@ class Login
     public function setUser(string $user)
     {
         if (!empty($user))
-            $this->user = (string)strip_tags(trim($user));
+            $this->user = strip_tags(trim($user));
     }
 
     /**
@@ -94,7 +106,7 @@ class Login
     public function setNome(string $nome)
     {
         if (!empty($nome))
-            $this->nome = (string)strip_tags(trim($nome));
+            $this->nome = strip_tags(trim($nome));
     }
 
     /**
@@ -104,7 +116,7 @@ class Login
     public function setEmail(string $email)
     {
         if (!empty($email) && Check::email($email))
-            $this->email = (string)strip_tags(trim($email));
+            $this->email = strip_tags(trim($email));
     }
 
     /**
@@ -190,9 +202,14 @@ class Login
     {
         if (!$this->getResult()) {
 
+            $parseData = ["pass" => $this->senha];
+
+            if(!empty($this->system))
+                $parseData['si'] = $this->system;
+
             $read = new Read();
             $read->setSelect(["id", "nome", "imagem", "status", "data", "setor", "system_id"]);
-            $read->exeRead("usuarios", "WHERE password = :pass" . (!empty($this->setor) ? " AND setor IN('" . implode("','", $this->setor) . "')" : ""), ["pass" => $this->senha]);
+            $read->exeRead("usuarios", "WHERE password = :pass" . (!empty($this->system) ? " AND system_id = :si" : "") . (!empty($this->setor) ? " AND setor IN('" . implode("','", $this->setor) . "')" : ""), $parseData);
             if ($read->getResult()) {
                 $usuarios = $read->getResult();
 
@@ -244,7 +261,7 @@ class Login
      */
     private function createTokenUser(int $user) {
 
-        //Mantem apenas os últimos 2 tokens desse usuário + o que esta a ser criado
+        //Mantem apenas os últimos 4 tokens desse usuário + o que esta a ser criado
         $sql = new \Conn\SqlCommand();
         $sql->exeCommand("
             DELETE FROM usuarios_token
