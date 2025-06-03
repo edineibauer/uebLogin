@@ -125,8 +125,8 @@ class Login
      */
     public function setCpf(string $cpf)
     {
-        if (!empty($cpf) && Check::cpf($cpf))
-            $this->cpf = (string)str_replace([".", "-"], "", strip_tags(trim($cpf)));
+        if (!empty($cpf) && (Check::cpf($cpf) || Check::cnpj($cpf)))
+            $this->cpf = (string)str_replace([".", "-", "/"], "", strip_tags(trim($cpf)));
     }
 
     /**
