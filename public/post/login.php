@@ -3,11 +3,11 @@
 use Login\Login;
 use Entity\Json;
 
-$dados['email'] = strip_tags(trim(filter_input(INPUT_POST, "email")));
-$dados['cpf'] = str_replace([".", "-"], "", strip_tags(trim(filter_input(INPUT_POST, "cpf"))));
-$dados['nome'] = strip_tags(trim(filter_input(INPUT_POST, "nome")));
-$dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "user")));
-$dados['setor'] = strip_tags(trim(filter_input(INPUT_POST, "setor")));
+$dados['email'] = strip_tags(trim(filter_input(INPUT_POST, "email") ?? ''));
+$dados['cpf'] = str_replace([".", "-"], "", strip_tags(trim(filter_input(INPUT_POST, "cpf") ?? '')));
+$dados['nome'] = strip_tags(trim(filter_input(INPUT_POST, "nome") ?? ''));
+$dados['user'] = strip_tags(trim(filter_input(INPUT_POST, "user") ?? ''));
+$dados['setor'] = strip_tags(trim(filter_input(INPUT_POST, "setor") ?? ''));
 $dados['system_id'] = filter_input(INPUT_POST, "system_id", FILTER_VALIDATE_INT);
 $userCache = filter_input(INPUT_POST, "userCache", FILTER_VALIDATE_BOOLEAN);
 
@@ -18,7 +18,7 @@ elseif(is_string($dados['setor']))
 else
     $dados['setor'] = null;
 
-$dados['password'] = trim(filter_input(INPUT_POST, "pass"));
+$dados['password'] = trim(filter_input(INPUT_POST, "pass") ?? '');
 
 $dados['token'] = filter_input(INPUT_POST, "token");
 
