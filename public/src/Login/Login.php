@@ -303,8 +303,8 @@ class Login
                     if($this->email && !empty($info[$usuario['setor']]['email'])) {
                         $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['email']]['column'] . " = '{$this->email}'";
 
-                    } elseif($this->cpf && !empty($info[$usuario['setor']]['cpf'])) {
-                        $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['cpf']]['column'] . " = '{$this->cpf}'";
+                    } elseif($this->cpf) {
+                        $where .= " AND cpf = '{$this->cpf}'";
 
                     } elseif($this->nome && !empty($info[$usuario['setor']]['title'])) {
                         $where .= " AND " . $dicionarios[$usuario['setor']][$info[$usuario['setor']]['title']]['column'] . " = '{$this->nome}'";
